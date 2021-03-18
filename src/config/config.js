@@ -6,13 +6,13 @@ export default {
   parent: 'phaser-example',
   width: 800,
   height: 600,
+  backgroundColor: '#dddddd',
   plugins: {
-    scene: [
-      {
-        key: 'rexBoard',
-        plugin: BoardPlugin,
-        mapping: 'rexBoard',
-      },
-    ],
-  },
+    scene: [{
+      key: 'rexBoard',
+      plugin: BoardPlugin,
+      mapping: 'rexBoard'
+    },
+  ]
+}
 };
