@@ -3,7 +3,11 @@ import 'phaser';
 import firebase from 'firebase/app';
 import 'firebase/database';
 
-import { Board, HexagonGrid, QuadGrid } from 'phaser3-rex-plugins/plugins/board-components.js';
+import {
+  Board,
+  HexagonGrid,
+  QuadGrid,
+} from 'phaser3-rex-plugins/plugins/board-components.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -12,7 +16,6 @@ export default class GameScene extends Phaser.Scene {
 
   preload() {
     // load images
-  
   }
 
   create() {
@@ -29,25 +32,57 @@ export default class GameScene extends Phaser.Scene {
     //     console.log('THIS IS THE FANCY HOUSE', snapshot.val());
     //   });
 
+    const tiles = [
+      '111 11 111',
+      '000 00 000',
+      '111 11 111',
+      '000 00 000',
+      '111 11 111',
+      '000 00 000',
+      '111 11 111',
+      '000 00 000',
+      '111 11 111',
+      '000 00 000',
+    ];
+
     let gridded = {
       grid: {
-          gridType: 'quadGrid',
-          x: 50,
-          y: 100,
-          cellWidth: 20,
-          cellHeight: 20,
-          type: 'orthogonal',
-          fillColor: '#000'
+        gridType: 'quadGrid',
+        x: 130,
+        y: 30,
+        cellWidth: 60,
+        cellHeight: 60,
+        type: 'orthogonal',
       },
-      width: 200,
-      height: 200
-    }
-    const board = new Board(this, gridded);
-  
+      width: 10,
+      height: 10,
+      randomValue: 'TEST',
+    };
 
-    this.rexBoard.add.board(gridded)
-    
-    this.rexBoard.add.shape(board, 1, 1, 1, 0xffc0cb)
-    this.rexBoard.add.shape(board, 2, 2, 1, 0x3f51b5)
+    // const board = new Board(this, gridded);
+
+    const board = this.rexBoard.add.board(gridded);
+    console.log('BOARD', board);
+
+    for (let i = 0; i < board.width; i++) {
+      for (let j = 0; j < board.height; j++) {
+        let number = tiles[i][j];
+        let color;
+        if (number === '1') {
+          color = 0xffc0cb;
+        } else if (number === '0') {
+          color = 0x4caf50;
+        } else {
+          color = 0xdddddd;
+        }
+        this.rexBoard.add
+          .shape(board, j, i, 0, color)
+          .setStrokeStyle(1, 0xffffff, 1);
+      }
+    }
+
+    // this.rexBoard.add.shape(board, 0xffc0cb);
+
+    // board.addChess();
   }
 }
