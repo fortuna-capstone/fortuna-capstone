@@ -32,17 +32,19 @@ export default class GameScene extends Phaser.Scene {
     //     console.log('THIS IS THE FANCY HOUSE', snapshot.val());
     //   });
 
+    // CREATING BOARD
+    // 0: red
+    // 1: orange
+    // 2: life
+    // 3: green
     const tiles = [
-      '111 11 111',
-      '000 00 000',
-      '111 11 111',
-      '000 00 000',
-      '111 11 111',
-      '000 00 000',
-      '111 11 111',
-      '000 00 000',
-      '111 11 111',
-      '000 00 000',
+      '111    ',
+      '2 2   0',
+      '1 032 1',
+      '2 2 1 3',
+      '011 1 2',
+      '    112',
+      '       '
     ];
 
     let gridded = {
@@ -54,35 +56,43 @@ export default class GameScene extends Phaser.Scene {
         cellHeight: 60,
         type: 'orthogonal',
       },
-      width: 10,
-      height: 10,
-      randomValue: 'TEST',
+      width: 7,
+      height: 7,
     };
 
-    // const board = new Board(this, gridded);
-
     const board = this.rexBoard.add.board(gridded);
-    console.log('BOARD', board);
-
+    
     for (let i = 0; i < board.width; i++) {
       for (let j = 0; j < board.height; j++) {
         let number = tiles[i][j];
         let color;
-        if (number === '1') {
+        if (number === '0') {
+          color = 0xff0000;
+        } else if (number === '1') {
+          color = 0xffa500;
+        } else if (number === '2') {
           color = 0xffc0cb;
-        } else if (number === '0') {
-          color = 0x4caf50;
+        } else if (number === '3') {
+          color = 0x00cc00;
         } else {
-          color = 0xdddddd;
+          continue;
         }
         this.rexBoard.add
-          .shape(board, j, i, 0, color)
+          .shape(board, j, i, 1, color)
           .setStrokeStyle(1, 0xffffff, 1);
       }
     }
-
-    // this.rexBoard.add.shape(board, 0xffc0cb);
-
-    // board.addChess();
+    
+    // const board = new Board(this, gridded);
+    let gameObj = this.add.circle(0, 0, 10, 0x000000)
+    let chess = board.addChess(gameObj, 0, 4, 2)
+    board.setInteractive();
+    board.on('pointerdown', function (pointer, board) {
+      console.log('clicked')
+    })
+    setTimeout(() => {
+      board.moveChess(gameObj, 0, 3, 2)
+    }, 5000)
+    console.log('CHESS', chess)
   }
 }
