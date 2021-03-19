@@ -1,6 +1,6 @@
 import 'phaser';
-import config from './Config/config';
-import GameScene from './Scenes/GameScene';
+import config from './config/config';
+import GameScene from './scenes/GameScene';
 
 import firebase from 'firebase/app';
 import 'firebase/database';
@@ -19,4 +19,4 @@ class Game extends Phaser.Game {
   }
 }
 
-window.game = new Game();
+window.game = new Game(config);
