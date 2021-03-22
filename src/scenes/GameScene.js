@@ -10,6 +10,7 @@ import {
 } from 'phaser3-rex-plugins/plugins/board-components.js';
 
 import io from 'socket.io-client';
+
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
     super('Game');
