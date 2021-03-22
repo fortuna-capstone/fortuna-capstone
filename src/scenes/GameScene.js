@@ -93,8 +93,8 @@ export default class GameScene extends Phaser.Scene {
       console.log('clicked');
     });
     setTimeout(() => {
-      board.moveChess(gameObj, 0, 3, 2);
-    }, 5000);
+      board.moveChess(gameObj, 0, 2, 2);
+    }, 2000);
     console.log('CHESS', chess);
   }
 }
