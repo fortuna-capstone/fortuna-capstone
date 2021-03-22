@@ -9,6 +9,7 @@ import {
   QuadGrid,
 } from 'phaser3-rex-plugins/plugins/board-components.js';
 
+import io from 'socket.io-client';
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
     super('Game');
@@ -19,6 +20,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    //const socket = io();
+    this.socket = io();
+    console.log(this.socket);
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 

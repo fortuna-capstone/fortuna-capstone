@@ -8,6 +8,7 @@ import 'firebase/database';
 import firebaseConfig from './config/firebaseConfig';
 firebase.initializeApp(firebaseConfig);
 
+import { io } from 'socket.io-client';
 // const dbRefObject = firebase.database().ref();
 // dbRefObject.on('value', (snap) => console.log(snap.val()));
 

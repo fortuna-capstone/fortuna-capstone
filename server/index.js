@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
 app.use(express.static(path.join(__dirname, '..', '/')));
 
@@ -13,8 +15,16 @@ app.get('*', function (req, res) {
 });
 
 const port = process.env.PORT || 8080; // this can be very useful if you deploy to Heroku!
-app.listen(port, function () {
-  console.log("Knock, knock");
+server.listen(port, function () {
+  console.log('Knock, knock');
   console.log("Who's there?");
   console.log(`Your server, listening on port ${port}`);
 });
+
+io.on('connection', (socket) => {
+  console.log(`Connected to the ${socket.id}`);
+});
+
+// socket.on('connect', () => {
+//   console.log(socket.id); // ojIckSD2jqNzOqIrAGzL
+// });
