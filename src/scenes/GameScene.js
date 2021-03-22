@@ -44,7 +44,7 @@ export default class GameScene extends Phaser.Scene {
       '2 2 1 3',
       '011 1 2',
       '    112',
-      '       '
+      '       ',
     ];
 
     let gridded = {
@@ -61,7 +61,7 @@ export default class GameScene extends Phaser.Scene {
     };
 
     const board = this.rexBoard.add.board(gridded);
-    
+
     for (let i = 0; i < board.width; i++) {
       for (let j = 0; j < board.height; j++) {
         let number = tiles[i][j];
@@ -82,17 +82,17 @@ export default class GameScene extends Phaser.Scene {
           .setStrokeStyle(1, 0xffffff, 1);
       }
     }
-    
+
     // const board = new Board(this, gridded);
-    let gameObj = this.add.circle(0, 0, 10, 0x000000)
-    let chess = board.addChess(gameObj, 0, 4, 2)
+    let gameObj = this.add.circle(0, 0, 10, 0x000000);
+    let chess = board.addChess(gameObj, 0, 4, 2);
     board.setInteractive();
     board.on('pointerdown', function (pointer, board) {
-      console.log('clicked')
-    })
+      console.log('clicked');
+    });
     setTimeout(() => {
-      board.moveChess(gameObj, 0, 3, 2)
-    }, 5000)
-    console.log('CHESS', chess)
+      board.moveChess(gameObj, 0, 2, 2);
+    }, 2000);
+    console.log('CHESS', chess);
   }
 }
