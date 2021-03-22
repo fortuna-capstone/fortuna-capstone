@@ -18,10 +18,6 @@ class Game extends Phaser.Game {
     this.scene.add('Game', GameScene);
     this.scene.start('Game');
   }
-  create() {
-    const socket = io();
-    console.log(socket);
-  }
 }
 
 window.game = new Game(config);
