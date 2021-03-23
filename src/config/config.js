@@ -8,11 +8,12 @@ export default {
   height: 600,
   backgroundColor: '#dddddd',
   plugins: {
-    scene: [{
-      key: 'rexBoard',
-      plugin: BoardPlugin,
-      mapping: 'rexBoard'
-    },
-  ]
-}
+    scene: [
+      {
+        key: 'rexBoard',
+        plugin: BoardPlugin,
+        mapping: 'rexBoard',
+      },
+    ],
+  },
 };

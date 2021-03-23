@@ -2,16 +2,13 @@ import 'phaser';
 
 import firebase from 'firebase/app';
 import 'firebase/database';
-import Dice from '../objects/Dice'
-import config from '../config/config'
-
-import {
-  Board,
-  HexagonGrid,
-  QuadGrid,
-} from 'phaser3-rex-plugins/plugins/board-components.js';
+import Dice from '../objects/Dice';
+import config from '../config/config';
 
 import io from 'socket.io-client';
+
+import MyBoard from '../objects/MyBoard';
+import ChessPiece from '../objects/ChessPiece';
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -20,23 +17,30 @@ export default class GameScene extends Phaser.Scene {
 
   preload() {
     // load images
-    this.load.image('blueButton1', 'assets/blue_button02.png')
-    this.load.image('blueButton2', 'assets/blue_button03.png')
+    this.load.image('blueButton1', 'assets/blue_button02.png');
+    this.load.image('blueButton2', 'assets/blue_button03.png');
   }
 
   create() {
-    //const socket = io();
+    // CREATING BOARD
+    const board = new MyBoard(this);
     this.socket = io();
-    if(this.socket.lifeTiles === undefined){
-      this.socket.lifeTiles = []
-      this.socket.career = {}
-      this.socket.salary = {}
-      this.socket.home = {}
-      this.socket.bank = 0
-      this.socket.roll = 0
+    if (this.socket.lifeTiles === undefined) {
+      this.socket.lifeTiles = [];
+      this.socket.career = {};
+      this.socket.salary = {};
+      this.socket.home = {};
+      this.socket.bank = 0;
+      this.socket.roll = 0;
+      this.socket.gamePiece = new ChessPiece(board, {
+        x: 0,
+        y: 4,
+      });
     }
-    console.log(this.socket)
-    
+
+    // const path = this.socket.gamePiece.monopoly.getPath(20);
+    // this.socket.gamePiece.moveAlongPath(path);
+
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
@@ -50,69 +54,20 @@ export default class GameScene extends Phaser.Scene {
     //     console.log('THIS IS THE FANCY HOUSE', snapshot.val());
     //   });
 
-    // CREATING BOARD
-    // 0: red
-    // 1: orange
-    // 2: life
-    // 3: green
-    const tiles = [
-      '111    ',
-      '2 2   0',
-      '1 032 1',
-      '2 2 1 3',
-      '011 1 2',
-      '    112',
-      '       ',
-    ];
-
-    let gridded = {
-      grid: {
-        gridType: 'quadGrid',
-        x: 130,
-        y: 30,
-        cellWidth: 60,
-        cellHeight: 60,
-        type: 'orthogonal',
-      },
-      width: 7,
-      height: 7,
-    };
-
-    const board = this.rexBoard.add.board(gridded);
-
-    for (let i = 0; i < board.width; i++) {
-      for (let j = 0; j < board.height; j++) {
-        let number = tiles[i][j];
-        let color;
-        if (number === '0') {
-          color = 0xff0000;
-        } else if (number === '1') {
-          color = 0xffa500;
-        } else if (number === '2') {
-          color = 0xffc0cb;
-        } else if (number === '3') {
-          color = 0x00cc00;
-        } else {
-          continue;
-        }
-        this.rexBoard.add
-          .shape(board, j, i, 1, color)
-          .setStrokeStyle(1, 0xffffff, 1);
-      }
-    }
-
-    // const board = new Board(this, gridded);
-    // let gameObj = this.add.circle(0, 0, 10, 0x000000);
-    // let chess = board.addChess(gameObj, 0, 4, 2);
-    // board.setInteractive();
-    // board.on('pointerdown', function (pointer, board) {
-    //   console.log('clicked');
-    // });
-    // setTimeout(() => {
-    //   board.moveChess(gameObj, 0, 2, 2);
-    // }, 2000);
-    this.gameDice = new Dice(this, config.width-50, config.height-50, 'blueButton1', 'blueButton2', "Spin!").setScale(.5)
+    this.gameDice = new Dice(
+      this,
+      config.width - 50,
+      config.height - 50,
+      'blueButton1',
+      'blueButton2',
+      'Spin!'
+    ).setScale(0.5);
   }
-  update(){
-  } 
+  update() {
+    if (this.socket.roll !== 0) {
+      const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
+      this.socket.gamePiece.moveAlongPath(path);
+      this.socket.roll = 0;
+    }
+  }
 }
