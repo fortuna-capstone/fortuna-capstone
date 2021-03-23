@@ -27,7 +27,16 @@ export default class GameScene extends Phaser.Scene {
   create() {
     //const socket = io();
     this.socket = io();
-    console.log(this.socket);
+    if(this.socket.lifeTiles === undefined){
+      this.socket.lifeTiles = []
+      this.socket.career = {}
+      this.socket.salary = {}
+      this.socket.home = {}
+      this.socket.bank = 0
+      this.socket.roll = 0
+    }
+    console.log(this.socket)
+    
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
@@ -93,15 +102,17 @@ export default class GameScene extends Phaser.Scene {
     }
 
     // const board = new Board(this, gridded);
-    let gameObj = this.add.circle(0, 0, 10, 0x000000);
-    let chess = board.addChess(gameObj, 0, 4, 2);
-    board.setInteractive();
-    board.on('pointerdown', function (pointer, board) {
-      console.log('clicked');
-    });
-    setTimeout(() => {
-      board.moveChess(gameObj, 0, 2, 2);
-    }, 2000);
+    // let gameObj = this.add.circle(0, 0, 10, 0x000000);
+    // let chess = board.addChess(gameObj, 0, 4, 2);
+    // board.setInteractive();
+    // board.on('pointerdown', function (pointer, board) {
+    //   console.log('clicked');
+    // });
+    // setTimeout(() => {
+    //   board.moveChess(gameObj, 0, 2, 2);
+    // }, 2000);
     this.gameDice = new Dice(this, config.width-50, config.height-50, 'blueButton1', 'blueButton2', "Spin!").setScale(.5)
-  }  
+  }
+  update(){
+  } 
 }
