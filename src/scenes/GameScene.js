@@ -6,6 +6,7 @@ import 'firebase/database';
 import io from 'socket.io-client';
 
 import MyBoard from '../objects/MyBoard';
+import ChessPiece from '../objects/ChessPiece';
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -34,6 +35,10 @@ export default class GameScene extends Phaser.Scene {
 
     // CREATING BOARD
     const board = new MyBoard(this);
+    const chess = new ChessPiece(board, {
+      x: 0,
+      y: 4,
+    });
 
     //   let gameObj = this.add.circle(0, 0, 10, 0x000000);
     //   board.addChess(gameObj, 0, 4, 2);
