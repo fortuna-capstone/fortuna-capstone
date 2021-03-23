@@ -15,10 +15,8 @@ export default class Dice extends Phaser.GameObjects.Container {
     this.add(this.text);
 
     this.button.on('pointerdown', function () {
-      const number = Phaser.Math.Between(0,10)
+      const number = Phaser.Math.Between(0,8)
       this.scene.socket.roll = number
-      console.log(this.scene.socket.roll)
-
     }.bind(this));
 
     this.button.on('pointerover', function () {
