@@ -3,13 +3,9 @@ import 'phaser';
 import firebase from 'firebase/app';
 import 'firebase/database';
 
-import {
-  Board,
-  HexagonGrid,
-  QuadGrid,
-} from 'phaser3-rex-plugins/plugins/board-components.js';
-
 import io from 'socket.io-client';
+
+import MyBoard from '../objects/MyBoard';
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -21,7 +17,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    //const socket = io();
     this.socket = io();
     console.log(this.socket);
     // const dbRefObject = firebase.database().ref().child('HOUSES');
@@ -38,86 +33,46 @@ export default class GameScene extends Phaser.Scene {
     //   });
 
     // CREATING BOARD
-    // 0: red
-    // 1: orange
-    // 2: life
-    // 3: green
-    const tiles = [
-      '111    ',
-      '2 2   0',
-      '1 032 1',
-      '2 2 1 3',
-      '011 1 2',
-      '    112',
-      '       ',
-    ];
+    const board = new MyBoard(this);
 
-    const COLORMAP = [0xff0000, 0xffa500, 0xffc0cb, 0x00cc00];
+    //   let gameObj = this.add.circle(0, 0, 10, 0x000000);
+    //   board.addChess(gameObj, 0, 4, 2);
 
-    let gridded = {
-      grid: {
-        gridType: 'quadGrid',
-        x: 130,
-        y: 30,
-        cellWidth: 60,
-        cellHeight: 60,
-        type: 'orthogonal',
-      },
-      width: 7,
-      height: 7,
-    };
+    //   gameObj.monopoly = this.rexBoard.add.monopoly(gameObj, {
+    //     face: 3,
+    //     pathTileZ: 0,
+    //     costCallback: function (curTileXY, preTileXY, monopoly) {
+    //       const board = monopoly.board;
+    //       return board
+    //         .tileXYZToChess(curTileXY.x, curTileXY.y, 0)
+    //         .getData('cost');
+    //     },
+    //   });
 
-    const board = this.rexBoard.add.board(gridded);
+    //   gameObj.moveTo = this.rexBoard.add.moveTo(gameObj);
 
-    for (let tileX = 0; tileX < board.width; tileX++) {
-      for (let tileY = 0; tileY < board.height; tileY++) {
-        let symbol = tiles[tileX][tileY];
-        if (symbol === ' ') {
-          continue;
-        }
-        let cost = 1;
-        if (symbol === '0') {
-          cost = 0;
-        }
-        this.rexBoard.add
-          .shape(board, tileY, tileX, 0, COLORMAP[symbol])
-          .setStrokeStyle(1, 0xffffff, 1).setData('cost', cost);
-      }
-    }
+    //   const path = gameObj.monopoly.getPath(20);
 
-    let gameObj = this.add.circle(0, 0, 10, 0x000000);
-    board.addChess(gameObj, 0, 4, 2);
+    //   const moveAlongPath = (path) => {
+    //     if (!path.length) {
+    //       return;
+    //     }
+    //     let tile = path.shift();
+    //     gameObj.moveTo.moveTo(tile);
+    //     if (!tile.cost) {
+    //       return;
+    //     }
+    //     gameObj.moveTo.once(
+    //       'complete',
+    //       () => {
+    //         moveAlongPath(path);
+    //       },
+    //       gameObj
+    //     );
+    //     gameObj.monopoly.setFace(gameObj.moveTo.destinationDirection);
+    //     return gameObj;
+    //   };
 
-    gameObj.monopoly = this.rexBoard.add.monopoly(gameObj, {
-      face: 3,
-      pathTileZ: 0,
-      costCallback: function(curTileXY, preTileXY, monopoly) {
-        const board = monopoly.board;
-        return board.tileXYZToChess(curTileXY.x, curTileXY.y, 0).getData('cost');
-      }
-    })
-
-    gameObj.moveTo = this.rexBoard.add.moveTo(gameObj);
-
-    const path = gameObj.monopoly.getPath(20);
-
-    const moveAlongPath = path => {
-      if (!path.length) {
-          return;
-      }
-      let tile = path.shift();
-      gameObj.moveTo.moveTo(tile);
-      if (!tile.cost) {
-        return;
-      }
-      gameObj.moveTo.once('complete', () => {
-        moveAlongPath(path);
-      }, gameObj);
-      gameObj.monopoly.setFace(gameObj.moveTo.destinationDirection);
-      return gameObj;
-    }
-
-    moveAlongPath(path)
-
+    //   moveAlongPath(path);
   }
 }
