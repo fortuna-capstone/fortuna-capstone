@@ -2,6 +2,8 @@ import 'phaser';
 
 import firebase from 'firebase/app';
 import 'firebase/database';
+import Dice from '../objects/Dice'
+import config from '../config/config'
 
 import io from 'socket.io-client';
 
@@ -15,11 +17,22 @@ export default class GameScene extends Phaser.Scene {
 
   preload() {
     // load images
+    this.load.image('blueButton1', 'assets/blue_button02.png')
+    this.load.image('blueButton2', 'assets/blue_button03.png')
   }
 
   create() {
     this.socket = io();
-    console.log(this.socket);
+    if(this.socket.lifeTiles === undefined){
+      this.socket.lifeTiles = []
+      this.socket.career = {}
+      this.socket.salary = {}
+      this.socket.home = {}
+      this.socket.bank = 0
+      this.socket.roll = 0
+    }
+    console.log(this.socket)
+    
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
@@ -40,6 +53,8 @@ export default class GameScene extends Phaser.Scene {
       y: 4,
     });
 
+    console.log('CHESS', chess)
+
     //   let gameObj = this.add.circle(0, 0, 10, 0x000000);
     //   board.addChess(gameObj, 0, 4, 2);
 
@@ -56,7 +71,8 @@ export default class GameScene extends Phaser.Scene {
 
     //   gameObj.moveTo = this.rexBoard.add.moveTo(gameObj);
 
-    //   const path = gameObj.monopoly.getPath(20);
+      const path = chess.monopoly.getPath(20);
+      chess.moveAlongPath(path)
 
     //   const moveAlongPath = (path) => {
     //     if (!path.length) {
@@ -79,5 +95,19 @@ export default class GameScene extends Phaser.Scene {
     //   };
 
     //   moveAlongPath(path);
+    // const board = new Board(this, gridded);
+    // let gameObj = this.add.circle(0, 0, 10, 0x000000);
+    // let chess = board.addChess(gameObj, 0, 4, 2);
+    // board.setInteractive();
+    // board.on('pointerdown', function (pointer, board) {
+    //   console.log('clicked');
+    // });
+    // setTimeout(() => {
+    //   board.moveChess(gameObj, 0, 2, 2);
+    // }, 2000);
+    this.gameDice = new Dice(this, config.width-50, config.height-50, 'blueButton1', 'blueButton2', "Spin!").setScale(.5)
+
   }
+  update(){
+  } 
 }

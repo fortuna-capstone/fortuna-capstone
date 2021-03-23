@@ -3,19 +3,41 @@ import 'phaser';
 export default class ChessPiece extends RexPlugins.Board.Shape {
   constructor(board, tileXY) {
     const scene = board.scene;
-    super(board, tileXY.x, tileXY.y, 1, 0xffc0cb);
+    super(board, tileXY.x, tileXY.y, 1, 0x000000);
     scene.add.existing(this);
     this.setScale(0.5);
 
-    console.log('PHASER RexPlugins OBJECT', RexPlugins.Board);
+    this.monopoly = scene.rexBoard.add.monopoly(this, {
+      face: 3,
+      pathTileZ: 0,
+      costCallback: function (curTileXY, preTileXY, monopoly) {
+        const board = monopoly.board;
+        return board
+          .tileXYZToChess(curTileXY.x, curTileXY.y, 0)
+          .getData('cost');
+        },
+    });
 
-    // console.log('THIS', this);
-    // scene.add.existing(this);
-    // this.type = 'circle';
+    this.moveTo = scene.rexBoard.add.moveTo(this);
   }
-  putPieceOnBoard(board, piece, x, y, z) {
-    return board.addChess(piece, x, y, z);
+
+  moveAlongPath(path) {
+    if (!path.length) {
+      return;
+    }
+    let tile = path.shift();
+    this.moveTo.moveTo(tile);
+    if (!tile.cost) {
+      return;
+    }
+    this.moveTo.once('complete', () => { 
+      this.moveAlongPath(path);
+    }, this);
+    return this;
   }
+  // putPieceOnBoard(board, piece, x, y, z) {
+  //   return board.addChess(piece, x, y, z);
+  // }
 }
 
 // import 'phaser';
