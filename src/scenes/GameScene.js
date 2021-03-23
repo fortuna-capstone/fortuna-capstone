@@ -2,6 +2,8 @@ import 'phaser';
 
 import firebase from 'firebase/app';
 import 'firebase/database';
+import Dice from '../objects/Dice'
+import config from '../config/config'
 
 import {
   Board,
@@ -18,6 +20,8 @@ export default class GameScene extends Phaser.Scene {
 
   preload() {
     // load images
+    this.load.image('blueButton1', 'assets/blue_button02.png')
+    this.load.image('blueButton2', 'assets/blue_button03.png')
   }
 
   create() {
@@ -98,6 +102,6 @@ export default class GameScene extends Phaser.Scene {
     setTimeout(() => {
       board.moveChess(gameObj, 0, 2, 2);
     }, 2000);
-    console.log('CHESS', chess);
-  }
+    this.gameDice = new Dice(this, config.width-50, config.height-50, 'blueButton1', 'blueButton2', "Spin!").setScale(.5)
+  }  
 }
