@@ -24,6 +24,7 @@ server.listen(port, function () {
 
 io.on('connection', (socket) => {
   console.log(`Connected to the ${socket.id}`);
+  socket.emit('roll', 'someone has rolled');
 });
 
 // socket.on('connect', () => {
