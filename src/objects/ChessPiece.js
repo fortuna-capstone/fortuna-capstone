@@ -3,11 +3,11 @@ import 'phaser';
 export default class ChessPiece extends RexPlugins.Board.Shape {
   constructor(board, tileXY) {
     const scene = board.scene;
-    super(board, tileXY);
-    this.gameObj = scene.add.circle(0, 0, 10, 0x000000);
-    this.putPieceOnBoard(board, this.gameObj, tileXY.x, tileXY.y, 1);
+    super(board, tileXY.x, tileXY.y, 1, 0xffc0cb);
+    scene.add.existing(this);
+    this.setScale(0.5);
 
-    console.log('PHASER GAME OBJECT', Phaser.GameObjects);
+    console.log('PHASER RexPlugins OBJECT', RexPlugins.Board);
 
     // console.log('THIS', this);
     // scene.add.existing(this);
