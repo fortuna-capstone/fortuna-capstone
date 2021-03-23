@@ -47,6 +47,8 @@ export default class GameScene extends Phaser.Scene {
       '       ',
     ];
 
+    const COLORMAP = [0xff0000, 0xffa500, 0xffc0cb, 0x00cc00];
+
     let gridded = {
       grid: {
         gridType: 'quadGrid',
@@ -62,37 +64,55 @@ export default class GameScene extends Phaser.Scene {
 
     const board = this.rexBoard.add.board(gridded);
 
-    for (let i = 0; i < board.width; i++) {
-      for (let j = 0; j < board.height; j++) {
-        let number = tiles[i][j];
-        let color;
-        if (number === '0') {
-          color = 0xff0000;
-        } else if (number === '1') {
-          color = 0xffa500;
-        } else if (number === '2') {
-          color = 0xffc0cb;
-        } else if (number === '3') {
-          color = 0x00cc00;
-        } else {
+    for (let tileX = 0; tileX < board.width; tileX++) {
+      for (let tileY = 0; tileY < board.height; tileY++) {
+        let symbol = tiles[tileX][tileY];
+        if (symbol === ' ') {
           continue;
         }
+        let cost = 1;
+        if (symbol === '0') {
+          cost = 0;
+        }
         this.rexBoard.add
-          .shape(board, j, i, 1, color)
-          .setStrokeStyle(1, 0xffffff, 1);
+          .shape(board, tileY, tileX, 0, COLORMAP[symbol])
+          .setStrokeStyle(1, 0xffffff, 1).setData('cost', cost);
       }
     }
 
-    // const board = new Board(this, gridded);
     let gameObj = this.add.circle(0, 0, 10, 0x000000);
-    let chess = board.addChess(gameObj, 0, 4, 2);
-    board.setInteractive();
-    board.on('pointerdown', function (pointer, board) {
-      console.log('clicked');
-    });
-    setTimeout(() => {
-      board.moveChess(gameObj, 0, 2, 2);
-    }, 2000);
-    console.log('CHESS', chess);
+    board.addChess(gameObj, 0, 4, 2);
+
+    gameObj.monopoly = this.rexBoard.add.monopoly(gameObj, {
+      face: 3,
+      pathTileZ: 0,
+      costCallback: function(curTileXY, preTileXY, monopoly) {
+        const board = monopoly.board;
+        return board.tileXYZToChess(curTileXY.x, curTileXY.y, 0).getData('cost');
+      }
+    })
+
+    gameObj.moveTo = this.rexBoard.add.moveTo(gameObj);
+
+    const path = gameObj.monopoly.getPath(20);
+
+    const moveAlongPath = path => {
+      if (!path.length) {
+          return;
+      }
+      let tile = path.shift();
+      gameObj.moveTo.moveTo(tile);
+      if (!tile.cost) {
+        return;
+      }
+      gameObj.moveTo.once('complete', () => {
+        moveAlongPath(path);
+      }, gameObj);
+      gameObj.monopoly.setFace(gameObj.moveTo.destinationDirection);
+      return gameObj;
+    }
+
+    moveAlongPath(path)
+
   }
 }
