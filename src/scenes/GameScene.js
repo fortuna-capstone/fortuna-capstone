@@ -10,6 +10,8 @@ import io from 'socket.io-client';
 import MyBoard from '../objects/MyBoard';
 import ChessPiece from '../objects/ChessPiece';
 
+let counter;
+
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
     super('Game');
@@ -68,26 +70,25 @@ export default class GameScene extends Phaser.Scene {
     ).setScale(0.5);
   }
 
-  getCurrentTile() {
-    const curTile = this.board.chessToTileXYZ(this.socket.gamePiece);
-    console.log('CURRENT TILE', curTile);
+  getCurrentTile(updatedCoords) {
+    const curTile = this.board.chessToTileXYZ(updatedCoords);
     console.log(
       this.board.tileXYZToChess(curTile.x, curTile.y, 0).data.list.description
     );
     return curTile;
   }
+
   movePiece() {
     const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
-    const newPiece = this.socket.gamePiece.moveAlongPath(path);
-    console.log('NEW PIECE', newPiece);
-    const curTile = this.board.chessToTileXYZ(newPiece);
-    console.log('CURRENT TILE', curTile);
+    this.socket.gamePiece.moveAlongPath(path);
+    console.log('THIS.CURRENTTILE', this.currentTile);
+    // return this.getCurrentTile(updatedCoords);
   }
 
   update() {
     if (this.socket.roll !== 0) {
+      // this.getCurrentTile();
       this.movePiece();
-
       this.socket.roll = 0;
     }
   }
