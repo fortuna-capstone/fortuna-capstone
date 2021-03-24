@@ -1,29 +1,42 @@
 import 'phaser';
+import config from '../config/config'
 
-export default class MessageBox extends Phaser.GameObjects.Container {
-  constructor(scene, x, y) {
+export default class Button extends Phaser.GameObjects.Container {
+  constructor(scene, x, y, key1, key2, key3, description) {
     super(scene);
     this.scene = scene;
+    const width = config.width / 2;
+    const height = config.height / 2;
+    const msgBox = this.scene.add.group();
 
-    this.button = this.scene.add.sprite(0, 0, key1).setInteractive();
-    this.text = this.scene.add.text(0, 0, 'hello', { fontSize: '32px', fill: '#fff' });
-    Phaser.Display.Align.In.Center(this.text, this.button);
+    const box = this.scene.add.sprite(width, height, key1).setScale(0.5);
+    const button = this.scene.add.sprite(width, height + 50, key2).setInteractive();
+    const buttonText = this.scene.add.text(0, 0, 'Okay', {fontSize: '32px', fill: '#fff'}).setScale(0.9);
+    Phaser.Display.Align.In.Center(buttonText, button);
 
-    this.add(this.button);
-    this.add(this.text);
+    const text = this.scene.add.text(0, 0, description, {fontSize: '20px', fill: '#000', wordWrap: {width: 220}, align: 'center'})
+    // text.wordWrap = {width: 50, useAdvancedWrap: true};
+    Phaser.Display.Align.In.TopCenter(text, box);
+    text.y = 210;
 
-    this.button.on('pointerdown', function () {
-      this.scene.scene.start(targetScene);
-    }.bind(this));
+    msgBox.add(box);
+    msgBox.add(button);
+    msgBox.add(buttonText);
+    msgBox.add(text);
+    console.log(msgBox)
 
-    this.button.on('pointerover', function () {
-      this.button.setTexture(key2);
-    }.bind(this));
 
-    this.button.on('pointerout', function () {
-      this.button.setTexture(key1);
-    }.bind(this));
+    button.on('pointerdown', function () {
+      msgBox.destroy(true);
+    });
 
-    this.scene.add.existing(this);
+    button.on('pointerover', function () {
+      button.setTexture(key3);
+    });
+
+    button.on('pointerout', function () {
+      button.setTexture(key2);
+    });
+
   }
 }

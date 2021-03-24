@@ -10,6 +10,7 @@ import io from 'socket.io-client';
 import MyBoard from '../objects/MyBoard';
 import ChessPiece from '../objects/ChessPiece';
 import tilemap from '../objects/tilemap';
+import MessageBox from '../objects/MessageBox'
 
 let tile;
 let counter;
@@ -28,13 +29,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-<<<<<<< HEAD
-=======
     const board = new MyBoard(this);
 
     // CREATING BOARD
     // const board = new MyBoard(this);
->>>>>>> main
     this.board = new MyBoard(this);
     this.socket = io();
     if (this.socket.lifeTiles === undefined) {
@@ -49,29 +47,19 @@ export default class GameScene extends Phaser.Scene {
         y: 4,
       });
     }
-<<<<<<< HEAD
  
     console.log(this.socket)
-=======
-
-    //     this.board.addChess(this.socket.gamePiece);
-    //     console.log('BOARD', this.board);
-
-    // const path = this.socket.gamePiece.monopoly.getPath(20);
-    // this.socket.gamePiece.moveAlongPath(path);
-    console.log(this.socket);
->>>>>>> main
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
+    // this.message = new MessageBox(
+    //   this,
+    //   0,
+    //   0,
+    //   'messageBox',
+    //   'blueButton1',
 
-    const messageBox = new messageBox(
-      this,
-      config.width - 50,
-      config.height - 50,
-      'messageBox',
-      'blueButton1'
-    )
+    // )
     // firebase
     //   .database()
     //   .ref()
@@ -94,23 +82,6 @@ export default class GameScene extends Phaser.Scene {
 
   movePiece() {
     const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
-<<<<<<< HEAD
-    this.socket.gamePiece.moveAlongPath(path);
-  }
-
-  update() {
-    if (this.socket.roll) {
-      counter = this.socket.roll;
-      this.movePiece();
-      this.socket.roll = 0;
-    }
-    if(this.currentTile !== tile ){
-      tile = this.currentTile;
-      counter--;
-      if(!counter){
-        console.log("in counter", tile)
-        this.getCurrentTile(tile)
-=======
     let updatedPath = [];
     for (let i = 0; i < path.length; i++) {
       let currentTileCost = path[i].cost;
@@ -136,12 +107,20 @@ export default class GameScene extends Phaser.Scene {
       counter--;
       if (!counter || !tile.cost) {
         let activeTile = tilemap[tile.y][tile.x]
-        alert(
+        // alert(
+        //   activeTile.description
+        // );
+        new MessageBox(
+          this,
+          0,
+          0,
+          'messageBox',
+          'blueButton1',
+          'blueButton2',
           activeTile.description
-        );
+        )
         let action = activeTile.operation
         action(this.scene)
->>>>>>> main
       }
     }
   }
