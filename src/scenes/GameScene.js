@@ -9,9 +9,10 @@ import io from 'socket.io-client';
 
 import MyBoard from '../objects/MyBoard';
 import ChessPiece from '../objects/ChessPiece';
+import tilemap from '../objects/tilemap';
 
 let tile;
-let counter
+let counter;
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -27,6 +28,13 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+<<<<<<< HEAD
+=======
+    const board = new MyBoard(this);
+
+    // CREATING BOARD
+    // const board = new MyBoard(this);
+>>>>>>> main
     this.board = new MyBoard(this);
     this.socket = io();
     if (this.socket.lifeTiles === undefined) {
@@ -41,8 +49,18 @@ export default class GameScene extends Phaser.Scene {
         y: 4,
       });
     }
+<<<<<<< HEAD
  
     console.log(this.socket)
+=======
+
+    //     this.board.addChess(this.socket.gamePiece);
+    //     console.log('BOARD', this.board);
+
+    // const path = this.socket.gamePiece.monopoly.getPath(20);
+    // this.socket.gamePiece.moveAlongPath(path);
+    console.log(this.socket);
+>>>>>>> main
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
@@ -72,21 +90,11 @@ export default class GameScene extends Phaser.Scene {
       'blueButton2',
       'Spin!'
     ).setScale(0.5);
-   
   }
-
-  getCurrentTile(updatedCoords) {
-    const curTile = this.board.chessToTileXYZ(updatedCoords);
-    alert(
-      this.board.tileXYZToChess(curTile.x, curTile.y, 0).data.list.description
-    );
-    return curTile;
-  }
-
-
 
   movePiece() {
     const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
+<<<<<<< HEAD
     this.socket.gamePiece.moveAlongPath(path);
   }
 
@@ -102,8 +110,39 @@ export default class GameScene extends Phaser.Scene {
       if(!counter){
         console.log("in counter", tile)
         this.getCurrentTile(tile)
+=======
+    let updatedPath = [];
+    for (let i = 0; i < path.length; i++) {
+      let currentTileCost = path[i].cost;
+      updatedPath.push(path[i]);
+      if (currentTileCost === 0) {
+        break;
+      }
+    }
+    this.socket.gamePiece.moveAlongPath(updatedPath);
+
+    // return this.getCurrentTile(updatedCoords);
+  }
+
+  update() {
+    if (this.socket.roll !== 0) {
+      counter = this.socket.roll;
+      // this.getCurrentTile();
+      this.movePiece();
+      this.socket.roll = 0;
+    }
+    if (this.currentTile !== tile) {
+      tile = this.currentTile;
+      counter--;
+      if (!counter || !tile.cost) {
+        let activeTile = tilemap[tile.y][tile.x]
+        alert(
+          activeTile.description
+        );
+        let action = activeTile.operation
+        action(this.scene)
+>>>>>>> main
       }
     }
   }
- 
 }
