@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - 14 # uses version 14
+dist: xenial # uses xenial environment
+notifications:
+  email:
+    on_success: change # default: change (only when going from broken to fixed)
+    on_failure: always # default: always (which is annoying, as it should be)
+install:
+  - npm ci # faster, goes only from package-lock
+before_script:
+  
+script:
+  # - npm test # test the code
+  - npm run build-client # make the bundle
+before_deploy: # omit node_modules, since we set skip_cleanup below
+  - rm -rf node_modules
+deploy: # see README for details on these keys
+  # prevents travis from deleting the build
+  skip_cleanup: true
+  provider: heroku
+  # app should be your heroku app name; see README
+  app: gol-developer-edition
+  # the secure key indicates an encrypted value; see README
+  api_key:
+    secure: LjhBxKeC7FZeADO4ioPTLyW4IHQSARZUYG9uCTDb9ubiWHTW9Kq02Zm6rCU1KBnwj3ShLGyZ1PbME85OtFRzPkhH0UgHj+dqTIpcNVK7b4qpe23SeJav+f47dRDzME9aG2wv07VVRsDF5NFBgmaGw4/QXQcwhEL5fOlFXmtJAUzfQbDF/XnVYXT0RxX7yq4ajQhwj6B3IzspN8onxWIoEP1adfg2Ju92dZJctF5rF1encHo6SRE3aoqw5YSUUFpWukBxy1DHmACh3tul+rr4Ww4exiEQdNoR+SdOF2ARhTqvdyJj19rSb6EbEAi9RzVv7Jo6P4bQm9s6Pbv1iqpyu+6CSuRNMLwJaTb2Oui+erVn1ZQPzQdtENBIlyDYapVKZircSvsKwtv1+m5FXqmLux4YbUfeylTAviKWuiG+YMbldT50VSV+Dy4tvRR3Tj9P+7KW/dIv2azTT9uQOKhY1rqnWF9R2MlMaXyDqJmSsbE/eX1y+9UM08/C7P2FIcSOcRCwG4Ef94WGktd7panpZzGkwFOSAWUycBsw5RCwRw7v43mvE14VU5tK0ruWUAI0ZkSYq08z4IeKWLk5pWGddI2A3Ro0+z5sVzHNiDF9KeGUveI97YKaHBeOn/cFA1rMBoMI5+1sQajq6P94Hdrua8XWSKb9+Nw0g6AIl3qGvyE=
