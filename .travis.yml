@@ -8,8 +8,8 @@ notifications:
     on_failure: always # default: always (which is annoying, as it should be)
 install:
   - npm ci # faster, goes only from package-lock
-before_script:
-  
+before_script: null
+
 script:
   # - npm test # test the code
   - npm run build-client # make the bundle
@@ -23,4 +23,4 @@ deploy: # see README for details on these keys
   app: gol-developer-edition
   # the secure key indicates an encrypted value; see README
   api_key:
-    secure: LjhBxKeC7FZeADO4ioPTLyW4IHQSARZUYG9uCTDb9ubiWHTW9Kq02Zm6rCU1KBnwj3ShLGyZ1PbME85OtFRzPkhH0UgHj+dqTIpcNVK7b4qpe23SeJav+f47dRDzME9aG2wv07VVRsDF5NFBgmaGw4/QXQcwhEL5fOlFXmtJAUzfQbDF/XnVYXT0RxX7yq4ajQhwj6B3IzspN8onxWIoEP1adfg2Ju92dZJctF5rF1encHo6SRE3aoqw5YSUUFpWukBxy1DHmACh3tul+rr4Ww4exiEQdNoR+SdOF2ARhTqvdyJj19rSb6EbEAi9RzVv7Jo6P4bQm9s6Pbv1iqpyu+6CSuRNMLwJaTb2Oui+erVn1ZQPzQdtENBIlyDYapVKZircSvsKwtv1+m5FXqmLux4YbUfeylTAviKWuiG+YMbldT50VSV+Dy4tvRR3Tj9P+7KW/dIv2azTT9uQOKhY1rqnWF9R2MlMaXyDqJmSsbE/eX1y+9UM08/C7P2FIcSOcRCwG4Ef94WGktd7panpZzGkwFOSAWUycBsw5RCwRw7v43mvE14VU5tK0ruWUAI0ZkSYq08z4IeKWLk5pWGddI2A3Ro0+z5sVzHNiDF9KeGUveI97YKaHBeOn/cFA1rMBoMI5+1sQajq6P94Hdrua8XWSKb9+Nw0g6AIl3qGvyE=
+    secure: eurXcv2qDU3aTn6KTPJ0s/YzvxGzlX+1bnrs8otj/3iGSRUFSMG5eJLh2tmyxtiFjtC9ZT1pZ7QcnsQjrU2rWEvc7oKvBhes6PBAxN0OAXB3cKoCErbtgXw4ya8iq8fkzlsMld1Ynv4BdzAu5hy5/5BEFmtNkMpEiPy4yuXQUuinmB+sx7r1xw7X2+upFjcNF7oTjVxZubG7ki1/xjhwtpD8cSQCr8yPCPCxZNS48CIHx6AAHSvFsg7mjU96eZqvpZAulm+GoJBDkHHO/IuCWoUoW/ZeUoZqjNHRPJqGYt1SXiTkmnLSEGYSIopwucXo2jgbv/Ck/Q9bW140nDJsowZmXv9Dao7Tf3vYjj7LCxBNNz1gkjMMHCGv9EtumO71KFYvGWEmlPwTeLp3Zre5WT6cK92HY8P7HS68H+FcFa6e2t82Qv4rLfxZZYmzG6lU4dG36spW3DA24ztRrhWFB3rosDqjRIJ+3ssX02HG39ls/9xZUwpv2TADHHB/RQr7PSlp3AQVkltDe2AkDRUD+RS9fC/CGNydPrm+UZE/FctK0qwZWdL8XP6CIkm5tIU0bnLWQ2EAX0KGygadiWHpiqWXtp+F6be5q/gG5O2Ocnitm87gstZl4RAIVT9PwZmU207scxnPFb6s4OTtJqLLCOi3pW2TqmFr9fBrf9IjWpM=
