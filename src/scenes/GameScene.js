@@ -42,12 +42,13 @@ export default class GameScene extends Phaser.Scene {
         y: 4,
       });
     }
-    this.board.addChess(this.socket.gamePiece);
-    console.log('BOARD', this.board);
+ 
+//     this.board.addChess(this.socket.gamePiece);
+//     console.log('BOARD', this.board);
 
     // const path = this.socket.gamePiece.monopoly.getPath(20);
     // this.socket.gamePiece.moveAlongPath(path);
-
+    console.log(this.socket)
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
