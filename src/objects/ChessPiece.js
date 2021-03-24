@@ -6,9 +6,9 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
     super(board, tileXY.x, tileXY.y, 1, 0x000000);
     scene.add.existing(this);
     this.setScale(0.5);
-
+    this.start = 'bootcamp'
     this.monopoly = scene.rexBoard.add.monopoly(this, {
-      face: 3,
+      face: this.start === 'bootcamp' ? 4 : 3, // determines starting face direction
       pathTileZ: 0,
       costCallback: function (curTileXY, preTileXY, monopoly) {
         const board = monopoly.board;
@@ -32,10 +32,11 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
       this.moveTo.moveTo(tile);
       
       if (!tile.cost) {
-        console.log('TILE IN NO COST', tile);
+          this.changeDirectionAtStop(tile)
         this.scene.currentTile = tile;
         return;
       }
+       this.monopoly.setFace(this.moveTo.destinationDirection);
       this.moveTo.once(
         'complete',
         () => {
@@ -44,8 +45,17 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
         this
       );
     }
+  
   }
-  // putPieceOnBoard(board, piece, x, y, z) {
-  //   return board.addChess(piece, x, y, z);
-  // }
+
+  changeDirectionAtStop(tile) {
+    //changes direction at first stop
+    if (tile.x === 2 && tile.y === 2) {
+      this.monopoly.setFace(4) 
+    }
+  }
 }
+
+// putPieceOnBoard(board, piece, x, y, z) {
+//   return board.addChess(piece, x, y, z);
+// }

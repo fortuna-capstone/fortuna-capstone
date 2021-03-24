@@ -26,6 +26,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+
+    const board = new MyBoard(this);
+
     // CREATING BOARD
     // const board = new MyBoard(this);
     this.board = new MyBoard(this);
@@ -80,6 +83,8 @@ export default class GameScene extends Phaser.Scene {
     );
     return curTile;
   }
+
+
 
   movePiece() {
     const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
