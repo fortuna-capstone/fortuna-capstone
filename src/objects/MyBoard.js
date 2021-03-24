@@ -1,18 +1,20 @@
+import tilemap from './tilemap';
 // COLOR KEY:
 // 0: red
 // 1: orange
 // 2: life
 // 3: green
 
-const tiles = [
-  '111    ',
-  '2 2   0',
-  '1 032 1',
-  '2 2 1 3',
-  '011 1 2',
-  '    112',
-  '       ',
-];
+// const tiles = [
+//   '111    ',
+//   '2 2   0',
+//   '1 032 1',
+//   '2 2 1 3',
+//   '011 1 2',
+//   '    112',
+//   '       ',
+// ];
+const tiles = tilemap;
 const COLORMAP = [0xff0000, 0xffa500, 0xffc0cb, 0x00cc00];
 
 export default class MyBoard extends RexPlugins.Board.Board {
@@ -34,21 +36,25 @@ export default class MyBoard extends RexPlugins.Board.Board {
   }
 
   createTiles(tiles) {
-    for (let tileX = 0; tileX < tiles.length; tileX++) {
-      let line = tiles[tileX];
-      for (let tileY = 0; tileY < line.length; tileY++) {
-        let symbol = line[tileY];
-        if (symbol === ' ') {
+    for (let tileY = 0; tileY < tiles.length; tileY++) {
+      let line = tiles[tileY];
+      for (let tileX = 0; tileX < line.length; tileX++) {
+        let color = line[tileX].color;
+        let tile = line[tileX];
+        if (color === ' ') {
           continue;
         }
         let cost = 1;
-        if (symbol === '0') {
+        if (color === 0) {
           cost = 0;
         }
-        this.scene.rexBoard.add
-          .shape(this, tileY, tileX, 0, COLORMAP[symbol])
+        let data = { cost: cost, description: tile.description };
+        const tiles = this.scene.rexBoard.add
+          .shape(this, tileX, tileY, 0, COLORMAP[color])
           .setStrokeStyle(1, 0xffffff, 1)
-          .setData('cost', cost);
+          .setData('cost', cost)
+          .setData('description', tile.description)
+          .setData('operation', tile.operation);
       }
     }
     return this;

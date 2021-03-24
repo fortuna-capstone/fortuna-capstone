@@ -10,9 +10,13 @@ import io from 'socket.io-client';
 import MyBoard from '../objects/MyBoard';
 import ChessPiece from '../objects/ChessPiece';
 
+let tile;
+let counter
+
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
     super('Game');
+    this.board = null;
   }
 
   preload() {
@@ -23,7 +27,8 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     // CREATING BOARD
-    const board = new MyBoard(this);
+    // const board = new MyBoard(this);
+    this.board = new MyBoard(this);
     this.socket = io();
     if (this.socket.lifeTiles === undefined) {
       this.socket.lifeTiles = [];
@@ -32,13 +37,18 @@ export default class GameScene extends Phaser.Scene {
       this.socket.home = {};
       this.socket.bank = 0;
       this.socket.roll = 0;
-      this.socket.gamePiece = new ChessPiece(board, {
+      this.socket.gamePiece = new ChessPiece(this.board, {
         x: 0,
         y: 4,
       });
     }
-    console.log(this.socket)
+ 
+//     this.board.addChess(this.socket.gamePiece);
+//     console.log('BOARD', this.board);
 
+    // const path = this.socket.gamePiece.monopoly.getPath(20);
+    // this.socket.gamePiece.moveAlongPath(path);
+    console.log(this.socket)
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
@@ -60,12 +70,39 @@ export default class GameScene extends Phaser.Scene {
       'blueButton2',
       'Spin!'
     ).setScale(0.5);
+   
   }
+
+  getCurrentTile(updatedCoords) {
+    const curTile = this.board.chessToTileXYZ(updatedCoords);
+    alert(
+      this.board.tileXYZToChess(curTile.x, curTile.y, 0).data.list.description
+    );
+    return curTile;
+  }
+
+  movePiece() {
+    const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
+    this.socket.gamePiece.moveAlongPath(path);
+
+    // return this.getCurrentTile(updatedCoords);
+  }
+
   update() {
     if (this.socket.roll !== 0) {
-      const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
-      this.socket.gamePiece.moveAlongPath(path);
+      counter = this.socket.roll
+      // this.getCurrentTile();
+      this.movePiece();
       this.socket.roll = 0;
     }
+    if(this.currentTile !== tile ){
+      tile = this.currentTile
+      counter --
+      if(counter ===0){
+        console.log("in counter", tile)
+        this.getCurrentTile(tile)
+      }
+    }
   }
+ 
 }
