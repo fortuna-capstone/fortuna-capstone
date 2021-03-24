@@ -37,10 +37,7 @@ export default class GameScene extends Phaser.Scene {
         y: 4,
       });
     }
-<<<<<<< HEAD
-=======
     console.log(this.socket)
->>>>>>> main
 
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
