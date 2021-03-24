@@ -32,10 +32,11 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
       this.moveTo.moveTo(tile);
       
       if (!tile.cost) {
-        console.log('TILE IN NO COST', tile);
+          this.changeDirectionAtStop(tile)
         this.scene.currentTile = tile;
         return;
       }
+       this.monopoly.setFace(this.moveTo.destinationDirection);
       this.moveTo.once(
         'complete',
         () => {
@@ -44,23 +45,7 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
         this
       );
     }
-
-    let tile = path.shift();
-    this.moveTo.moveTo(tile);
-    if (!tile.cost) {
-      this.changeDirectionAtStop(tile)
-      return;
-    }
-    this.monopoly.setFace(this.moveTo.destinationDirection);
-    this.moveTo.once(
-      'complete',
-      () => {
-        this.moveAlongPath(path);
-      },
-      this
-    );
-    return this;
-
+  
   }
 
   changeDirectionAtStop(tile) {
