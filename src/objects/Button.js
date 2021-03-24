@@ -16,6 +16,7 @@ export default class Button extends Phaser.GameObjects.Container {
 
     this.button.on('pointerdown', function () {
       this.scene.scene.start(targetScene);
+      this.scene.socket.start = Phaser.Math.Between(0,20)
     }.bind(this));
 
     this.button.on('pointerover', function () {
