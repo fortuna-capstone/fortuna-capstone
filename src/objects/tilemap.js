@@ -74,6 +74,4 @@ const tilemap = [
   ],
 ];
 
-console.log('TILEMAP', tilemap);
-
 export default tilemap;
