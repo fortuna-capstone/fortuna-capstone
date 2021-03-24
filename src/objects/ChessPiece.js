@@ -22,9 +22,29 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
   }
 
   moveAlongPath(path) {
+    // console.log('THIS CURRENT TILE', this.currentTile);
     if (!path.length) {
       return;
+    } else {
+      let tile = path.shift();
+  
+      this.scene.currentTile = tile
+      this.moveTo.moveTo(tile);
+      
+      if (!tile.cost) {
+        console.log('TILE IN NO COST', tile);
+        this.scene.currentTile = tile;
+        return;
+      }
+      this.moveTo.once(
+        'complete',
+        () => {
+          this.moveAlongPath(path);
+        },
+        this
+      );
     }
+
     let tile = path.shift();
     this.moveTo.moveTo(tile);
     if (!tile.cost) {
@@ -40,6 +60,7 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
       this
     );
     return this;
+
   }
 
   changeDirectionAtStop(tile) {
