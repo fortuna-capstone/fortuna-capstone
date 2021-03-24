@@ -23,14 +23,10 @@ export default class GameScene extends Phaser.Scene {
     // load images
     this.load.image('blueButton1', 'assets/blue_button02.png');
     this.load.image('blueButton2', 'assets/blue_button03.png');
+    this.load.image('messageBox', 'assets/message_box.png');
   }
 
   create() {
-
-    const board = new MyBoard(this);
-
-    // CREATING BOARD
-    // const board = new MyBoard(this);
     this.board = new MyBoard(this);
     this.socket = io();
     if (this.socket.lifeTiles === undefined) {
@@ -46,15 +42,18 @@ export default class GameScene extends Phaser.Scene {
       });
     }
  
-//     this.board.addChess(this.socket.gamePiece);
-//     console.log('BOARD', this.board);
-
-    // const path = this.socket.gamePiece.monopoly.getPath(20);
-    // this.socket.gamePiece.moveAlongPath(path);
     console.log(this.socket)
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
+
+    const messageBox = new messageBox(
+      this,
+      config.width - 50,
+      config.height - 50,
+      'messageBox',
+      'blueButton1'
+    )
     // firebase
     //   .database()
     //   .ref()
@@ -89,21 +88,18 @@ export default class GameScene extends Phaser.Scene {
   movePiece() {
     const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
     this.socket.gamePiece.moveAlongPath(path);
-
-    // return this.getCurrentTile(updatedCoords);
   }
 
   update() {
-    if (this.socket.roll !== 0) {
-      counter = this.socket.roll
-      // this.getCurrentTile();
+    if (this.socket.roll) {
+      counter = this.socket.roll;
       this.movePiece();
       this.socket.roll = 0;
     }
     if(this.currentTile !== tile ){
-      tile = this.currentTile
-      counter --
-      if(counter ===0){
+      tile = this.currentTile;
+      counter--;
+      if(!counter){
         console.log("in counter", tile)
         this.getCurrentTile(tile)
       }
