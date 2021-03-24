@@ -1,5 +1,5 @@
 import Tile from './Tiles';
-import { test } from './operations';
+import { payday } from './operations';
 
 // COLOR KEY:
 // 0: red
@@ -19,61 +19,59 @@ import { test } from './operations';
 
 const tilemap = [
   [
-    new Tile(1, 'Orange Tile # 1', test),
-    new Tile(1, 'Orange Tile #2', test),
-    new Tile(1, 'Orange Tile #3', test),
+    new Tile(1, 'Orange Tile # 1', payday),
+    new Tile(1, 'Orange Tile #2', payday),
+    new Tile(1, 'Orange Tile #3', payday),
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
   ],
   [
-    new Tile(2, 'Life Tile # 1', test),
+    new Tile(2, 'Life Tile # 1', payday),
     new Tile(' '),
-    new Tile(2, 'Life Tile #2', test),
+    new Tile(2, 'Life Tile #2', payday),
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(0, 'Red Tile # 1', test),
+    new Tile(0, 'Red Tile # 1', payday),
   ],
   [
-    new Tile(1, 'Orange Tile # 4', test),
+    new Tile(1, 'Orange Tile # 4', payday),
     new Tile(' '),
-    new Tile(0, 'Red Tile #2', test),
-    new Tile(3, 'Green Tile #1', test),
-    new Tile(2, 'Life Tile #3', test),
+    new Tile(0, 'Red Tile #2', payday),
+    new Tile(3, 'Green Tile #1', payday),
+    new Tile(2, 'Life Tile #3', payday),
     new Tile(' '),
-    new Tile(1, 'Orange Tile #5', test),
+    new Tile(1, 'Orange Tile #5', payday),
   ],
   [
-    new Tile(2, 'Life Tile # 4', test),
+    new Tile(2, 'Life Tile # 4', payday),
     new Tile(' '),
-    new Tile(2, 'Life Tile #5', test),
+    new Tile(2, 'Life Tile #5', payday),
     new Tile(' '),
-    new Tile(1, 'Orange Tile #6', test),
+    new Tile(1, 'Orange Tile #6', payday),
     new Tile(' '),
-    new Tile(3, 'Green Tile #2', test),
+    new Tile(3, 'Green Tile #2', payday),
   ],
   [
-    new Tile(0, 'Red Tile # 3', test),
-    new Tile(1, 'Orange Tile #7', test),
-    new Tile(1, 'Orange Tile #8', test),
+    new Tile(0, 'Red Tile # 3', payday),
+    new Tile(1, 'Orange Tile #7', payday),
+    new Tile(1, 'Orange Tile #8', payday),
     new Tile(' '),
-    new Tile(1, 'Orange Tile #9', test),
+    new Tile(1, 'Orange Tile #9', payday),
     new Tile(' '),
-    new Tile(2, 'Life Tile #6', test),
+    new Tile(2, 'Life Tile #6', payday),
   ],
   [
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'Orange Tile # 10', test),
-    new Tile(1, 'Orange Tile #11', test),
-    new Tile(2, 'Life Tile #7', test),
+    new Tile(1, 'Orange Tile # 10', payday),
+    new Tile(1, 'Orange Tile #11', payday),
+    new Tile(2, 'Life Tile #7', payday),
   ],
 ];
-
-console.log('TILEMAP', tilemap);
 
 export default tilemap;

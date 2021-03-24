@@ -9,6 +9,7 @@ import io from 'socket.io-client';
 
 import MyBoard from '../objects/MyBoard';
 import ChessPiece from '../objects/ChessPiece';
+import tilemap from '../objects/tilemap';
 
 let tile;
 let counter
@@ -78,9 +79,9 @@ export default class GameScene extends Phaser.Scene {
 
   getCurrentTile(updatedCoords) {
     const curTile = this.board.chessToTileXYZ(updatedCoords);
-    alert(
-      this.board.tileXYZToChess(curTile.x, curTile.y, 0).data.list.description
-    );
+    // alert(
+    //   this.board.tileXYZToChess(curTile.x, curTile.y, 0).data.list.description
+    // );
     return curTile;
   }
 
@@ -89,12 +90,11 @@ export default class GameScene extends Phaser.Scene {
   movePiece() {
     const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
     this.socket.gamePiece.moveAlongPath(path);
-
-    // return this.getCurrentTile(updatedCoords);
   }
 
   update() {
     if (this.socket.roll !== 0) {
+      console.log(this.socket.roll)
       counter = this.socket.roll
       // this.getCurrentTile();
       this.movePiece();
@@ -104,8 +104,10 @@ export default class GameScene extends Phaser.Scene {
       tile = this.currentTile
       counter --
       if(counter ===0){
-        console.log("in counter", tile)
         this.getCurrentTile(tile)
+        console.log(tilemap)
+        let action = tilemap[tile.y][tile.x].operation
+        console.log(action)
       }
     }
   }
