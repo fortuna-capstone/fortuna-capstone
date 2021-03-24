@@ -12,7 +12,7 @@ import ChessPiece from '../objects/ChessPiece';
 import tilemap from '../objects/tilemap';
 
 let tile;
-let counter
+let counter;
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -27,7 +27,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-
     const board = new MyBoard(this);
 
     // CREATING BOARD
@@ -46,13 +45,13 @@ export default class GameScene extends Phaser.Scene {
         y: 4,
       });
     }
- 
-//     this.board.addChess(this.socket.gamePiece);
-//     console.log('BOARD', this.board);
+
+    //     this.board.addChess(this.socket.gamePiece);
+    //     console.log('BOARD', this.board);
 
     // const path = this.socket.gamePiece.monopoly.getPath(20);
     // this.socket.gamePiece.moveAlongPath(path);
-    console.log(this.socket)
+    console.log(this.socket);
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
@@ -74,42 +73,41 @@ export default class GameScene extends Phaser.Scene {
       'blueButton2',
       'Spin!'
     ).setScale(0.5);
-   
   }
-
-  getCurrentTile(updatedCoords) {
-    const curTile = this.board.chessToTileXYZ(updatedCoords);
-    // alert(
-    //   this.board.tileXYZToChess(curTile.x, curTile.y, 0).data.list.description
-    // );
-    return curTile;
-  }
-
-
 
   movePiece() {
     const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
-    this.socket.gamePiece.moveAlongPath(path);
+    let updatedPath = [];
+    for (let i = 0; i < path.length; i++) {
+      let currentTileCost = path[i].cost;
+      updatedPath.push(path[i]);
+      if (currentTileCost === 0) {
+        break;
+      }
+    }
+    this.socket.gamePiece.moveAlongPath(updatedPath);
+
+    // return this.getCurrentTile(updatedCoords);
   }
 
   update() {
     if (this.socket.roll !== 0) {
-      console.log(this.socket.roll)
-      counter = this.socket.roll
+      counter = this.socket.roll;
       // this.getCurrentTile();
       this.movePiece();
       this.socket.roll = 0;
     }
-    if(this.currentTile !== tile ){
-      tile = this.currentTile
-      counter --
-      if(counter ===0){
-        this.getCurrentTile(tile)
-        console.log(tilemap)
-        let action = tilemap[tile.y][tile.x].operation
-        console.log(action)
+    if (this.currentTile !== tile) {
+      tile = this.currentTile;
+      counter--;
+      if (!counter || !tile.cost) {
+        let activeTile = tilemap[tile.y][tile.x]
+        alert(
+          activeTile.description
+        );
+        let action = activeTile.operation
+        action(this.scene)
       }
     }
   }
- 
 }

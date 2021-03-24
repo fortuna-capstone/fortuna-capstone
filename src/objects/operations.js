@@ -2,18 +2,18 @@ export const test = () => {
   alert('This is a test!');
 };
 
-export const payday = () => {
-  this.scene.socket.bank += 100
-  console.log(this.scene.socket)
-
+export function payday(scene){
+  scene.scene.socket.bank += 100
 }
 
 // import 'phaser';
 
 // export default class Operations extends Phaser.Game{
-//   constructor(){
+//   constructor(scene, ){
 //     super()
 
 //   }
-
+//   create(){
+//   this.payday = () => 
+//   }
 // }
