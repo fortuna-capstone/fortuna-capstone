@@ -22,8 +22,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    // CREATING BOARD
     const board = new MyBoard(this);
+
     this.socket = io();
     if (this.socket.lifeTiles === undefined) {
       this.socket.lifeTiles = [];
@@ -37,9 +37,6 @@ export default class GameScene extends Phaser.Scene {
         y: 4,
       });
     }
-
-    // const path = this.socket.gamePiece.monopoly.getPath(20);
-    // this.socket.gamePiece.moveAlongPath(path);
 
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
@@ -63,6 +60,7 @@ export default class GameScene extends Phaser.Scene {
       'Spin!'
     ).setScale(0.5);
   }
+
   update() {
     if (this.socket.roll !== 0) {
       const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
