@@ -6,6 +6,7 @@
   "scripts": { 
     "start": "node server/index.js",
     "build-client": "webpack -w",
+    "deploy": "script/deploy",
     "start-dev": "npm run build-client & npm run start-server",
     "start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
     "heroku-token": "script/encrypt-heroku-auth-token.js"
