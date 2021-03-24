@@ -13,6 +13,7 @@ import ChessPiece from '../objects/ChessPiece';
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
     super('Game');
+    this.board = null;
   }
 
   preload() {
@@ -23,7 +24,8 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     // CREATING BOARD
-    const board = new MyBoard(this);
+    // const board = new MyBoard(this);
+    this.board = new MyBoard(this);
     this.socket = io();
     if (this.socket.lifeTiles === undefined) {
       this.socket.lifeTiles = [];
@@ -32,11 +34,13 @@ export default class GameScene extends Phaser.Scene {
       this.socket.home = {};
       this.socket.bank = 0;
       this.socket.roll = 0;
-      this.socket.gamePiece = new ChessPiece(board, {
+      this.socket.gamePiece = new ChessPiece(this.board, {
         x: 0,
         y: 4,
       });
     }
+    this.board.addChess(this.socket.gamePiece);
+    console.log('BOARD', this.board);
 
     // const path = this.socket.gamePiece.monopoly.getPath(20);
     // this.socket.gamePiece.moveAlongPath(path);
@@ -63,10 +67,27 @@ export default class GameScene extends Phaser.Scene {
       'Spin!'
     ).setScale(0.5);
   }
+
+  getCurrentTile() {
+    const curTile = this.board.chessToTileXYZ(this.socket.gamePiece);
+    console.log('CURRENT TILE', curTile);
+    console.log(
+      this.board.tileXYZToChess(curTile.x, curTile.y, 0).data.list.description
+    );
+    return curTile;
+  }
+  movePiece() {
+    const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
+    const newPiece = this.socket.gamePiece.moveAlongPath(path);
+    console.log('NEW PIECE', newPiece);
+    const curTile = this.board.chessToTileXYZ(newPiece);
+    console.log('CURRENT TILE', curTile);
+  }
+
   update() {
     if (this.socket.roll !== 0) {
-      const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
-      this.socket.gamePiece.moveAlongPath(path);
+      this.movePiece();
+
       this.socket.roll = 0;
     }
   }
