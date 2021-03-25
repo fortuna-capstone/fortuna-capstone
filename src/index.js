@@ -3,9 +3,11 @@ import config from './config/config';
 import GameScene from './scenes/GameScene';
 import TitleScene from './scenes/TitleScene';
 
-import firebase from 'firebase/app';
-import firebaseConfig from './config/firebaseConfig';
-firebase.initializeApp(firebaseConfig);
+// import firebase from 'firebase/app';
+// import firebaseConfig from './config/firebaseConfig';
+// firebase.initializeApp(firebaseConfig);
+
+// import db from './config/firebaseConfig';
 
 class Game extends Phaser.Game {
   constructor() {
