@@ -1,6 +1,6 @@
 import 'phaser';
 import Button from '../objects/Button';
-import config from '../config/config';
+import phaserConfig from '../config/phaserConfig';
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {
@@ -13,8 +13,8 @@ export default class TitleScene extends Phaser.Scene {
   create() {
     this.gameButton = new Button(
       this,
-      config.width / 2,
-      config.height / 2 - 100,
+      phaserConfig.width / 2,
+      phaserConfig.height / 2 - 100,
       'blueButton1',
       'blueButton2',
       'Play',

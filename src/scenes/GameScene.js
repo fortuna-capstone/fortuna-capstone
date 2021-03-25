@@ -4,7 +4,7 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 
 import Dice from '../objects/Dice';
-import config from '../config/config';
+import phaserConfig from '../config/phaserConfig';
 
 import io from 'socket.io-client';
 
@@ -16,7 +16,7 @@ import DecisionBox from '../objects/DecisionBox';
 
 let tile;
 let counter;
-let board
+let board;
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -29,44 +29,44 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('blueButton1', 'assets/blue_button02.png');
     this.load.image('blueButton2', 'assets/blue_button03.png');
     this.load.image('messageBox', 'assets/message_box.png');
-    this.load.image('otherPlayer', 'assets/grey_box.png')
+    this.load.image('otherPlayer', 'assets/grey_box.png');
   }
 
   create() {
     board = new MyBoard(this);
-    var scene = this
+    var scene = this;
     // CREATING BOARD
     // const board = new MyBoard(this);
     this.board = new MyBoard(this);
     this.socket = io();
 
-    this.otherPlayers = this.add.group()
+    this.otherPlayers = this.add.group();
     this.socket.on('currentPlayers', function (players) {
       Object.keys(players).forEach(function (id) {
         if (players[id].playerId === scene.socket.id) {
           addPlayer(scene, players[id]);
-        }else {
-          addOtherPlayers(scene, players[id])
+        } else {
+          addOtherPlayers(scene, players[id]);
         }
-      })
-    })
-    this.socket.on('newPlayer', function(playerInfo){
-      addOtherPlayers(scene, playerInfo)
-    })
-    this.socket.on('disconnect', function(playerId){
-      scene.otherPlayers.getChildren().forEach(function(otherPlayer){
-        if(playerId === otherPlayer.playerId){
-          otherPlayer.destroy()
+      });
+    });
+    this.socket.on('newPlayer', function (playerInfo) {
+      addOtherPlayers(scene, playerInfo);
+    });
+    this.socket.on('disconnect', function (playerId) {
+      scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+        if (playerId === otherPlayer.playerId) {
+          otherPlayer.destroy();
         }
-      })
-    })
-    this.socket.on('playerMoved', function(playerInfo){
-      scene.otherPlayers.getChildren().forEach(function(otherPlayer){
-        if(playerInfo.playerId === otherPlayer.playerId){
-          otherPlayer.setPosition(playerInfo.x, playerInfo.y)
+      });
+    });
+    this.socket.on('playerMoved', function (playerInfo) {
+      scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+        if (playerInfo.playerId === otherPlayer.playerId) {
+          otherPlayer.setPosition(playerInfo.x, playerInfo.y);
         }
-      })
-    })
+      });
+    });
 
     new DecisionBox(
       this,
@@ -77,15 +77,14 @@ export default class GameScene extends Phaser.Scene {
       'blueButton2',
       'Make a choice',
       (decision) => {
-        this.player.monopoly.setFace(decision)
+        this.player.monopoly.setFace(decision);
       }
-    )
-
+    );
 
     this.gameDice = new Dice(
       this,
-      config.width - 50,
-      config.height - 50,
+      phaserConfig.width - 50,
+      phaserConfig.height - 50,
       'blueButton1',
       'blueButton2',
       'Spin!'
@@ -93,19 +92,19 @@ export default class GameScene extends Phaser.Scene {
   }
 
   movePiece() {
-    console.log(this.player)
-    if(this.player){
-    const path = this.player.monopoly.getPath(this.socket.roll);
-    let updatedPath = [];
-    for (let i = 0; i < path.length; i++) {
-      let currentTileCost = path[i].cost;
-      updatedPath.push(path[i]);
-      if (currentTileCost === 0) {
-        break;
+    console.log('Player', this.socket);
+    if (this.player) {
+      const path = this.player.monopoly.getPath(this.socket.roll);
+      let updatedPath = [];
+      for (let i = 0; i < path.length; i++) {
+        let currentTileCost = path[i].cost;
+        updatedPath.push(path[i]);
+        if (currentTileCost === 0) {
+          break;
+        }
       }
+      this.player.moveAlongPath(updatedPath);
     }
-    this.player.moveAlongPath(updatedPath);
-  }
     // return this.getCurrentTile(updatedCoords);
   }
 
@@ -116,21 +115,28 @@ export default class GameScene extends Phaser.Scene {
       this.movePiece();
       this.socket.roll = 0;
     }
-    if(this.player){
-    let x = this.player.x
-    let y = this.player.y
-    if (this.player.oldPosition && (x !== this.player.oldPosition.x || y !== this.player.oldPosition.y)) {
-      this.socket.emit('playerMovement', { x: this.player.x, y: this.player.y});
+    if (this.player) {
+      let x = this.player.x;
+      let y = this.player.y;
+      if (
+        this.player.oldPosition &&
+        (x !== this.player.oldPosition.x || y !== this.player.oldPosition.y)
+      ) {
+        this.socket.emit('playerMovement', {
+          x: this.player.x,
+          y: this.player.y,
+        });
+      }
+      this.player.oldPosition = {
+        x: this.player.x,
+        y: this.player.y,
+      };
     }
-    this.player.oldPosition = {
-      x : this.player.x,
-      y: this.player.y
-    }}
     if (this.currentTile !== tile) {
       tile = this.currentTile;
       counter--;
       if (!counter || !tile.cost) {
-        let activeTile = tilemap[tile.y][tile.x]
+        let activeTile = tilemap[tile.y][tile.x];
         // alert(
         //   activeTile.description
         // );
@@ -143,7 +149,7 @@ export default class GameScene extends Phaser.Scene {
             'blueButton1',
             'blueButton2',
             'Choose a career'
-          )
+          );
         } else {
           new MessageBox(
             this,
@@ -153,28 +159,33 @@ export default class GameScene extends Phaser.Scene {
             'blueButton1',
             'blueButton2',
             activeTile.description
-          )
+          );
         }
-        let action = activeTile.operation
-        action(this.scene)
+        let action = activeTile.operation;
+        action(this.scene);
       }
     }
   }
 }
-function addPlayer(scene, player)  {
-  if(!scene.player){
-  scene.player = new ChessPiece(board, {
+function addPlayer(scene, player) {
+  if (!scene.player) {
+    scene.player = new ChessPiece(
+      board,
+      {
         x: 0,
         y: 4,
       },
       'messageBox',
       'blueButton1',
       'blueButton2'
-  )};
+    );
+  }
 }
-function addOtherPlayers(scene, playerInfo){
-  const otherPlayer = scene.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setScale(.5)
+function addOtherPlayers(scene, playerInfo) {
+  const otherPlayer = scene.add
+    .sprite(playerInfo.x, playerInfo.y, 'otherPlayer')
+    .setScale(0.5);
   otherPlayer.playerId = playerInfo.playerId;
   scene.otherPlayers.add(otherPlayer);
-  console.log(scene.otherPlayers)
+  console.log(scene.otherPlayers);
 }
