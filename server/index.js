@@ -46,6 +46,10 @@ io.on('connection', (socket) => {
     players[socket.id].y = movementData.y
     socket.broadcast.emit('playerMoved', players[socket.id])
   })
+  socket.on('payday', function(payData){
+    players[socket.id].bankAccount = payData.bankAccount
+    socket.broadcast.emit('gotPaid', players[socket.id])
+  })
 
   socket.emit('currentPlayers', players);
   socket.broadcast.emit('newPlayer', players[socket.id]);

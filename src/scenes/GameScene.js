@@ -69,6 +69,13 @@ export default class GameScene extends Phaser.Scene {
         }
       })
     })
+    this.socket.on('gotPaid', function(playerInfo){
+      scene.otherPlayers.getChildren().forEach(function(otherPlayer){
+        if(playerInfo.playerId === otherPlayer.playerId){
+          otherPlayer.bankAccount = playerInfo.bankAccount
+        }
+      })
+    })
 
     new DecisionBox(
       this,
@@ -126,7 +133,14 @@ export default class GameScene extends Phaser.Scene {
     this.player.gamePiece.oldPosition = {
       x : this.player.gamePiece.x,
       y: this.player.gamePiece.y
-    }}
+    }
+    let bankAccount = this.player.bankAccount
+    if(this.player.bankAccount.oldBalance &&(bankAccount !=this.player.bankAccount)){
+      this.socket.emit('payday', {bankAccount: this.player.bankAccount})
+    }
+    // console.log(this.player)
+    // console.log(this.otherPlayers)
+  }
     if (this.currentTile !== tile) {
       tile = this.currentTile;
       counter--;
@@ -160,7 +174,8 @@ export default class GameScene extends Phaser.Scene {
         action(this.scene)
       }
     }
-  }
+  // console.log(this.otherPlayers)
+}
 }
 function addPlayer(scene, player)  {
   if(!scene.player){
@@ -175,7 +190,7 @@ function addPlayer(scene, player)  {
   )};
 }
 function addOtherPlayers(scene, playerInfo){
-  const otherPlayer = scene.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setScale(.5)
-  otherPlayer.playerId = playerInfo.playerId;
+  let otherPlayer = playerInfo
+  otherPlayer.gamePiece = scene.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setScale(.5)
   scene.otherPlayers.add(otherPlayer);
 }
