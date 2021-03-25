@@ -11,6 +11,7 @@ import io from 'socket.io-client';
 import MyBoard from '../objects/MyBoard';
 import ChessPiece from '../objects/ChessPiece';
 import tilemap from '../objects/tilemap';
+import MessageBox from '../objects/MessageBox'
 
 let tile;
 let counter;
@@ -25,6 +26,7 @@ export default class GameScene extends Phaser.Scene {
     // load images
     this.load.image('blueButton1', 'assets/blue_button02.png');
     this.load.image('blueButton2', 'assets/blue_button03.png');
+    this.load.image('messageBox', 'assets/message_box.png');
   }
 
   create() {
@@ -46,16 +48,19 @@ export default class GameScene extends Phaser.Scene {
         y: 4,
       });
     }
-
-    //     this.board.addChess(this.socket.gamePiece);
-    //     console.log('BOARD', this.board);
-
-    // const path = this.socket.gamePiece.monopoly.getPath(20);
-    // this.socket.gamePiece.moveAlongPath(path);
-    console.log(this.socket);
+ 
+    console.log(this.socket)
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
+    // this.message = new MessageBox(
+    //   this,
+    //   0,
+    //   0,
+    //   'messageBox',
+    //   'blueButton1',
+
+    // )
     // firebase
     //   .database()
     //   .ref()
@@ -102,11 +107,23 @@ export default class GameScene extends Phaser.Scene {
       tile = this.currentTile;
       counter--;
       if (!counter || !tile.cost) {
-        let activeTile = tilemap[tile.y][tile.x];
-        alert(activeTile.description);
-        let action = activeTile.operation;
-        action(this.scene);
-        console.log('AFTER', this.socket);
+
+
+        let activeTile = tilemap[tile.y][tile.x]
+        // alert(
+        //   activeTile.description
+        // );
+        new MessageBox(
+          this,
+          0,
+          0,
+          'messageBox',
+          'blueButton1',
+          'blueButton2',
+          activeTile.description
+        )
+        let action = activeTile.operation
+        action(this.scene)
       }
     }
   }

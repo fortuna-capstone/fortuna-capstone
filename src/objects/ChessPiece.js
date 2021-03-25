@@ -6,7 +6,7 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
     super(board, tileXY.x, tileXY.y, 1, 0x000000);
     scene.add.existing(this);
     this.setScale(0.5);
-    this.start = 'bootcamp';
+    this.start = 'college'
     this.monopoly = scene.rexBoard.add.monopoly(this, {
       face: this.start === 'bootcamp' ? 4 : 3, // determines starting face direction
       pathTileZ: 0,
