@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
   socket.emit('roll', 'someone has rolled');
 
   socket.emit('currentPlayers', players)
-  socket.broadcast.emit('leftPlayer', players[socket.id]);
+  socket.broadcast.emit('playerLeft', players[socket.id]);
 
 });
 
