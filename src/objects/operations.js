@@ -41,7 +41,7 @@ export function pickCareer(scene) {
   let randomNum = Math.floor(Math.random() * Math.floor(options.length));
   const chosen = careers[options[randomNum]];
   scene.scene.player.career = chosen;
-  let update = { taken: true };
+  let update = { taken: false };
   pickSalary(scene);
   return db.ref().child('Career').child(options[randomNum]).update(update);
 }

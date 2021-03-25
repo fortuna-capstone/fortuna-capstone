@@ -93,6 +93,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   movePiece() {
+    console.log(this.player);
     if (this.player) {
       const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
       let updatedPath = [];
