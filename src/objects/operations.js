@@ -33,7 +33,6 @@ const careersRef = db
   .equalTo(false);
 careersRef.on('value', (snap) => {
   careers = snap.val();
-  console.log(careers);
 });
 
 //pick career function
