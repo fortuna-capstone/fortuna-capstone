@@ -1,15 +1,15 @@
 // Connecting to Firebase
 import db from '../config/firebaseConfig';
 
+// Importing data from data.js
+import { tileKeys, salaryKeys } from './data';
+
 // Pulling Life Tile Data from Firebase
 let lifeTiles = {};
 const tilesRef = db.ref().child('Tiles');
 tilesRef.on('value', (snap) => {
   lifeTiles = snap.val();
 });
-
-// Pulling in the tileKeys array with keys to database data
-import tileKeys from './lifeTiles';
 
 // pick lifetile function
 export function pickLifeTile(scene) {
@@ -42,16 +42,30 @@ export function pickCareer(scene) {
   const chosen = careers[options[randomNum]];
   scene.scene.socket.career = chosen;
   let update = { taken: true };
+  pickSalary(scene);
   return db.ref().child('Career').child(options[randomNum]).update(update);
 }
-// import 'phaser';
 
-// export default class Operations extends Phaser.Game{
-//   constructor(scene, ){
-//     super()
+// Pulling Salary Data from Firebase
+let salaries = {};
+const salariesRef = db.ref().child('Salaries');
+salariesRef.on('value', (snap) => {
+  salaries = snap.val();
+});
 
-//   }
-//   create(){
-//   this.payday = () =>
-//   }
-// }
+function pickSalary(scene) {
+  let randomNum = Math.floor(Math.random() * Math.floor(salaryKeys.length));
+  let chosenSalary = salaries[salaryKeys[randomNum]];
+  scene.scene.socket.salary = chosenSalary;
+  salaryKeys.splice(randomNum, 1);
+}
+
+// Pay function
+export function pay(scene, amount) {
+  scene.scene.socket.bank -= amount;
+}
+
+// Collect function
+export function collect(scene, amount) {
+  scene.scene.socket.bank += amount;
+}

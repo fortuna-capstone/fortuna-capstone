@@ -39,7 +39,7 @@ export default class GameScene extends Phaser.Scene {
       this.socket.career = {};
       this.socket.salary = {};
       this.socket.home = {};
-      this.socket.bank = 0;
+      this.socket.bank = 500;
       this.socket.roll = 0;
       this.socket.gamePiece = new ChessPiece(this.board, {
         x: 0,
