@@ -21,7 +21,7 @@ export function pickLifeTile(scene) {
 
 // payday function
 export function payday(scene) {
-  scene.scene.player.bank += 100;
+  scene.scene.player.bankAccount += 100;
 }
 
 // Pulling Career Data from firebase
@@ -41,7 +41,7 @@ export function pickCareer(scene) {
   let randomNum = Math.floor(Math.random() * Math.floor(options.length));
   const chosen = careers[options[randomNum]];
   scene.scene.player.career = chosen;
-  let update = { taken: true };
+  let update = { taken: false };
   pickSalary(scene);
   return db.ref().child('Career').child(options[randomNum]).update(update);
 }
@@ -56,16 +56,16 @@ salariesRef.on('value', (snap) => {
 function pickSalary(scene) {
   let randomNum = Math.floor(Math.random() * Math.floor(salaryKeys.length));
   let chosenSalary = salaries[salaryKeys[randomNum]];
-  scene.scene.socket.salary = chosenSalary;
+  scene.scene.player.salary = chosenSalary;
   salaryKeys.splice(randomNum, 1);
 }
 
 // Pay function
 export function pay(scene, amount) {
-  scene.scene.socket.bank -= amount;
+  scene.scene.player.bankAccount -= amount;
 }
 
 // Collect function
 export function collect(scene, amount) {
-  scene.scene.socket.bank += amount;
+  scene.scene.player.bankAccount += amount;
 }

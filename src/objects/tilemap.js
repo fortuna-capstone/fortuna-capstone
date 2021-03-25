@@ -28,7 +28,7 @@ const tilemap = [
       (scene, amount) => pay(scene, (amount = 2000))
     ),
     new Tile(1, 'Spring Break! Pay $500 (Orange #3)', (scene, amount) =>
-      pay(scene, (amount = 2000))
+      pay(scene, (amount = 500))
     ),
     new Tile(' '),
     new Tile(' '),
