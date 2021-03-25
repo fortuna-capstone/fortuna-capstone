@@ -13,6 +13,7 @@ import ChessPiece from '../objects/ChessPiece';
 import tilemap from '../objects/tilemap';
 import MessageBox from '../objects/MessageBox';
 import DecisionBox from '../objects/DecisionBox';
+import { pickCareer } from '../objects/operations';
 
 let tile;
 let counter;
@@ -69,6 +70,7 @@ export default class GameScene extends Phaser.Scene {
       });
     });
 
+    // bootcamp or college
     new DecisionBox(
       this,
       0,
@@ -76,7 +78,11 @@ export default class GameScene extends Phaser.Scene {
       'messageBox',
       'blueButton1',
       'blueButton2',
-      'Make a choice',
+      'College or Bootcamp?',
+      'Go to College',
+      'Go to Bootcamp',
+      3,
+      4,
       (decision) => {
         this.player.gamePiece.monopoly.setFace(decision);
       }
@@ -112,7 +118,6 @@ export default class GameScene extends Phaser.Scene {
   update() {
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
-      // this.getCurrentTile();
       this.movePiece();
       this.socket.roll = 0;
     }
@@ -139,9 +144,8 @@ export default class GameScene extends Phaser.Scene {
       counter--;
       if (!counter || !tile.cost) {
         let activeTile = tilemap[tile.y][tile.x];
-        // alert(
-        //   activeTile.description
-        // );
+        let action = activeTile.operation;
+        // action(this.scene)
         if (tile.x === 2 && tile.y === 2) {
           new MessageBox(
             this,
@@ -150,7 +154,8 @@ export default class GameScene extends Phaser.Scene {
             'messageBox',
             'blueButton1',
             'blueButton2',
-            'Choose a career'
+            'Choose a Career',
+            () => action(this.scene)
           );
         } else {
           new MessageBox(
@@ -160,11 +165,11 @@ export default class GameScene extends Phaser.Scene {
             'messageBox',
             'blueButton1',
             'blueButton2',
-            activeTile.description
+            activeTile.description,
+            () => action(this.scene)
           );
         }
-        let action = activeTile.operation;
-        action(this.scene);
+        console.log('PLAYER', this.player);
       }
     }
   }
@@ -172,16 +177,10 @@ export default class GameScene extends Phaser.Scene {
 function addPlayer(scene, player) {
   if (!scene.player) {
     scene.player = player;
-    scene.player.gamePiece = new ChessPiece(
-      board,
-      {
-        x: 0,
-        y: 4,
-      },
-      'messageBox',
-      'blueButton1',
-      'blueButton2'
-    );
+    scene.player.gamePiece = new ChessPiece(board, {
+      x: 0,
+      y: 4,
+    });
   }
 }
 function addOtherPlayers(scene, playerInfo) {

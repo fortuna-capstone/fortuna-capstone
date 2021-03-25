@@ -2,7 +2,7 @@ import 'phaser';
 import phaserConfig from '../config/phaserConfig';
 
 export default class Button extends Phaser.GameObjects.Container {
-  constructor(scene, x, y, key1, key2, key3, description) {
+  constructor(scene, x, y, key1, key2, key3, description, callback) {
     super(scene);
     this.scene = scene;
     const width = phaserConfig.width / 2;
@@ -10,6 +10,7 @@ export default class Button extends Phaser.GameObjects.Container {
     const msgBox = this.scene.add.group();
 
     const box = this.scene.add.sprite(width, height, key1).setScale(0.5);
+
     const button = this.scene.add
       .sprite(width, height + 50, key2)
       .setInteractive();
@@ -24,7 +25,6 @@ export default class Button extends Phaser.GameObjects.Container {
       wordWrap: { width: 220 },
       align: 'center',
     });
-    // text.wordWrap = {width: 50, useAdvancedWrap: true};
     Phaser.Display.Align.In.TopCenter(text, box);
     text.y = 210;
 
@@ -35,6 +35,7 @@ export default class Button extends Phaser.GameObjects.Container {
 
     button.on('pointerdown', function () {
       msgBox.destroy(true);
+      callback();
     });
 
     button.on('pointerover', function () {

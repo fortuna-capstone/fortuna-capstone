@@ -2,7 +2,20 @@ import 'phaser';
 import phaserConfig from '../config/phaserConfig';
 
 export default class Button extends Phaser.GameObjects.Container {
-  constructor(scene, x, y, key1, key2, key3, description, callback) {
+  constructor(
+    scene,
+    x,
+    y,
+    key1,
+    key2,
+    key3,
+    description,
+    text1,
+    text2,
+    decision1,
+    decision2,
+    callback
+  ) {
     super(scene);
     this.scene = scene;
     const width = phaserConfig.width / 2;
@@ -11,24 +24,27 @@ export default class Button extends Phaser.GameObjects.Container {
 
     const box = this.scene.add.sprite(width, height, key1).setScale(0.6);
 
+    // create top choice button
     const topButton = this.scene.add
       .sprite(width, height, key2)
       .setInteractive();
-    const topButtonText = this.scene.add.text(0, 0, 'Go to college', {
+    const topButtonText = this.scene.add.text(0, 0, text1, {
       fontSize: '20px',
       fill: '#fff',
     });
     Phaser.Display.Align.In.Center(topButtonText, topButton);
 
+    // create bottom choice button
     const bottomButton = this.scene.add
       .sprite(width, height + 75, key2)
       .setInteractive();
-    const bottomButtonText = this.scene.add.text(0, 0, 'Go to bootcamp', {
+    const bottomButtonText = this.scene.add.text(0, 0, text2, {
       fontSize: '20px',
       fill: '#fff',
     });
     Phaser.Display.Align.In.Center(bottomButtonText, bottomButton);
 
+    // adds text in box
     const text = this.scene.add.text(0, 0, description, {
       fontSize: '20px',
       fill: '#000',
@@ -46,8 +62,9 @@ export default class Button extends Phaser.GameObjects.Container {
     msgBox.add(text);
     console.log(msgBox);
 
+    // top button decision
     topButton.on('pointerdown', function () {
-      callback(3);
+      callback(decision1);
       msgBox.destroy(true);
     });
 
@@ -59,8 +76,9 @@ export default class Button extends Phaser.GameObjects.Container {
       topButton.setTexture(key2);
     });
 
+    // bottom button decision
     bottomButton.on('pointerdown', function () {
-      callback(4);
+      callback(decision2);
       msgBox.destroy(true);
     });
 

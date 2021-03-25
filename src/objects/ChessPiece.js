@@ -1,7 +1,7 @@
 import 'phaser';
 
 export default class ChessPiece extends RexPlugins.Board.Shape {
-  constructor(board, tileXY, key1, key2, key3) {
+  constructor(board, tileXY) {
     const scene = board.scene;
     super(board, tileXY.x, tileXY.y, 1, 0x000000);
     scene.add.existing(this);
@@ -46,7 +46,3 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
     }
   }
 }
-
-// putPieceOnBoard(board, piece, x, y, z) {
-//   return board.addChess(piece, x, y, z);
-// }
