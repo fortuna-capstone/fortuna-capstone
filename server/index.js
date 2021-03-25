@@ -22,11 +22,41 @@ server.listen(process.env.PORT || 8080, function () {
   console.log(`Your server, listening on port ${port}`);
 });
 
+let players = {};
+
 io.on('connection', (socket) => {
+  players[socket.id] = {
+    playerId: socket.id,
+    career: [],
+    bankAccount: 0,
+    lifeTiles: [],
+    salary: [],
+    deskItems: [],
+    house: [],
+    gamePiece: {},
+    x: 130,
+    y: 270
+  }
+  socket.on('disconnect', function () {
+    console.log('user disconnected');
+    delete players[socket.id];
+  });
+  socket.on('playerMovement', function(movementData){
+    players[socket.id].x =movementData.x
+    players[socket.id].y = movementData.y
+    socket.broadcast.emit('playerMoved', players[socket.id])
+  })
+
+  socket.emit('currentPlayers', players);
+  socket.broadcast.emit('newPlayer', players[socket.id]);
+
+
   console.log(`Connected to the ${socket.id}`);
   socket.emit('roll', 'someone has rolled');
+
+  socket.emit('currentPlayers', players)
+  socket.broadcast.emit('playerLeft', players[socket.id]);
+
 });
 
-// socket.on('connect', () => {
-//   console.log(socket.id); // ojIckSD2jqNzOqIrAGzL
-// });
+
