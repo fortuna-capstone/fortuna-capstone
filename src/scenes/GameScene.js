@@ -15,6 +15,7 @@ import MessageBox from '../objects/MessageBox'
 
 let tile;
 let counter;
+let board
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -27,29 +28,43 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('blueButton1', 'assets/blue_button02.png');
     this.load.image('blueButton2', 'assets/blue_button03.png');
     this.load.image('messageBox', 'assets/message_box.png');
+    this.load.image('otherPlayer', 'assets/grey_box.png')
   }
 
   create() {
-    const board = new MyBoard(this);
-
+    board = new MyBoard(this);
+    var scene = this
     // CREATING BOARD
     // const board = new MyBoard(this);
     this.board = new MyBoard(this);
     this.socket = io();
-    if (this.socket.lifeTiles === undefined) {
-      this.socket.lifeTiles = [];
-      this.socket.career = {};
-      this.socket.salary = {};
-      this.socket.home = {};
-      this.socket.bank = 0;
-      this.socket.roll = 0;
-      this.socket.gamePiece = new ChessPiece(this.board, {
-        x: 0,
-        y: 4,
-      });
-    }
- 
-    console.log(this.socket)
+    this.otherPlayers = this.add.group()
+    this.socket.on('currentPlayers', function (players) {
+      Object.keys(players).forEach(function (id) {
+        if (players[id].playerId === scene.socket.id) {
+          addPlayer(scene, players[id]);
+        }else {
+          addOtherPlayers(scene, players[id])
+        }
+      })
+    })
+    this.socket.on('newPlayer', function(playerInfo){
+      addOtherPlayers(scene, playerInfo)
+    })
+    this.socket.on('disconnect', function(playerId){
+      scene.otherPlayers.getChildren().forEach(function(otherPlayer){
+        if(playerId === otherPlayer.playerId){
+          otherPlayer.destroy()
+        }
+      })
+    })
+    this.socket.on('playerMoved', function(playerInfo){
+      scene.otherPlayers.getChildren().forEach(function(otherPlayer){
+        if(playerInfo.playerId === otherPlayer.playerId){
+          otherPlayer.setPosition(playerInfo.x, playerInfo.y)
+        }
+      })
+    })
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
@@ -82,7 +97,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   movePiece() {
-    const path = this.socket.gamePiece.monopoly.getPath(this.socket.roll);
+    console.log(this.player)
+    if(this.player){
+    const path = this.player.monopoly.getPath(this.socket.roll);
     let updatedPath = [];
     for (let i = 0; i < path.length; i++) {
       let currentTileCost = path[i].cost;
@@ -91,8 +108,8 @@ export default class GameScene extends Phaser.Scene {
         break;
       }
     }
-    this.socket.gamePiece.moveAlongPath(updatedPath);
-
+    this.player.moveAlongPath(updatedPath);
+  }
     // return this.getCurrentTile(updatedCoords);
   }
 
@@ -103,16 +120,21 @@ export default class GameScene extends Phaser.Scene {
       this.movePiece();
       this.socket.roll = 0;
     }
+    if(this.player){
+    let x = this.player.x
+    let y = this.player.y
+    if (this.player.oldPosition && (x !== this.player.oldPosition.x || y !== this.player.oldPosition.y)) {
+      this.socket.emit('playerMovement', { x: this.player.x, y: this.player.y});
+    }
+    this.player.oldPosition = {
+      x : this.player.x,
+      y: this.player.y
+    }}
     if (this.currentTile !== tile) {
       tile = this.currentTile;
       counter--;
       if (!counter || !tile.cost) {
-
-
         let activeTile = tilemap[tile.y][tile.x]
-        // alert(
-        //   activeTile.description
-        // );
         new MessageBox(
           this,
           0,
@@ -127,4 +149,17 @@ export default class GameScene extends Phaser.Scene {
       }
     }
   }
+}
+function addPlayer(scene, player)  {
+  if(!scene.player){
+  scene.player = new ChessPiece(board, {
+        x: 0,
+        y: 4,
+      });}
+};
+function addOtherPlayers(scene, playerInfo){
+  const otherPlayer = scene.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setScale(.5)
+  otherPlayer.playerId = playerInfo.playerId;
+  scene.otherPlayers.add(otherPlayer);
+  console.log(scene.otherPlayers)
 }
