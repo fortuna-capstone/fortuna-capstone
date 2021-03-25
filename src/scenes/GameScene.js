@@ -2,6 +2,7 @@ import 'phaser';
 
 import firebase from 'firebase/app';
 import 'firebase/database';
+
 import Dice from '../objects/Dice';
 import config from '../config/config';
 
@@ -101,12 +102,11 @@ export default class GameScene extends Phaser.Scene {
       tile = this.currentTile;
       counter--;
       if (!counter || !tile.cost) {
-        let activeTile = tilemap[tile.y][tile.x]
-        alert(
-          activeTile.description
-        );
-        let action = activeTile.operation
-        action(this.scene)
+        let activeTile = tilemap[tile.y][tile.x];
+        alert(activeTile.description);
+        let action = activeTile.operation;
+        action(this.scene);
+        console.log('AFTER', this.socket);
       }
     }
   }
