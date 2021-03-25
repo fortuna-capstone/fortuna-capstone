@@ -19,6 +19,7 @@ import PlayerInfo from '../objects/PlayerInfo';
 let tile;
 let counter;
 let board;
+let playerInfo;
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -52,6 +53,7 @@ export default class GameScene extends Phaser.Scene {
           addOtherPlayers(scene, players[id]);
         }
       });
+      playerInfo = new PlayerInfo(scene, scene.player);
     });
     this.socket.on('newPlayer', function (playerInfo) {
       addOtherPlayers(scene, playerInfo);
@@ -71,8 +73,6 @@ export default class GameScene extends Phaser.Scene {
       });
     });
 
-    let playerInfo = new PlayerInfo(this, this.player);
-    console.log(playerInfo);
     // bootcamp or college
     new DecisionBox(
       this,
@@ -125,6 +125,15 @@ export default class GameScene extends Phaser.Scene {
       this.socket.roll = 0;
     }
     if (this.player) {
+      playerInfo.text.setText(
+        `bank account: ${this.player.bankAccount} \ncareer: ${
+          this.player.career.description
+            ? this.player.career.description
+            : 'unemployed'
+        } \nsalary: ${
+          this.player.salary.amount ? this.player.salary.amount : 'No income'
+        } \nlife tiles: ${this.player.lifeTiles.length}`
+      );
       let x = this.player.gamePiece.x;
       let y = this.player.gamePiece.y;
       if (
