@@ -41,6 +41,7 @@ export default class GameScene extends Phaser.Scene {
     this.board = new MyBoard(this);
     this.socket = io();
 
+
     this.otherPlayers = this.add.group()
     this.socket.on('currentPlayers', function (players) {
       Object.keys(players).forEach(function (id) {
