@@ -23,7 +23,6 @@ export default class Button extends Phaser.GameObjects.Container {
     msgBox.add(button);
     msgBox.add(buttonText);
     msgBox.add(text);
-    console.log(msgBox)
 
 
     button.on('pointerdown', function () {

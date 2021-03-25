@@ -10,7 +10,8 @@ import io from 'socket.io-client';
 import MyBoard from '../objects/MyBoard';
 import ChessPiece from '../objects/ChessPiece';
 import tilemap from '../objects/tilemap';
-import MessageBox from '../objects/MessageBox'
+import MessageBox from '../objects/MessageBox';
+import DecisionBox from '../objects/DecisionBox';
 
 let tile;
 let counter;
@@ -45,10 +46,26 @@ export default class GameScene extends Phaser.Scene {
       this.socket.gamePiece = new ChessPiece(this.board, {
         x: 0,
         y: 4,
-      });
+      }, 'messageBox',
+      'blueButton1',
+      'blueButton2'
+      );
     }
  
     console.log(this.socket)
+
+    new DecisionBox(
+      this,
+      0,
+      0,
+      'messageBox',
+      'blueButton1',
+      'blueButton2',
+      'Make a choice',
+      (decision) => {
+        this.socket.gamePiece.monopoly.setFace(decision)
+      }
+    )
     // const dbRefObject = firebase.database().ref().child('HOUSES');
     // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
@@ -110,15 +127,27 @@ export default class GameScene extends Phaser.Scene {
         // alert(
         //   activeTile.description
         // );
-        new MessageBox(
-          this,
-          0,
-          0,
-          'messageBox',
-          'blueButton1',
-          'blueButton2',
-          activeTile.description
-        )
+        if (tile.x === 2 && tile.y === 2) {
+          new MessageBox(
+            this,
+            0,
+            0,
+            'messageBox',
+            'blueButton1',
+            'blueButton2',
+            'Choose a career'
+          )
+        } else {
+          new MessageBox(
+            this,
+            0,
+            0,
+            'messageBox',
+            'blueButton1',
+            'blueButton2',
+            activeTile.description
+          )
+        }
         let action = activeTile.operation
         action(this.scene)
       }
