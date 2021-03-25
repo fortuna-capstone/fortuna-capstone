@@ -102,7 +102,6 @@ export default class GameScene extends Phaser.Scene {
         if (currentTileCost === 0) {
           break;
         }
-        this.player.gamePiece.moveAlongPath(updatedPath);
       }
       this.player.gamePiece.moveAlongPath(updatedPath);
     }
