@@ -1,14 +1,13 @@
 import 'phaser';
 
 export default class ChessPiece extends RexPlugins.Board.Shape {
-  constructor(board, tileXY) {
+  constructor(board, tileXY, key1, key2, key3) {
     const scene = board.scene;
     super(board, tileXY.x, tileXY.y, 1, 0x000000);
     scene.add.existing(this);
     this.setScale(0.5);
-    this.start = 'college'
     this.monopoly = scene.rexBoard.add.monopoly(this, {
-      face: this.start === 'bootcamp' ? 4 : 3, // determines starting face direction
+      face: 3, // determines starting face direction
       pathTileZ: 0,
       costCallback: function (curTileXY, preTileXY, monopoly) {
         const board = monopoly.board;

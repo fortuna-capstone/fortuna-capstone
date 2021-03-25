@@ -11,7 +11,8 @@ import io from 'socket.io-client';
 import MyBoard from '../objects/MyBoard';
 import ChessPiece from '../objects/ChessPiece';
 import tilemap from '../objects/tilemap';
-import MessageBox from '../objects/MessageBox'
+import MessageBox from '../objects/MessageBox';
+import DecisionBox from '../objects/DecisionBox';
 
 let tile;
 let counter;
@@ -38,6 +39,7 @@ export default class GameScene extends Phaser.Scene {
     // const board = new MyBoard(this);
     this.board = new MyBoard(this);
     this.socket = io();
+
     this.otherPlayers = this.add.group()
     this.socket.on('currentPlayers', function (players) {
       Object.keys(players).forEach(function (id) {
@@ -65,26 +67,20 @@ export default class GameScene extends Phaser.Scene {
         }
       })
     })
-    // const dbRefObject = firebase.database().ref().child('HOUSES');
-    // dbRefObject.on('value', (snap) => console.log(snap.val()));
 
-    // this.message = new MessageBox(
-    //   this,
-    //   0,
-    //   0,
-    //   'messageBox',
-    //   'blueButton1',
+    new DecisionBox(
+      this,
+      0,
+      0,
+      'messageBox',
+      'blueButton1',
+      'blueButton2',
+      'Make a choice',
+      (decision) => {
+        this.player.monopoly.setFace(decision)
+      }
+    )
 
-    // )
-    // firebase
-    //   .database()
-    //   .ref()
-    //   .child('Houses')
-    //   .child('Fancy House')
-    //   .get()
-    //   .then(function (snapshot) {
-    //     console.log('THIS IS THE FANCY HOUSE', snapshot.val());
-    //   });
 
     this.gameDice = new Dice(
       this,
@@ -135,15 +131,30 @@ export default class GameScene extends Phaser.Scene {
       counter--;
       if (!counter || !tile.cost) {
         let activeTile = tilemap[tile.y][tile.x]
-        new MessageBox(
-          this,
-          0,
-          0,
-          'messageBox',
-          'blueButton1',
-          'blueButton2',
-          activeTile.description
-        )
+        // alert(
+        //   activeTile.description
+        // );
+        if (tile.x === 2 && tile.y === 2) {
+          new MessageBox(
+            this,
+            0,
+            0,
+            'messageBox',
+            'blueButton1',
+            'blueButton2',
+            'Choose a career'
+          )
+        } else {
+          new MessageBox(
+            this,
+            0,
+            0,
+            'messageBox',
+            'blueButton1',
+            'blueButton2',
+            activeTile.description
+          )
+        }
         let action = activeTile.operation
         action(this.scene)
       }
@@ -155,8 +166,12 @@ function addPlayer(scene, player)  {
   scene.player = new ChessPiece(board, {
         x: 0,
         y: 4,
-      });}
-};
+      },
+      'messageBox',
+      'blueButton1',
+      'blueButton2'
+  )};
+}
 function addOtherPlayers(scene, playerInfo){
   const otherPlayer = scene.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setScale(.5)
   otherPlayer.playerId = playerInfo.playerId;
