@@ -35,6 +35,7 @@ export default class GameScene extends Phaser.Scene {
   create() {
     board = new MyBoard(this);
     var scene = this;
+
     // CREATING BOARD
     // const board = new MyBoard(this);
     this.board = new MyBoard(this);
@@ -53,7 +54,7 @@ export default class GameScene extends Phaser.Scene {
     this.socket.on('newPlayer', function (playerInfo) {
       addOtherPlayers(scene, playerInfo);
     });
-    this.socket.on('disconnect', function (playerId) {
+    this.socket.on('playerLeft', function (playerId) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerId === otherPlayer.playerId) {
           otherPlayer.destroy();
@@ -77,7 +78,7 @@ export default class GameScene extends Phaser.Scene {
       'blueButton2',
       'Make a choice',
       (decision) => {
-        this.player.monopoly.setFace(decision);
+        this.player.gamePiece.monopoly.setFace(decision);
       }
     );
 
@@ -92,9 +93,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   movePiece() {
-    console.log('Player', this.socket);
     if (this.player) {
-      const path = this.player.monopoly.getPath(this.socket.roll);
+      const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
       let updatedPath = [];
       for (let i = 0; i < path.length; i++) {
         let currentTileCost = path[i].cost;
@@ -102,8 +102,9 @@ export default class GameScene extends Phaser.Scene {
         if (currentTileCost === 0) {
           break;
         }
+        this.player.gamePiece.moveAlongPath(updatedPath);
       }
-      this.player.moveAlongPath(updatedPath);
+      this.player.gamePiece.moveAlongPath(updatedPath);
     }
     // return this.getCurrentTile(updatedCoords);
   }
@@ -116,20 +117,21 @@ export default class GameScene extends Phaser.Scene {
       this.socket.roll = 0;
     }
     if (this.player) {
-      let x = this.player.x;
-      let y = this.player.y;
+      let x = this.player.gamePiece.x;
+      let y = this.player.gamePiece.y;
       if (
-        this.player.oldPosition &&
-        (x !== this.player.oldPosition.x || y !== this.player.oldPosition.y)
+        this.player.gamePiece.oldPosition &&
+        (x !== this.player.gamePiece.oldPosition.x ||
+          y !== this.player.gamePiece.oldPosition.y)
       ) {
         this.socket.emit('playerMovement', {
-          x: this.player.x,
-          y: this.player.y,
+          x: this.player.gamePiece.x,
+          y: this.player.gamePiece.y,
         });
       }
-      this.player.oldPosition = {
-        x: this.player.x,
-        y: this.player.y,
+      this.player.gamePiece.oldPosition = {
+        x: this.player.gamePiece.x,
+        y: this.player.gamePiece.y,
       };
     }
     if (this.currentTile !== tile) {
@@ -169,7 +171,8 @@ export default class GameScene extends Phaser.Scene {
 }
 function addPlayer(scene, player) {
   if (!scene.player) {
-    scene.player = new ChessPiece(
+    scene.player = player;
+    scene.player.gamePiece = new ChessPiece(
       board,
       {
         x: 0,
@@ -187,5 +190,4 @@ function addOtherPlayers(scene, playerInfo) {
     .setScale(0.5);
   otherPlayer.playerId = playerInfo.playerId;
   scene.otherPlayers.add(otherPlayer);
-  console.log(scene.otherPlayers);
 }
