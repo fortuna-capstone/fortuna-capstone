@@ -14,6 +14,7 @@ import tilemap from '../objects/tilemap';
 import MessageBox from '../objects/MessageBox';
 import DecisionBox from '../objects/DecisionBox';
 import { pickCareer } from '../objects/operations';
+import PlayerInfo from '../objects/PlayerInfo';
 
 let tile;
 let counter;
@@ -70,6 +71,8 @@ export default class GameScene extends Phaser.Scene {
       });
     });
 
+    let playerInfo = new PlayerInfo(this, this.player);
+    console.log(playerInfo);
     // bootcamp or college
     new DecisionBox(
       this,
