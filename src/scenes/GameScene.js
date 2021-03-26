@@ -124,7 +124,7 @@ export default class GameScene extends Phaser.Scene {
   update() {
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
-      // this.getCurrentTile();
+      console.log(this)
       this.movePiece();
       this.socket.roll = 0;
     }
