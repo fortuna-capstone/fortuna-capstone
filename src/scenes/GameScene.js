@@ -102,20 +102,39 @@ export default class GameScene extends Phaser.Scene {
   }
 
   movePiece() {
-    console.log(this.player);
-    if (this.player) {
-      const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
-      let updatedPath = [];
-      for (let i = 0; i < path.length; i++) {
-        let currentTileCost = path[i].cost;
-        updatedPath.push(path[i]);
-        if (currentTileCost === 0) {
-          break;
-        }
-      }
-      this.player.gamePiece.moveAlongPath(updatedPath);
-    }
+    // console.log(this.player);
+    // if (this.player) {
+    //   const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
+    //   let updatedPath = [];
+    //   for (let i = 0; i < path.length; i++) {
+    //     let currentTileCost = path[i].cost;
+    //     updatedPath.push(path[i]);
+    //     if (currentTileCost === 0) {
+    //       break;
+    //     }
+    //   }
+    //   this.player.gamePiece.moveAlongPath(updatedPath);
+    // } else {
+    //     if (this.playerId !== otherPlayer.playerId) {
+    //       console.log('Please wait for your turn', this.otherPlayers);
+    //     }
+    //   });
+    // }
     // return this.getCurrentTile(updatedCoords);
+    // this.otherPlayers.getChildren().forEach(function (otherPlayer) {
+    //   if (this.player) {
+    //     const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
+    //     let updatedPath = [];
+    //     for (let i = 0; i < path.length; i++) {
+    //       let currentTileCost = path[i].cost;
+    //       updatedPath.push(path[i]);
+    //       if (currentTileCost === 0) {
+    //         break;
+    //       }
+    //     }
+    //     this.player.gamePiece.moveAlongPath(updatedPath);
+    //   }
+    // });
   }
 
   update() {
@@ -202,3 +221,12 @@ function addOtherPlayers(scene, playerInfo) {
   otherPlayer.playerId = playerInfo.playerId;
   scene.otherPlayers.add(otherPlayer);
 }
+
+// function setTurn(scene, player) {
+//   console.log(scene);
+//   // scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+//   //   if (player.playerId !== otherPlayer.playerId) {
+//   //     console.log('Please wait for your turn');
+//   //   }
+//   // });
+// }
