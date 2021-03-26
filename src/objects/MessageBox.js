@@ -28,6 +28,7 @@ export default class Button extends Phaser.GameObjects.Container {
     button.on('pointerdown', function () {
       msgBox.destroy(true);
       callback();
+      scene.messageBox = null;
     });
 
     button.on('pointerover', function () {
