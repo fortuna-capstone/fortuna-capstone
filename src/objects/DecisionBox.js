@@ -22,26 +22,26 @@ export default class Button extends Phaser.GameObjects.Container {
     const height = phaserConfig.height / 2;
     const msgBox = this.scene.add.group();
 
-    const box = this.scene.add.sprite(width, height, key1).setScale(0.6);
+    const box = this.scene.add.sprite(width, height, key1).setScale(0.6).setDepth(6);
 
     // create top choice button
     const topButton = this.scene.add
       .sprite(width, height, key2)
-      .setInteractive();
+      .setInteractive().setDepth(7);
     const topButtonText = this.scene.add.text(0, 0, text1, {
       fontSize: '20px',
       fill: '#fff',
-    });
+    }).setDepth(8);
     Phaser.Display.Align.In.Center(topButtonText, topButton);
 
     // create bottom choice button
     const bottomButton = this.scene.add
       .sprite(width, height + 75, key2)
-      .setInteractive();
+      .setInteractive().setDepth(7);
     const bottomButtonText = this.scene.add.text(0, 0, text2, {
       fontSize: '20px',
       fill: '#fff',
-    });
+    }).setDepth(8);
     Phaser.Display.Align.In.Center(bottomButtonText, bottomButton);
 
     // adds text in box
@@ -50,7 +50,7 @@ export default class Button extends Phaser.GameObjects.Container {
       fill: '#000',
       wordWrap: { width: 220 },
       align: 'center',
-    });
+    }).setDepth(7);
     Phaser.Display.Align.In.TopCenter(text, box);
     text.y = 210;
 
