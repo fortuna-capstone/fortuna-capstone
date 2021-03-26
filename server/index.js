@@ -48,6 +48,7 @@ io.on('connection', (socket) => {
   })
   socket.on('payday', function(payData){
     players[socket.id].bankAccount = payData.bankAccount
+    console.log(players[socket.id].bankAccount)
     socket.broadcast.emit('gotPaid', players[socket.id])
   })
 

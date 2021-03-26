@@ -74,7 +74,9 @@ export default class GameScene extends Phaser.Scene {
     this.socket.on('gotPaid', function(playerInfo){
       scene.otherPlayers.getChildren().forEach(function(otherPlayer){
         if(playerInfo.playerId === otherPlayer.playerId){
-          otherPlayer.bankAccount = playerInfo.bankAccount
+          console.log("otherplayer", otherPlayer)
+          console.log("playerInfo", playerInfo)
+          otherPlayer.playerInfo.bankAccount = playerInfo.bankAccount
         }
       })
     })
@@ -137,20 +139,22 @@ export default class GameScene extends Phaser.Scene {
       y: this.player.gamePiece.y
     }
     let bankAccount = this.player.bankAccount
-    if(this.player.bankAccount.oldBalance &&(bankAccount !=this.player.bankAccount)){
+    if(this.player.oldBalance &&(bankAccount !=this.player.oldBalance.bankAccount)){
+      
       this.socket.emit('payday', {bankAccount: this.player.bankAccount})
+      console.log(this.otherPlayers)
     }
-    // console.log(this.player)
-    // console.log(this.otherPlayers)
+    this.player.oldBalance = {
+      bankAccount : this.player.bankAccount,
+    }
+  
   }
     if (this.currentTile !== tile) {
       tile = this.currentTile;
       counter--;
       if (!counter || !tile.cost) {
         let activeTile = tilemap[tile.y][tile.x]
-        // alert(
-        //   activeTile.description
-        // );
+        
         if (tile.x === 2 && tile.y === 2) {
           new MessageBox(
             this,
@@ -176,7 +180,6 @@ export default class GameScene extends Phaser.Scene {
         action(this.scene)
       }
     }
-  // console.log(this.otherPlayers)
 }
 }
 function addPlayer(scene, player)  {
@@ -193,7 +196,9 @@ function addPlayer(scene, player)  {
 }
 function addOtherPlayers(scene, playerInfo){
   let otherPlayerBody = playerInfo
-  let otherPlayerPiece = scene.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setScale(.5)
-  scene.otherPlayers.add(otherPlayerPiece);
+  const otherPlayer = scene.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setScale(.5)
+  otherPlayer.playerId = playerInfo.playerId
+  otherPlayer.playerInfo = playerInfo
+  scene.otherPlayers.add(otherPlayer);
   scene.otherPlayersBody.push(otherPlayerBody)
 }
