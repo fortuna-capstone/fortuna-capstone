@@ -86,9 +86,7 @@ export default class GameScene extends Phaser.Scene {
       })
     })
 
-      });
-    });
-
+  
 
     // bootcamp or college
     this.messageBox = new DecisionBox(
@@ -173,7 +171,7 @@ export default class GameScene extends Phaser.Scene {
         x: this.player.gamePiece.x,
         y: this.player.gamePiece.y,
       };
-    }
+    
     let bankAccount = this.player.bankAccount
     if(this.player.oldBalance &&(bankAccount !=this.player.oldBalance.bankAccount)){
       
@@ -183,7 +181,6 @@ export default class GameScene extends Phaser.Scene {
     this.player.oldBalance = {
       bankAccount : this.player.bankAccount,
     }
-  
   }
 
     if (this.currentTile !== tile) {
@@ -192,9 +189,7 @@ export default class GameScene extends Phaser.Scene {
       if (!counter || !tile.cost) {
 
         let activeTile = tilemap[tile.y][tile.x]
-        
 
-        let activeTile = tilemap[tile.y][tile.x];
         let action = activeTile.operation;
         // action(this.scene)
 
@@ -224,7 +219,7 @@ export default class GameScene extends Phaser.Scene {
         console.log('PLAYER', this.player);
       }
     }
-}
+  }
 }
 function addPlayer(scene, player) {
   if (!scene.player) {
