@@ -40,6 +40,7 @@ export default class GameScene extends Phaser.Scene {
     // const board = new MyBoard(this);
     this.board = new MyBoard(this);
     this.socket = io();
+    this.otherPlayersBody = []
 
 
     this.otherPlayers = this.add.group()
@@ -53,6 +54,7 @@ export default class GameScene extends Phaser.Scene {
       })
     })
     this.socket.on('newPlayer', function(playerInfo){
+      console.log(playerInfo)
       addOtherPlayers(scene, playerInfo)
     })
     this.socket.on('playerLeft', function(playerId){
@@ -190,7 +192,8 @@ function addPlayer(scene, player)  {
   )};
 }
 function addOtherPlayers(scene, playerInfo){
-  let otherPlayer = playerInfo
-  otherPlayer.gamePiece = scene.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setScale(.5)
-  scene.otherPlayers.add(otherPlayer);
+  let otherPlayerBody = playerInfo
+  let otherPlayerPiece = scene.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setScale(.5)
+  scene.otherPlayers.add(otherPlayerPiece);
+  scene.otherPlayersBody.push(otherPlayerBody)
 }
