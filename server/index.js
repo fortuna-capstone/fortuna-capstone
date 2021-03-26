@@ -30,17 +30,18 @@ io.on('connection', (socket) => {
     career: [],
     bankAccount: 0,
     lifeTiles: [],
-    salary: [],
+    salary: {},
     deskItems: [],
     house: [],
     gamePiece: {},
     x: 130,
-    y: 270
-  }
+    y: 270,
+  };
   socket.on('disconnect', function () {
     console.log('user disconnected');
     delete players[socket.id];
   });
+
   socket.on('playerMovement', function(movementData){
     players[socket.id].x =movementData.x
     players[socket.id].y = movementData.y
@@ -55,13 +56,9 @@ io.on('connection', (socket) => {
   socket.emit('currentPlayers', players);
   socket.broadcast.emit('newPlayer', players[socket.id]);
 
-
   console.log(`Connected to the ${socket.id}`);
   socket.emit('roll', 'someone has rolled');
 
-  socket.emit('currentPlayers', players)
+  socket.emit('currentPlayers', players);
   socket.broadcast.emit('playerLeft', players[socket.id]);
-
 });
-
-

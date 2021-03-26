@@ -1,21 +1,30 @@
 import 'phaser';
-import config from '../config/config'
+import phaserConfig from '../config/phaserConfig';
 
 export default class Button extends Phaser.GameObjects.Container {
-  constructor(scene, x, y, key1, key2, key3, description) {
+  constructor(scene, x, y, key1, key2, key3, description, callback) {
     super(scene);
     this.scene = scene;
-    const width = config.width / 2;
-    const height = config.height / 2;
+    const width = phaserConfig.width / 2;
+    const height = phaserConfig.height / 2;
     const msgBox = this.scene.add.group();
 
     const box = this.scene.add.sprite(width, height, key1).setScale(0.5);
-    const button = this.scene.add.sprite(width, height + 50, key2).setInteractive();
-    const buttonText = this.scene.add.text(0, 0, 'Okay', {fontSize: '32px', fill: '#fff'}).setScale(0.9);
+
+    const button = this.scene.add
+      .sprite(width, height + 50, key2)
+      .setInteractive();
+    const buttonText = this.scene.add
+      .text(0, 0, 'Okay', { fontSize: '32px', fill: '#fff' })
+      .setScale(0.9);
     Phaser.Display.Align.In.Center(buttonText, button);
 
-    const text = this.scene.add.text(0, 0, description, {fontSize: '20px', fill: '#000', wordWrap: {width: 220}, align: 'center'})
-    // text.wordWrap = {width: 50, useAdvancedWrap: true};
+    const text = this.scene.add.text(0, 0, description, {
+      fontSize: '20px',
+      fill: '#000',
+      wordWrap: { width: 220 },
+      align: 'center',
+    });
     Phaser.Display.Align.In.TopCenter(text, box);
     text.y = 210;
 
@@ -24,9 +33,10 @@ export default class Button extends Phaser.GameObjects.Container {
     msgBox.add(buttonText);
     msgBox.add(text);
 
-
     button.on('pointerdown', function () {
       msgBox.destroy(true);
+      callback();
+      scene.messageBox = null;
     });
 
     button.on('pointerover', function () {
@@ -36,6 +46,5 @@ export default class Button extends Phaser.GameObjects.Container {
     button.on('pointerout', function () {
       button.setTexture(key2);
     });
-
   }
 }

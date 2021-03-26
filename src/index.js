@@ -1,5 +1,5 @@
 import 'phaser';
-import config from './config/config';
+import phaserConfig from './config/phaserConfig';
 import GameScene from './scenes/GameScene';
 import TitleScene from './scenes/TitleScene';
 
@@ -11,11 +11,11 @@ import TitleScene from './scenes/TitleScene';
 
 class Game extends Phaser.Game {
   constructor() {
-    super(config);
+    super(phaserConfig);
     this.scene.add('Title', TitleScene);
     this.scene.add('Game', GameScene);
     this.scene.start('Title');
   }
 }
 
-window.game = new Game(config);
+window.game = new Game(phaserConfig);
