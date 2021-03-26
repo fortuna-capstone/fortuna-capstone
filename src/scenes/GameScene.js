@@ -74,7 +74,7 @@ export default class GameScene extends Phaser.Scene {
     });
 
     // bootcamp or college
-    new DecisionBox(
+    this.messageBox = new DecisionBox(
       this,
       0,
       0,
@@ -119,6 +119,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
+    if (this.messageBox) {
+      this.gameDice.button.disableInteractive();
+    } else {
+      this.gameDice.button.setInteractive();
+    }
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
       this.movePiece();
@@ -159,7 +164,7 @@ export default class GameScene extends Phaser.Scene {
         let action = activeTile.operation;
         // action(this.scene)
         if (tile.x === 2 && tile.y === 2) {
-          new MessageBox(
+          this.messageBox = new MessageBox(
             this,
             0,
             0,
@@ -170,7 +175,7 @@ export default class GameScene extends Phaser.Scene {
             () => action(this.scene)
           );
         } else {
-          new MessageBox(
+          this.messageBox = new MessageBox(
             this,
             0,
             0,

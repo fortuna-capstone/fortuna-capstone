@@ -66,6 +66,7 @@ export default class Button extends Phaser.GameObjects.Container {
     topButton.on('pointerdown', function () {
       callback(decision1);
       msgBox.destroy(true);
+      scene.messageBox = null;
     });
 
     topButton.on('pointerover', function () {
@@ -80,6 +81,7 @@ export default class Button extends Phaser.GameObjects.Container {
     bottomButton.on('pointerdown', function () {
       callback(decision2);
       msgBox.destroy(true);
+      scene.messageBox = null;
     });
 
     bottomButton.on('pointerover', function () {
