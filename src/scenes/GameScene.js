@@ -43,6 +43,7 @@ export default class GameScene extends Phaser.Scene {
     // const board = new MyBoard(this);
     this.board = new MyBoard(this);
     this.socket = io();
+    this.otherPlayersBody = []
 
     this.otherPlayers = this.add.group();
     this.socket.on('currentPlayers', function (players) {
@@ -52,6 +53,7 @@ export default class GameScene extends Phaser.Scene {
         } else {
           addOtherPlayers(scene, players[id]);
         }
+
       });
       playerInfo = new PlayerInfo(scene, scene.player);
     });
@@ -62,6 +64,7 @@ export default class GameScene extends Phaser.Scene {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerId === otherPlayer.playerId) {
           otherPlayer.destroy();
+
         }
       });
     });
@@ -70,8 +73,22 @@ export default class GameScene extends Phaser.Scene {
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.setPosition(playerInfo.x, playerInfo.y);
         }
+
+      })
+    })
+    this.socket.on('gotPaid', function(playerInfo){
+      scene.otherPlayers.getChildren().forEach(function(otherPlayer){
+        if(playerInfo.playerId === otherPlayer.playerId){
+          console.log("otherplayer", otherPlayer)
+          console.log("playerInfo", playerInfo)
+          otherPlayer.playerInfo.bankAccount = playerInfo.bankAccount
+        }
+      })
+    })
+
       });
     });
+
 
     // bootcamp or college
     this.messageBox = new DecisionBox(
@@ -126,6 +143,7 @@ export default class GameScene extends Phaser.Scene {
     }
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
+
       this.movePiece();
       this.socket.roll = 0;
     }
@@ -156,13 +174,30 @@ export default class GameScene extends Phaser.Scene {
         y: this.player.gamePiece.y,
       };
     }
+    let bankAccount = this.player.bankAccount
+    if(this.player.oldBalance &&(bankAccount !=this.player.oldBalance.bankAccount)){
+      
+      this.socket.emit('payday', {bankAccount: this.player.bankAccount})
+      console.log(this.otherPlayers)
+    }
+    this.player.oldBalance = {
+      bankAccount : this.player.bankAccount,
+    }
+  
+  }
+
     if (this.currentTile !== tile) {
       tile = this.currentTile;
       counter--;
       if (!counter || !tile.cost) {
+
+        let activeTile = tilemap[tile.y][tile.x]
+        
+
         let activeTile = tilemap[tile.y][tile.x];
         let action = activeTile.operation;
         // action(this.scene)
+
         if (tile.x === 2 && tile.y === 2) {
           this.messageBox = new MessageBox(
             this,
@@ -189,7 +224,7 @@ export default class GameScene extends Phaser.Scene {
         console.log('PLAYER', this.player);
       }
     }
-  }
+}
 }
 function addPlayer(scene, player) {
   if (!scene.player) {
@@ -200,10 +235,12 @@ function addPlayer(scene, player) {
     });
   }
 }
-function addOtherPlayers(scene, playerInfo) {
-  const otherPlayer = scene.add
-    .sprite(playerInfo.x, playerInfo.y, 'otherPlayer')
-    .setScale(0.5);
-  otherPlayer.playerId = playerInfo.playerId;
+
+function addOtherPlayers(scene, playerInfo){
+  let otherPlayerBody = playerInfo
+  const otherPlayer = scene.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setScale(.5)
+  otherPlayer.playerId = playerInfo.playerId
+  otherPlayer.playerInfo = playerInfo
   scene.otherPlayers.add(otherPlayer);
+  scene.otherPlayersBody.push(otherPlayerBody)
 }

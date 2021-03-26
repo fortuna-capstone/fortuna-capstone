@@ -41,11 +41,17 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
     delete players[socket.id];
   });
-  socket.on('playerMovement', function (movementData) {
-    players[socket.id].x = movementData.x;
-    players[socket.id].y = movementData.y;
-    socket.broadcast.emit('playerMoved', players[socket.id]);
-  });
+
+  socket.on('playerMovement', function(movementData){
+    players[socket.id].x =movementData.x
+    players[socket.id].y = movementData.y
+    socket.broadcast.emit('playerMoved', players[socket.id])
+  })
+  socket.on('payday', function(payData){
+    players[socket.id].bankAccount = payData.bankAccount
+    console.log(players[socket.id].bankAccount)
+    socket.broadcast.emit('gotPaid', players[socket.id])
+  })
 
   socket.emit('currentPlayers', players);
   socket.broadcast.emit('newPlayer', players[socket.id]);
