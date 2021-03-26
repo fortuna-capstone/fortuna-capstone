@@ -113,7 +113,7 @@ export default class GameScene extends Phaser.Scene {
           break;
         }
       }
-      this.player.gamePiece.moveAlongPath(updatedPath);
+      this.player.gamePiece.moveAlongPath(updatedPath, this.scene);
     }
     // return this.getCurrentTile(updatedCoords);
   }
