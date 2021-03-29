@@ -21,19 +21,25 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
     this.moveTo = scene.rexBoard.add.moveTo(this);
   }
 
-  moveAlongPath(path, scene) {
+  moveAlongPath(path, scene, i = 0) {
     if (!path.length) {
       this.changeDirectionAtStop(this.scene.currentTile);
       return;
     } else {
       let tile = path.shift();
       this.moveTo.moveTo(tile);
+      i++;
       if (path.length) {
         if ((tile.x === 3 && tile.y === 2) || (tile.x === 6 && tile.y === 3)) {
           payday(scene);
         }
       }
       this.monopoly.setFace(this.moveTo.destinationDirection);
+      if (tile.x === 3 && tile.y === 2) {
+        this.monopoly.setFace(4);
+        scene.scene.movePiece(i);
+        return;
+      }
       this.moveTo.once(
         'complete',
         () => {
@@ -47,8 +53,8 @@ export default class ChessPiece extends RexPlugins.Board.Shape {
 
   changeDirectionAtStop(tile) {
     //changes direction at first stop
-    if (tile.x === 2 && tile.y === 2) {
-      this.monopoly.setFace(4);
-    }
+    // if (tile.x === 2 && tile.y === 2) {
+    //   this.monopoly.setFace(4);
+    // }
   }
 }

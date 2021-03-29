@@ -112,7 +112,6 @@ export default class GameScene extends Phaser.Scene {
     })
 })
 
-
     // bootcamp or college
     this.messageBox = new DecisionBox(
       this,
@@ -139,12 +138,13 @@ export default class GameScene extends Phaser.Scene {
       'blueButton2',
       'Spin!'
     ).setScale(0.5);
+    this.cameras.main.setBounds(0, 0, board.displayWidth, board.displayHeight);
+    // this.cameras.main.startFollow(this.player);
   }
 
-  movePiece() {
-    console.log(this.player);
+  movePiece(i = 0) {
     if (this.player) {
-      const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
+      const path = this.player.gamePiece.monopoly.getPath(this.socket.roll - i);
       let updatedPath = [];
       for (let i = 0; i < path.length; i++) {
         let currentTileCost = path[i].cost;
@@ -165,7 +165,6 @@ export default class GameScene extends Phaser.Scene {
       this.gameDice.button.setInteractive();
     }
     if (this.socket.roll !== 0) {
-      console.log("otherPlayers", this.otherPlayers)
       counter = this.socket.roll;
 
       this.movePiece();
@@ -244,7 +243,6 @@ export default class GameScene extends Phaser.Scene {
 
         let action = activeTile.operation;
         // action(this.scene)
-
         if (tile.x === 2 && tile.y === 2) {
           this.messageBox = new MessageBox(
             this,
@@ -256,7 +254,8 @@ export default class GameScene extends Phaser.Scene {
             'Choose a Career',
             () => action(this.scene)
           );
-        } else {
+        } 
+        else {
           this.messageBox = new MessageBox(
             this,
             0,
@@ -268,7 +267,6 @@ export default class GameScene extends Phaser.Scene {
             () => action(this.scene)
           );
         }
-        console.log('PLAYER', this.player);
       }
     }
   }
