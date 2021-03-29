@@ -74,7 +74,7 @@ export default class GameScene extends Phaser.Scene {
     });
 
     // bootcamp or college
-    new DecisionBox(
+    this.messageBox = new DecisionBox(
       this,
       0,
       0,
@@ -102,6 +102,19 @@ export default class GameScene extends Phaser.Scene {
   }
 
   movePiece() {
+    console.log(this.player);
+    if (this.player) {
+      const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
+      let updatedPath = [];
+      for (let i = 0; i < path.length; i++) {
+        let currentTileCost = path[i].cost;
+        updatedPath.push(path[i]);
+        if (currentTileCost === 0) {
+          break;
+        }
+      }
+      this.player.gamePiece.moveAlongPath(updatedPath, this.scene);
+    }
     // console.log(this.player);
     // if (this.player) {
     //   const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
@@ -121,6 +134,7 @@ export default class GameScene extends Phaser.Scene {
     //   });
     // }
     // return this.getCurrentTile(updatedCoords);
+
     // this.otherPlayers.getChildren().forEach(function (otherPlayer) {
     //   if (this.player) {
     //     const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
@@ -138,6 +152,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
+    if (this.messageBox) {
+      this.gameDice.button.disableInteractive();
+    } else {
+      this.gameDice.button.setInteractive();
+    }
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
       this.movePiece();
@@ -178,7 +197,7 @@ export default class GameScene extends Phaser.Scene {
         let action = activeTile.operation;
         // action(this.scene)
         if (tile.x === 2 && tile.y === 2) {
-          new MessageBox(
+          this.messageBox = new MessageBox(
             this,
             0,
             0,
@@ -189,7 +208,7 @@ export default class GameScene extends Phaser.Scene {
             () => action(this.scene)
           );
         } else {
-          new MessageBox(
+          this.messageBox = new MessageBox(
             this,
             0,
             0,
