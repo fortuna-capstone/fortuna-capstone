@@ -49,8 +49,23 @@ io.on('connection', (socket) => {
   })
   socket.on('payday', function(payData){
     players[socket.id].bankAccount = payData.bankAccount
-    console.log(players[socket.id].bankAccount)
     socket.broadcast.emit('gotPaid', players[socket.id])
+  })
+  socket.on('career', function(careerData){
+    players[socket.id].career = careerData.career
+    socket.broadcast.emit('gotCareer', players[socket.id])
+  })
+  socket.on('house', function(houseData){
+    players[socket.id].house = houseData.house
+    socket.broadcast.emit('gotHouse', players[socket.id])
+  })
+  socket.on('lifeTiles', function(lifeTilesData){
+    players[socket.id].lifeTiles = lifeTilesData.lifeTiles
+    socket.broadcast.emit('gotLifeTiles', players[socket.id])
+  })
+  socket.on('salary', function(salaryData){
+    players[socket.id].salary = salaryData.salary
+    socket.broadcast.emit('gotSalary', players[socket.id])
   })
 
   socket.emit('currentPlayers', players);

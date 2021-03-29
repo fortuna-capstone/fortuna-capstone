@@ -79,14 +79,39 @@ export default class GameScene extends Phaser.Scene {
     this.socket.on('gotPaid', function(playerInfo){
       scene.otherPlayers.getChildren().forEach(function(otherPlayer){
         if(playerInfo.playerId === otherPlayer.playerId){
-          console.log("otherplayer", otherPlayer)
-          console.log("playerInfo", playerInfo)
           otherPlayer.playerInfo.bankAccount = playerInfo.bankAccount
         }
       })
     })
+    this.socket.on('gotCareer', function(playerInfo){
+      scene.otherPlayers.getChildren().forEach(function(otherPlayer){
+        if(playerInfo.playerId === otherPlayer.playerId){
+          otherPlayer.playerInfo.career = playerInfo.career
+        }
+      })
+    })
+      this.socket.on('gotHouse', function(playerInfo){
+        scene.otherPlayers.getChildren().forEach(function(otherPlayer){
+          if(playerInfo.playerId === otherPlayer.playerId){
+            otherPlayer.playerInfo.house = playerInfo.house
+          }
+        })
+    })
+    this.socket.on('gotLifeTiles', function(playerInfo){
+      scene.otherPlayers.getChildren().forEach(function(otherPlayer){
+        if(playerInfo.playerId === otherPlayer.playerId){
+          otherPlayer.playerInfo.lifeTiles = playerInfo.lifeTiles
+        }
+      })
+  })
+  this.socket.on('gotSalary', function(playerInfo){
+    scene.otherPlayers.getChildren().forEach(function(otherPlayer){
+      if(playerInfo.playerId === otherPlayer.playerId){
+        otherPlayer.playerInfo.salary = playerInfo.salary
+      }
+    })
+})
 
-  
 
     // bootcamp or college
     this.messageBox = new DecisionBox(
@@ -140,6 +165,7 @@ export default class GameScene extends Phaser.Scene {
       this.gameDice.button.setInteractive();
     }
     if (this.socket.roll !== 0) {
+      console.log("otherPlayers", this.otherPlayers)
       counter = this.socket.roll;
 
       this.movePiece();
@@ -173,13 +199,39 @@ export default class GameScene extends Phaser.Scene {
       };
     
     let bankAccount = this.player.bankAccount
-    if(this.player.oldBalance &&(bankAccount !=this.player.oldBalance.bankAccount)){
-      
+    if(this.player.oldBalance &&(bankAccount !=this.player.oldBalance.bankAccount)){ 
       this.socket.emit('payday', {bankAccount: this.player.bankAccount})
-      console.log(this.otherPlayers)
     }
     this.player.oldBalance = {
       bankAccount : this.player.bankAccount,
+    }
+    let career = this.player.career
+    if(this.player.oldCareer &&(career !=this.player.oldCareer.career)){
+      this.socket.emit('career', {career: this.player.career})
+    }
+    this.player.oldCareer = {
+      career : this.player.career,
+    }
+    let house = this.player.house
+    if(this.player.oldHouse &&(house !=this.player.oldHouse.house)){
+      this.socket.emit('house', {house: this.player.house})
+    }
+    this.player.oldHouse = {
+      house : this.player.house
+    }
+    let lifeTiles = this.player.lifeTiles
+    if(this.player.oldLifeTiles &&(lifeTiles !=this.player.oldLifeTiles.lifeTiles)){
+      this.socket.emit('lifeTiles', {lifeTiles: this.player.lifeTiles})
+    }
+    this.player.oldLifeTiles= {
+      lifeTiles : this.player.lifeTiles
+    }
+    let salary = this.player.salary
+    if(this.player.oldSalary &&(salary !=this.player.oldSalary.salary)){
+      this.socket.emit('salary', {salary: this.player.salary})
+    }
+    this.player.oldSalary= {
+      salary : this.player.salary
     }
   }
 
