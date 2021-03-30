@@ -1,4 +1,3 @@
-const { SSL_OP_NO_TICKET } = require('constants');
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -23,7 +22,7 @@ server.listen(process.env.PORT || 8080, function () {
 });
 
 let players = {};
-let turn = 0;
+let turn = 1;
 let turnCounter = 1;
 
 io.on('connection', (socket) => {
@@ -44,6 +43,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', function () {
     console.log('user disconnected');
     delete players[socket.id];
+    turn --
+    turnCounter --
+    socket.broadcast.emit('turnStarted', turnCounter);
+    socket.emit('turnStarted', turnCounter);
   });
 
   socket.on('playerMovement', function (movementData) {
