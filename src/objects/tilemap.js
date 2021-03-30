@@ -1,5 +1,5 @@
 import Tile from './Tiles';
-import { collect, pay, payday, pickLifeTile, pickCareer } from './operations';
+import { collect, pay, payday, pickLifeTile, pickCareer, taxesDue } from './operations';
 
 // COLOR KEY:
 // 0: red
