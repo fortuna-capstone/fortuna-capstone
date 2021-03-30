@@ -1,7 +1,7 @@
 import 'phaser';
 import phaserConfig from '../config/phaserConfig';
 
-export default class Button extends Phaser.GameObjects.Container {
+export default class MessageBox extends Phaser.GameObjects.Container {
   constructor(scene, x, y, key1, key2, key3, description, callback) {
     super(scene);
     this.scene = scene;
@@ -9,10 +9,10 @@ export default class Button extends Phaser.GameObjects.Container {
     const height = phaserConfig.height / 2;
     const msgBox = this.scene.add.group();
 
-    const box = this.scene.add.sprite(width, height, key1).setScale(0.5);
+    const box = this.scene.add.sprite(x.x > 400 ? x.x : width, height, key1).setScale(0.5);
 
     const button = this.scene.add
-      .sprite(width, height + 50, key2)
+      .sprite(x.x > 400 ? x.x : width, height + 50, key2)
       .setInteractive();
     const buttonText = this.scene.add
       .text(0, 0, 'Okay', { fontSize: '32px', fill: '#fff' })

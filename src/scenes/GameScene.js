@@ -20,6 +20,7 @@ let tile;
 let counter;
 let board;
 let playerInfo;
+let camera;
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -112,7 +113,7 @@ export default class GameScene extends Phaser.Scene {
     })
 })
 
-    // bootcamp or college
+    // Bootcamp or college?
     this.messageBox = new DecisionBox(
       this,
       0,
@@ -120,10 +121,10 @@ export default class GameScene extends Phaser.Scene {
       'messageBox',
       'blueButton1',
       'blueButton2',
-      'College or Bootcamp?',
+      'Where do you want to start?',
       'Go to College',
       'Go to Bootcamp',
-      3,
+      2,
       4,
       (decision) => {
         this.player.gamePiece.monopoly.setFace(decision);
@@ -137,14 +138,16 @@ export default class GameScene extends Phaser.Scene {
       'blueButton1',
       'blueButton2',
       'Spin!'
-    ).setScale(0.5);
-    this.cameras.main.setBounds(0, 0, board.displayWidth, board.displayHeight);
-    // this.cameras.main.startFollow(this.player);
+    ).setScale(0.5).setScrollFactor(0);
+
+
+    camera = this.cameras.main.setBounds(0, 0, 8000, 360);
+
   }
 
-  movePiece(i = 0) {
+  movePiece() {
     if (this.player) {
-      const path = this.player.gamePiece.monopoly.getPath(this.socket.roll - i);
+      const path = this.player.gamePiece.monopoly.getPath(counter);
       let updatedPath = [];
       for (let i = 0; i < path.length; i++) {
         let currentTileCost = path[i].cost;
@@ -155,7 +158,6 @@ export default class GameScene extends Phaser.Scene {
       }
       this.player.gamePiece.moveAlongPath(updatedPath, this.scene);
     }
-    // return this.getCurrentTile(updatedCoords);
   }
 
   update() {
@@ -171,6 +173,7 @@ export default class GameScene extends Phaser.Scene {
       this.socket.roll = 0;
     }
     if (this.player) {
+      camera.startFollow(this.player.gamePiece);
       playerInfo.text.setText(
         `bank account: ${this.player.bankAccount} \ncareer: ${
           this.player.career.description
@@ -243,7 +246,7 @@ export default class GameScene extends Phaser.Scene {
 
         let action = activeTile.operation;
         // action(this.scene)
-        if (tile.x === 2 && tile.y === 2) {
+        if (tile.x === 3 && tile.y === 2) {
           this.messageBox = new MessageBox(
             this,
             0,
@@ -258,7 +261,7 @@ export default class GameScene extends Phaser.Scene {
         else {
           this.messageBox = new MessageBox(
             this,
-            0,
+            camera.midPoint,
             0,
             'messageBox',
             'blueButton1',
@@ -275,8 +278,8 @@ function addPlayer(scene, player) {
   if (!scene.player) {
     scene.player = player;
     scene.player.gamePiece = new ChessPiece(board, {
-      x: 0,
-      y: 4,
+      x: 1,
+      y: 5,
     });
   }
 }
