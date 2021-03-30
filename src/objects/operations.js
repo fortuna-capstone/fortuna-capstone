@@ -26,6 +26,10 @@ export function payday(scene) {
   console.log('AFTER PAYDAY', scene.scene.player.bankAccount);
 }
 
+export function taxesDue(scene) {
+  scene.scene.player.bankAccount -= parseInt(scene.scene.player.salary.taxes) * 1000;
+}
+
 // Pulling Career Data from firebase
 let careers = {};
 const careersRef = db
