@@ -19,7 +19,7 @@ let tile;
 let counter;
 let board;
 let playerInfo;
-let playerTurn;
+let turn;
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -61,12 +61,13 @@ export default class GameScene extends Phaser.Scene {
     });
     this.socket.on('turnStarted', function (turnCounter) {
       console.log('TURN STARTED?', turnCounter);
-      this.turnCounter = turnCounter;
+      turn = turnCounter;
     });
     this.socket.on('playerLeft', function (playerId) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerId === otherPlayer.playerId) {
           otherPlayer.destroy();
+          console.log(scene.otherPlayers)
         }
       });
     });
@@ -144,7 +145,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   movePiece() {
-    console.log(this.player);
     if (this.player) {
       const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
       let updatedPath = [];
@@ -167,7 +167,6 @@ export default class GameScene extends Phaser.Scene {
       this.gameDice.button.setInteractive();
     }
     if (this.socket.roll !== 0) {
-      console.log('otherPlayers', this.otherPlayers);
       counter = this.socket.roll;
 
       this.movePiece();
@@ -241,17 +240,14 @@ export default class GameScene extends Phaser.Scene {
       this.player.oldSalary = {
         salary: this.player.salary,
       };
-
-      if (this.turnCounter !== this.player.turn) {
-        console.log('PLAYER TURN IN IF', this.turnCounter);
-        console.log('THIS PLAYER TURN IN IF', this.player.turn);
+      if(turn){
+      if (turn !== this.player.turn) {
         this.gameDice.button.disableInteractive();
       } else {
-        console.log('PLAYER TURN IN ELSE', this.player.turn);
-        console.log('THIS PLAYER TURN IN ELSE', this.turnCounter);
         this.gameDice.button.setInteractive();
       }
     }
+  }
 
     if (this.currentTile !== tile) {
       tile = this.currentTile;

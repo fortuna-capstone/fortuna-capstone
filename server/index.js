@@ -23,7 +23,7 @@ server.listen(process.env.PORT || 8080, function () {
 });
 
 let players = {};
-let turn = 1;
+let turn = 0;
 let turnCounter = 1;
 
 io.on('connection', (socket) => {
@@ -84,6 +84,7 @@ io.on('connection', (socket) => {
     }
     console.log('TURN COUNTER IN INDEX', turnCounter);
     socket.broadcast.emit('turnStarted', turnCounter);
+    socket.emit('turnStarted', turnCounter);
   });
 
   socket.emit('currentPlayers', players);
