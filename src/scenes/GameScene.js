@@ -156,7 +156,7 @@ export default class GameScene extends Phaser.Scene {
           break;
         }
       }
-      this.player.gamePiece.moveAlongPath(updatedPath, this.scene);
+      this.player.gamePiece.moveAlongPath(updatedPath, this.scene, camera);
     }
   }
 
@@ -245,31 +245,16 @@ export default class GameScene extends Phaser.Scene {
         let activeTile = tilemap[tile.y][tile.x]
 
         let action = activeTile.operation;
-        // action(this.scene)
-        if (tile.x === 3 && tile.y === 2) {
-          this.messageBox = new MessageBox(
-            this,
-            0,
-            0,
-            'messageBox',
-            'blueButton1',
-            'blueButton2',
-            'Choose a Career',
-            () => action(this.scene)
-          );
-        } 
-        else {
-          this.messageBox = new MessageBox(
-            this,
-            camera.midPoint,
-            0,
-            'messageBox',
-            'blueButton1',
-            'blueButton2',
-            activeTile.description,
-            () => action(this.scene)
-          );
-        }
+        this.messageBox = new MessageBox(
+          this,
+          camera.midPoint,
+          0,
+          'messageBox',
+          'blueButton1',
+          'blueButton2',
+          activeTile.description,
+          () => action(this.scene)
+        );
       }
     }
   }
@@ -292,3 +277,4 @@ function addOtherPlayers(scene, playerInfo){
   scene.otherPlayers.add(otherPlayer);
   scene.otherPlayersBody.push(otherPlayerBody)
 }
+
