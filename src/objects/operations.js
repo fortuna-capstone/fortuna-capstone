@@ -21,7 +21,9 @@ export function pickLifeTile(scene) {
 
 // payday function
 export function payday(scene) {
-  scene.scene.player.bankAccount += 100;
+  scene.scene.player.bankAccount +=
+    parseInt(scene.scene.player.salary.amount) * 1000;
+  console.log('AFTER PAYDAY', scene.scene.player.bankAccount);
 }
 
 // Pulling Career Data from firebase
@@ -45,7 +47,6 @@ export function pickCareer(scene) {
   let update = { taken: false };
   pickSalary(scene);
   return db.ref().child('Career').child(options[randomNum]).update(update);
-
 }
 
 // Pulling Salary Data from Firebase
