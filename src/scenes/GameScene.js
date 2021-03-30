@@ -13,13 +13,13 @@ import ChessPiece from '../objects/ChessPiece';
 import tilemap from '../objects/tilemap';
 import MessageBox from '../objects/MessageBox';
 import DecisionBox from '../objects/DecisionBox';
-import { pickCareer } from '../objects/operations';
 import PlayerInfo from '../objects/PlayerInfo';
 
 let tile;
 let counter;
 let board;
 let playerInfo;
+let turn;
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -60,11 +60,22 @@ export default class GameScene extends Phaser.Scene {
     this.socket.on('newPlayer', function (playerInfo) {
       addOtherPlayers(scene, playerInfo);
     });
+<<<<<<< HEAD
 
+=======
+    this.socket.on('turnStarted', function (turnCounter) {
+      console.log('TURN STARTED?', turnCounter);
+      turn = turnCounter;
+    });
+>>>>>>> main
     this.socket.on('playerLeft', function (playerId) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerId === otherPlayer.playerId) {
           otherPlayer.destroy();
+<<<<<<< HEAD
+=======
+          console.log(scene.otherPlayers)
+>>>>>>> main
         }
       });
     });
@@ -76,7 +87,10 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
     this.socket.on('gotPaid', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -128,9 +142,9 @@ export default class GameScene extends Phaser.Scene {
       4,
       (decision) => {
         this.player.gamePiece.monopoly.setFace(decision);
+        this.socket.emit('startGame');
       }
     );
-
     this.gameDice = new Dice(
       this,
       phaserConfig.width - 50,
@@ -139,11 +153,16 @@ export default class GameScene extends Phaser.Scene {
       'blueButton2',
       'Spin!'
     ).setScale(0.5);
+
+    this.currentTurn = 0;
   }
 
   movePiece() {
+<<<<<<< HEAD
     console.log('SOCKET CLIENT SIDE', this.socket);
     console.log(this.player);
+=======
+>>>>>>> main
     if (this.player) {
       const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
       let updatedPath = [];
@@ -166,7 +185,10 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.socket.roll !== 0) {
+<<<<<<< HEAD
       console.log('otherPlayers', this.otherPlayers);
+=======
+>>>>>>> main
       counter = this.socket.roll;
 
       this.movePiece();
@@ -246,6 +268,15 @@ export default class GameScene extends Phaser.Scene {
       this.player.oldSalary = {
         salary: this.player.salary,
       };
+<<<<<<< HEAD
+=======
+      if(turn){
+      if (turn !== this.player.turn) {
+        this.gameDice.button.disableInteractive();
+      } else {
+        this.gameDice.button.setInteractive();
+      }
+>>>>>>> main
     }
 
     if (this.currentTile !== tile) {
@@ -268,6 +299,7 @@ export default class GameScene extends Phaser.Scene {
             'Choose a Career',
             () => action(this.scene)
           );
+          this.socket.emit('endTurn');
         } else {
           this.messageBox = new MessageBox(
             this,
@@ -279,6 +311,7 @@ export default class GameScene extends Phaser.Scene {
             activeTile.description,
             () => action(this.scene)
           );
+          this.socket.emit('endTurn');
         }
         console.log('PLAYER', this);
       }

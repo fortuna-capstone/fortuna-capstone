@@ -41,7 +41,6 @@ io.on('connection', (socket) => {
     turn: turn,
   };
   turn++;
-
   socket.on('disconnect', function () {
     console.log('user disconnected');
     delete players[socket.id];
@@ -59,7 +58,6 @@ io.on('connection', (socket) => {
     players[socket.id].bankAccount = payData.bankAccount;
     socket.broadcast.emit('gotPaid', players[socket.id]);
   });
-
   socket.on('career', function (careerData) {
     players[socket.id].career = careerData.career;
     socket.broadcast.emit('gotCareer', players[socket.id]);
@@ -75,6 +73,21 @@ io.on('connection', (socket) => {
   socket.on('salary', function (salaryData) {
     players[socket.id].salary = salaryData.salary;
     socket.broadcast.emit('gotSalary', players[socket.id]);
+  });
+
+  socket.on('startGame', function () {
+    socket.emit('turnStarted', turnCounter);
+  });
+
+  socket.on('endTurn', function () {
+    if (turnCounter % 3 !== 0) {
+      turnCounter++;
+    } else {
+      turnCounter = 1;
+    }
+    console.log('TURN COUNTER IN INDEX', turnCounter);
+    socket.broadcast.emit('turnStarted', turnCounter);
+    socket.emit('turnStarted', turnCounter);
   });
 
   socket.emit('currentPlayers', players);
