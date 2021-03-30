@@ -1,5 +1,12 @@
 import Tile from './Tiles';
-import { collect, pay, payday, pickLifeTile, pickCareer } from './operations';
+import {
+  collect,
+  pay,
+  payday,
+  pickLifeTile,
+  pickCareer,
+  retire,
+} from './operations';
 
 // COLOR KEY:
 // 0: red
@@ -42,7 +49,7 @@ const tilemap = [
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(0, 'Red Tile # 1', payday),
+    new Tile(0, 'Red Tile # 1', retire),
   ],
   [
     new Tile(1, 'Scholarship! Collect $20,000 (Orange #4)', (scene, amount) =>
