@@ -82,7 +82,7 @@ io.on('connection', (socket) => {
     // } else {
     //   turnCounter = 1;
     // }
-    turnCounter = 1;
+    turnCounter = turnCounter;
     console.log('TURN COUNTER IN INDEX', turnCounter);
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);
