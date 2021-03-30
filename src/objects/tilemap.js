@@ -171,8 +171,7 @@ const tilemap = [
     new Tile(2, 'Graduation Day!', pickLifeTile),
     new Tile(0, 'Choose a career.', pickCareer),
     new Tile(3, 'Payday!', payday),
-    // new Tile(2, 'Birthday Party!', pickLifeTile),
-    new Tile(3, 'Taxes?', taxesDue),
+    new Tile(2, 'Birthday Party!', pickLifeTile),
     new Tile(' '),
     new Tile(1, 'Pay $15,000.', (scene, amount) =>
       pay(scene, (amount = 15000))
