@@ -43,8 +43,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', function () {
     console.log('user disconnected');
     delete players[socket.id];
-    turn --
-    turnCounter --
+    if(turn>1){
+      turn --}
+    if(turnCounter>1){
+    turnCounter --}
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);
   });
