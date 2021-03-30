@@ -19,6 +19,7 @@ let tile;
 let counter;
 let board;
 let playerInfo;
+let camera;
 let turn;
 
 export default class GameScene extends Phaser.Scene {
@@ -125,10 +126,10 @@ export default class GameScene extends Phaser.Scene {
       'messageBox',
       'blueButton1',
       'blueButton2',
-      'College or Bootcamp?',
+      'Where do you want to start?',
       'Go to College',
       'Go to Bootcamp',
-      3,
+      2,
       4,
       (decision) => {
         this.player.gamePiece.monopoly.setFace(decision);
@@ -142,7 +143,10 @@ export default class GameScene extends Phaser.Scene {
       'blueButton1',
       'blueButton2',
       'Spin!'
-    ).setScale(0.5);
+    ).setScale(0.5).setScrollFactor(0);
+
+
+    camera = this.cameras.main.setBounds(0, 0, 8000, 360);
 
     this.currentTurn = 0;
   }
@@ -151,7 +155,7 @@ export default class GameScene extends Phaser.Scene {
     console.log('SOCKET CLIENT SIDE', this.socket);
     console.log(this.player);
     if (this.player) {
-      const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
+      const path = this.player.gamePiece.monopoly.getPath(counter);
       let updatedPath = [];
       for (let i = 0; i < path.length; i++) {
         let currentTileCost = path[i].cost;
@@ -160,7 +164,7 @@ export default class GameScene extends Phaser.Scene {
           break;
         }
       }
-      this.player.gamePiece.moveAlongPath(updatedPath, this.scene);
+      this.player.gamePiece.moveAlongPath(updatedPath, this.scene, camera);
     }
   }
 
@@ -184,6 +188,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.player) {
+      camera.startFollow(this.player.gamePiece);
       playerInfo.text.setText(
         `bank account: ${this.player.bankAccount} \ncareer: ${
           this.player.career.description
@@ -265,6 +270,7 @@ export default class GameScene extends Phaser.Scene {
         if (!counter || !tile.cost) {
           let activeTile = tilemap[tile.y][tile.x];
 
+
           let action = activeTile.operation;
           // action(this.scene)
 
@@ -295,6 +301,20 @@ export default class GameScene extends Phaser.Scene {
           }
           console.log('PLAYER', this);
         }
+
+        let action = activeTile.operation;
+        this.messageBox = new MessageBox(
+          this,
+          camera.midPoint,
+          0,
+          'messageBox',
+          'blueButton1',
+          'blueButton2',
+          activeTile.description,
+          () => action(this.scene)
+        );
+        this.socket.emit('endTurn');
+
       }
     }
   }
@@ -304,8 +324,8 @@ function addPlayer(scene, player) {
   if (!scene.player) {
     scene.player = player;
     scene.player.gamePiece = new ChessPiece(board, {
-      x: 0,
-      y: 4,
+      x: 1,
+      y: 5,
     });
     scene.player.isTurn++;
   }
@@ -322,6 +342,7 @@ function addOtherPlayers(scene, playerInfo) {
   scene.otherPlayersBody.push(otherPlayerBody);
 }
 
+
 // else if (this.player.isTurn === false) {
 //   this.messageBox = new MessageBox(
 //     this,
@@ -333,3 +354,5 @@ function addOtherPlayers(scene, playerInfo) {
 //     'Please wait for your turn!'
 //   );
 // }
+
+

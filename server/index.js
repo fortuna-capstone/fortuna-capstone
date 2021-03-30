@@ -1,4 +1,3 @@
-const { SSL_OP_NO_TICKET } = require('constants');
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -36,14 +35,18 @@ io.on('connection', (socket) => {
     deskItems: [],
     house: [],
     gamePiece: {},
-    x: 130,
-    y: 270,
+    x: 190,
+    y: 330,
     turn: turn,
   };
   turn++;
   socket.on('disconnect', function () {
     console.log('user disconnected');
     delete players[socket.id];
+    turn --
+    turnCounter --
+    socket.broadcast.emit('turnStarted', turnCounter);
+    socket.emit('turnStarted', turnCounter);
   });
 
   socket.emit('startTurn', turnCounter);

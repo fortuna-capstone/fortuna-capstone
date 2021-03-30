@@ -28,7 +28,7 @@ export default class MyBoard extends RexPlugins.Board.Board {
         cellHeight: 60,
         type: 'orthogonal',
       },
-      width: 7,
+      width: 48,
       height: 7,
     });
 
