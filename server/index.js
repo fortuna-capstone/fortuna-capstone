@@ -80,11 +80,11 @@ io.on('connection', (socket) => {
   });
 
   socket.on('endTurn', function () {
-    if (turnCounter % 3 !== 0) {
-      turnCounter++;
-    } else {
+    // if (turnCounter % 3 !== 0) {
+    //   turnCounter++;
+    // } else {
       turnCounter = 1;
-    }
+    // }
     console.log('TURN COUNTER IN INDEX', turnCounter);
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);

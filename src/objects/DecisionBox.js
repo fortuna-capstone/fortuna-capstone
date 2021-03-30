@@ -1,7 +1,7 @@
 import 'phaser';
 import phaserConfig from '../config/phaserConfig';
 
-export default class Button extends Phaser.GameObjects.Container {
+export default class DecisionBox extends Phaser.GameObjects.Container {
   constructor(
     scene,
     x,
