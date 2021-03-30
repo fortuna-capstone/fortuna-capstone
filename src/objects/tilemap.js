@@ -208,7 +208,7 @@ const tilemap = [
     ),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
+    new Tile(1, 'Taxes due.', taxesDue),
     new Tile(' '),
     new Tile(1, 'Collect $95,000.', (scene, amount) =>
       collect(scene, (amount = 95000))
@@ -218,7 +218,7 @@ const tilemap = [
       pay(scene, (amount = 50000))
     ),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
+    new Tile(1, 'Taxes due.', taxesDue),
     new Tile(' '),
     new Tile(1, 'Pay $100,000', (scene, amount) =>
       pay(scene, (amount = 100000))
@@ -245,7 +245,7 @@ const tilemap = [
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
+    new Tile(1, 'Taxes due.', taxesDue),
     new Tile(' '),
     new Tile(' '),
     new Tile(1, 'Pay $5,000.', (scene, amount) =>
@@ -288,7 +288,7 @@ const tilemap = [
     new Tile(' '),
     new Tile(1, 'ORANGE - Trade salary with any player.', () => console.log('Some function goes here.')),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
+    new Tile(1, 'Taxes due.', taxesDue),
     new Tile(' '),
     new Tile(1, 'ORANGE - spin again if not in the lead?', () => console.log('Some function goes here.')),
     new Tile(' '),
@@ -395,7 +395,7 @@ const tilemap = [
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
+    new Tile(1, 'Taxes due.', taxesDue),
     new Tile(1, 'Pay $25,000.', (scene, amount) => 
       pay(scene, (amount = 25000))
     ),
