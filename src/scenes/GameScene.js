@@ -60,22 +60,16 @@ export default class GameScene extends Phaser.Scene {
     this.socket.on('newPlayer', function (playerInfo) {
       addOtherPlayers(scene, playerInfo);
     });
-<<<<<<< HEAD
 
-=======
     this.socket.on('turnStarted', function (turnCounter) {
       console.log('TURN STARTED?', turnCounter);
       turn = turnCounter;
     });
->>>>>>> main
     this.socket.on('playerLeft', function (playerId) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerId === otherPlayer.playerId) {
           otherPlayer.destroy();
-<<<<<<< HEAD
-=======
-          console.log(scene.otherPlayers)
->>>>>>> main
+          console.log(scene.otherPlayers);
         }
       });
     });
@@ -87,10 +81,6 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
-<<<<<<< HEAD
-
-=======
->>>>>>> main
     this.socket.on('gotPaid', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -158,11 +148,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   movePiece() {
-<<<<<<< HEAD
     console.log('SOCKET CLIENT SIDE', this.socket);
     console.log(this.player);
-=======
->>>>>>> main
     if (this.player) {
       const path = this.player.gamePiece.monopoly.getPath(this.socket.roll);
       let updatedPath = [];
@@ -185,10 +172,6 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.socket.roll !== 0) {
-<<<<<<< HEAD
-      console.log('otherPlayers', this.otherPlayers);
-=======
->>>>>>> main
       counter = this.socket.roll;
 
       this.movePiece();
@@ -268,56 +251,55 @@ export default class GameScene extends Phaser.Scene {
       this.player.oldSalary = {
         salary: this.player.salary,
       };
-<<<<<<< HEAD
-=======
-      if(turn){
-      if (turn !== this.player.turn) {
-        this.gameDice.button.disableInteractive();
-      } else {
-        this.gameDice.button.setInteractive();
-      }
->>>>>>> main
-    }
-
-    if (this.currentTile !== tile) {
-      tile = this.currentTile;
-      counter--;
-      if (!counter || !tile.cost) {
-        let activeTile = tilemap[tile.y][tile.x];
-
-        let action = activeTile.operation;
-        // action(this.scene)
-
-        if (tile.x === 2 && tile.y === 2) {
-          this.messageBox = new MessageBox(
-            this,
-            0,
-            0,
-            'messageBox',
-            'blueButton1',
-            'blueButton2',
-            'Choose a Career',
-            () => action(this.scene)
-          );
-          this.socket.emit('endTurn');
+      if (turn) {
+        if (turn !== this.player.turn) {
+          this.gameDice.button.disableInteractive();
         } else {
-          this.messageBox = new MessageBox(
-            this,
-            0,
-            0,
-            'messageBox',
-            'blueButton1',
-            'blueButton2',
-            activeTile.description,
-            () => action(this.scene)
-          );
-          this.socket.emit('endTurn');
+          this.gameDice.button.setInteractive();
         }
-        console.log('PLAYER', this);
+      }
+
+      if (this.currentTile !== tile) {
+        tile = this.currentTile;
+        counter--;
+        if (!counter || !tile.cost) {
+          let activeTile = tilemap[tile.y][tile.x];
+
+          let action = activeTile.operation;
+          // action(this.scene)
+
+          if (tile.x === 2 && tile.y === 2) {
+            this.messageBox = new MessageBox(
+              this,
+              0,
+              0,
+              'messageBox',
+              'blueButton1',
+              'blueButton2',
+              'Choose a Career',
+              () => action(this.scene)
+            );
+            this.socket.emit('endTurn');
+          } else {
+            this.messageBox = new MessageBox(
+              this,
+              0,
+              0,
+              'messageBox',
+              'blueButton1',
+              'blueButton2',
+              activeTile.description,
+              () => action(this.scene)
+            );
+            this.socket.emit('endTurn');
+          }
+          console.log('PLAYER', this);
+        }
       }
     }
   }
 }
+
 function addPlayer(scene, player) {
   if (!scene.player) {
     scene.player = player;
