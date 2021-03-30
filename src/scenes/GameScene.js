@@ -57,11 +57,9 @@ export default class GameScene extends Phaser.Scene {
       });
       playerInfo = new PlayerInfo(scene, scene.player);
     });
-
     this.socket.on('newPlayer', function (playerInfo) {
       addOtherPlayers(scene, playerInfo);
     });
-
     this.socket.on('turnStarted', function (turnCounter) {
       console.log('TURN STARTED?', turnCounter);
       turn = turnCounter;
@@ -70,11 +68,10 @@ export default class GameScene extends Phaser.Scene {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerId === otherPlayer.playerId) {
           otherPlayer.destroy();
-          console.log(scene.otherPlayers);
+          console.log(scene.otherPlayers)
         }
       });
     });
-
     this.socket.on('playerMoved', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -152,8 +149,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   movePiece() {
-    console.log('SOCKET CLIENT SIDE', this.socket);
-    console.log(this.player);
     if (this.player) {
       const path = this.player.gamePiece.monopoly.getPath(counter);
       let updatedPath = [];
@@ -174,19 +169,12 @@ export default class GameScene extends Phaser.Scene {
     } else {
       this.gameDice.button.setInteractive();
     }
-
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
 
       this.movePiece();
       this.socket.roll = 0;
-
-      this.socket.on('startTurn', function (turnCounter, player = this.player) {
-        console.log('TURNNNN', turnCounter);
-        console.log('THISSS', this);
-      });
     }
-
     if (this.player) {
       camera.startFollow(this.player.gamePiece);
       playerInfo.text.setText(
@@ -256,51 +244,20 @@ export default class GameScene extends Phaser.Scene {
       this.player.oldSalary = {
         salary: this.player.salary,
       };
-      if (turn) {
-        if (turn !== this.player.turn) {
-          this.gameDice.button.disableInteractive();
-        } else {
-          this.gameDice.button.setInteractive();
-        }
+      if(turn){
+      if (turn !== this.player.turn) {
+        this.gameDice.button.disableInteractive();
+      } else {
+        this.gameDice.button.setInteractive();
       }
+    }
+  }
 
-      if (this.currentTile !== tile) {
-        tile = this.currentTile;
-        counter--;
-        if (!counter || !tile.cost) {
-          let activeTile = tilemap[tile.y][tile.x];
-
-
-          let action = activeTile.operation;
-          // action(this.scene)
-
-          if (tile.x === 2 && tile.y === 2) {
-            this.messageBox = new MessageBox(
-              this,
-              0,
-              0,
-              'messageBox',
-              'blueButton1',
-              'blueButton2',
-              'Choose a Career',
-              () => action(this.scene)
-            );
-            this.socket.emit('endTurn');
-          } else {
-            this.messageBox = new MessageBox(
-              this,
-              0,
-              0,
-              'messageBox',
-              'blueButton1',
-              'blueButton2',
-              activeTile.description,
-              () => action(this.scene)
-            );
-            this.socket.emit('endTurn');
-          }
-          console.log('PLAYER', this);
-        }
+    if (this.currentTile !== tile) {
+      tile = this.currentTile;
+      counter--;
+      if (!counter || !tile.cost) {
+        let activeTile = tilemap[tile.y][tile.x];
 
         let action = activeTile.operation;
         this.messageBox = new MessageBox(
@@ -314,12 +271,10 @@ export default class GameScene extends Phaser.Scene {
           () => action(this.scene)
         );
         this.socket.emit('endTurn');
-
       }
     }
   }
 }
-
 function addPlayer(scene, player) {
   if (!scene.player) {
     scene.player = player;
@@ -327,7 +282,6 @@ function addPlayer(scene, player) {
       x: 1,
       y: 5,
     });
-    scene.player.isTurn++;
   }
 }
 
@@ -341,18 +295,4 @@ function addOtherPlayers(scene, playerInfo) {
   scene.otherPlayers.add(otherPlayer);
   scene.otherPlayersBody.push(otherPlayerBody);
 }
-
-
-// else if (this.player.isTurn === false) {
-//   this.messageBox = new MessageBox(
-//     this,
-//     0,
-//     0,
-//     'messageBox',
-//     'blueButton1',
-//     'blueButton2',
-//     'Please wait for your turn!'
-//   );
-// }
-
 
