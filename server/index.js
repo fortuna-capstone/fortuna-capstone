@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('gotSalary', players[socket.id]);
   });
 
-  socket.on('startTurn', function () {
+  socket.on('startGame', function () {
     socket.emit('turnStarted', turnCounter);
   });
 
@@ -83,6 +83,7 @@ io.on('connection', (socket) => {
       turnCounter = 1;
     }
     console.log('TURN COUNTER IN INDEX', turnCounter);
+    socket.broadcast.emit('turnStarted', turnCounter);
   });
 
   socket.emit('currentPlayers', players);

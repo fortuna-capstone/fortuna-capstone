@@ -13,7 +13,6 @@ import ChessPiece from '../objects/ChessPiece';
 import tilemap from '../objects/tilemap';
 import MessageBox from '../objects/MessageBox';
 import DecisionBox from '../objects/DecisionBox';
-import { pickCareer } from '../objects/operations';
 import PlayerInfo from '../objects/PlayerInfo';
 
 let tile;
@@ -21,7 +20,6 @@ let counter;
 let board;
 let playerInfo;
 let playerTurn;
-let someonePlaying = false;
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -60,6 +58,10 @@ export default class GameScene extends Phaser.Scene {
     });
     this.socket.on('newPlayer', function (playerInfo) {
       addOtherPlayers(scene, playerInfo);
+    });
+    this.socket.on('turnStarted', function (turnCounter) {
+      console.log('TURN STARTED?', turnCounter);
+      this.turnCounter = turnCounter;
     });
     this.socket.on('playerLeft', function (playerId) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
@@ -126,6 +128,7 @@ export default class GameScene extends Phaser.Scene {
       4,
       (decision) => {
         this.player.gamePiece.monopoly.setFace(decision);
+        this.socket.emit('startGame');
       }
     );
     this.gameDice = new Dice(
@@ -239,22 +242,13 @@ export default class GameScene extends Phaser.Scene {
         salary: this.player.salary,
       };
 
-      if (!someonePlaying) {
-        someonePlaying = true;
-        this.socket.emit('startTurn');
-        this.socket.on('turnStarted', function (turnCounter) {
-          console.log('TURN COUNTER', turnCounter);
-          playerTurn = turnCounter;
-          console.log('PLAYER TURN AFTER ASSIGNMENT', playerTurn);
-        });
-      }
-      if (playerTurn !== this.player.turn) {
-        console.log('PLAYER TURN IN IF', playerTurn);
+      if (this.turnCounter !== this.player.turn) {
+        console.log('PLAYER TURN IN IF', this.turnCounter);
         console.log('THIS PLAYER TURN IN IF', this.player.turn);
         this.gameDice.button.disableInteractive();
       } else {
-        console.log('PLAYER TURN IN ELSE', playerTurn);
-        console.log('THIS PLAYER TURN IN ELSE', this.playerTurn);
+        console.log('PLAYER TURN IN ELSE', this.player.turn);
+        console.log('THIS PLAYER TURN IN ELSE', this.turnCounter);
         this.gameDice.button.setInteractive();
       }
     }
@@ -280,7 +274,6 @@ export default class GameScene extends Phaser.Scene {
             () => action(this.scene)
           );
           this.socket.emit('endTurn');
-          someonePlaying = false;
         } else {
           this.messageBox = new MessageBox(
             this,
@@ -293,7 +286,6 @@ export default class GameScene extends Phaser.Scene {
             () => action(this.scene)
           );
           this.socket.emit('endTurn');
-          someonePlaying = false;
         }
         console.log('PLAYER', this.player);
       }
