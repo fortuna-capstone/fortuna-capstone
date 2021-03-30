@@ -49,11 +49,14 @@ io.on('connection', (socket) => {
     socket.emit('turnStarted', turnCounter);
   });
 
+  socket.emit('startTurn', turnCounter);
+
   socket.on('playerMovement', function (movementData) {
     players[socket.id].x = movementData.x;
     players[socket.id].y = movementData.y;
     socket.broadcast.emit('playerMoved', players[socket.id]);
   });
+
   socket.on('payday', function (payData) {
     players[socket.id].bankAccount = payData.bankAccount;
     socket.broadcast.emit('gotPaid', players[socket.id]);
