@@ -171,6 +171,11 @@ export default class GameScene extends Phaser.Scene {
 
       this.movePiece();
       this.socket.roll = 0;
+
+      this.socket.on('startTurn', function (turnCounter, player = this.player) {
+        console.log('TURNNNN', turnCounter);
+        console.log('THISSS', this);
+      });
     }
 
     if (this.player) {
