@@ -28,7 +28,6 @@ let playing = true;
 
 let playerTwoInfo;
 
-
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
     super('Game');
@@ -61,7 +60,6 @@ export default class GameScene extends Phaser.Scene {
           addOtherPlayers(scene, players[id]);
         }
       });
-
     });
     this.socket.on('newPlayer', function (playerInfo) {
       addOtherPlayers(scene, playerInfo);
@@ -259,6 +257,10 @@ export default class GameScene extends Phaser.Scene {
         salary: this.player.salary,
       };
       if (turn) {
+        if (turn === this.player.turn && this.player.skip) {
+          console.log('TURN WILL BE SKIPPED!!!');
+          this.socket.emit('endTurn');
+        }
         if (turn !== this.player.turn) {
           this.gameDice.button.disableInteractive();
         } else {
@@ -312,9 +314,9 @@ function addPlayer(scene, player) {
       y: 5,
     });
     playerInfo = new PlayerInfo(scene, player, 20, 510);
-    console.log(playerInfo)
+    console.log(playerInfo);
     playerTwoInfo = new PlayerInfo(scene, player, 20, 110);
-    console.log(playerTwoInfo)
+    console.log(playerTwoInfo);
   }
 }
 
