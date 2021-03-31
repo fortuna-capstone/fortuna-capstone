@@ -23,102 +23,111 @@ export default class HouseDecision extends Phaser.GameObjects.Container {
 
     const splitLevel = new Button(
       scene,
-      x.x > 400 ? x.x : width,
-      height,
+      x.x > 400 ? x.x - 75 : width,
+      height - 50,
       key2,
       key3,
       'Split-Level: $40,000',
       () => destroyFunc('Split-Level'),
-      '20px'
-    ).setScale(0.5)
+      '12px',
+      0.8
+    )
 
     const mobileHome = new Button(
       scene,
-      x.x > 400 ? x.x : width,
-      height + 10,
+      x.x > 400 ? x.x + 75 : width,
+      height - 50,
       key2,
       key3,
       'Mobile Home: $60,000',
       () => destroyFunc('Mobile Home'),
-      '20px'
-    ).setScale(0.5)
+      '12px',
+      0.8
+    )
 
     const logCabin = new Button(
       scene,
-      x.x > 400 ? x.x : width,
-      height + 20,
+      x.x > 400 ? x.x - 75 : width,
+      height - 10,
       key2,
       key3,
       'Log Cabin: $80,000',
       () => destroyFunc('Log Cabin'),
-      '20px'
-    ).setScale(0.5)
+      '12px',
+      0.8
+    )
 
     const cozyCondo = new Button(
       scene,
-      x.x > 400 ? x.x : width,
-      height + 30,
+      x.x > 400 ? x.x + 75 : width,
+      height - 10,
       key2,
       key3,
       'Cozy Condo: $100,000',
       () => destroyFunc('Cozy Condo'),
-      '20px'
-    ).setScale(0.5)
+      '12px',
+      0.8
+    )
 
     const dutchColonial = new Button(
       scene,
-      x.x > 400 ? x.x : width,
-      height + 40,
+      x.x > 400 ? x.x - 75 : width,
+      height + 30,
       key2,
       key3,
-      'Dutch Colonial: $120,000',
+      'Colonial: $120,000',
       () => destroyFunc('Dutch Colonial'),
-      '20px'
-    ).setScale(0.5)
+      '12px',
+      0.8
+    )
 
     const beachHouse = new Button(
       scene,
-      x.x > 400 ? x.x : width,
-      height + 50,
+      x.x > 400 ? x.x + 75 : width,
+      height + 30,
       key2,
       key3,
       'Beach House: $140,000',
       () => destroyFunc('Beach House'),
-      '20px'
-    ).setScale(0.5)
+      '12px',
+      0.8
+    )
 
     const farmhouse = new Button(
       scene,
-      x.x > 400 ? x.x : width,
-      height + 60,
+      x.x > 400 ? x.x - 75: width,
+      height + 70,
       key2,
       key3,
       'Farmhouse: $160,000',
       () => destroyFunc('Farmhouse'),
-      '20px'
-    ).setScale(0.5)
+      '12px',
+      0.8
+    )
 
     const tudor = new Button(
       scene,
-      x.x > 400 ? x.x : width,
+      x.x > 400 ? x.x + 75: width,
       height + 70,
       key2,
       key3,
       'Tudor: $180,000',
       () => destroyFunc('Tudor'),
-      '20px'
-    ).setScale(0.5)
+      '12px',
+      0.8
+    )
 
     const victorian = new Button(
       scene,
       x.x > 400 ? x.x : width,
-      height + 80,
+      height + 110,
       key2,
       key3,
       'Victorian: $200,000',
       () => destroyFunc('Victorian'),
-      '20px'
-    ).setScale(0.5)
+      '12px',
+      0.8
+    )
 
   // adds text in box
     const text = this.scene.add.text(0, 0, description, {
@@ -128,7 +137,7 @@ export default class HouseDecision extends Phaser.GameObjects.Container {
       align: 'center',
     }).setDepth(7);
     Phaser.Display.Align.In.TopCenter(text, box);
-    text.y = 210;
+    text.y = 180;
 
     msgBox.add(box);
     msgBox.add(text);
