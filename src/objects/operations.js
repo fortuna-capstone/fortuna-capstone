@@ -49,7 +49,7 @@ housesRef.on('value', (snap) => {
 // pick house function
 export function pickHouse(scene, selectedHouse) {
   scene.scene.player.house = houses[selectedHouse];
-  console.log(scene.scene.player)
+  scene.scene.player.bankAccount -= parseInt(scene.scene.player.house.cost) * 1000;
 } 
 
 // Pulling Career Data from firebase

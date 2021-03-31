@@ -1,5 +1,6 @@
 import 'phaser';
 import phaserConfig from '../config/phaserConfig';
+import Button from './Button';
 
 export default class HouseDecision extends Phaser.GameObjects.Container {
   constructor(
@@ -20,63 +21,106 @@ export default class HouseDecision extends Phaser.GameObjects.Container {
 
     const box = this.scene.add.sprite(x.x > 400 ? x.x : width, height, key1).setScale(0.6).setDepth(6);
 
-    const button1 = this.scene.add
-      .sprite(x.x > 400 ? x.x - 25: width, height, key2)
-      .setInteractive().setDepth(7).setScale(0.7);
-    const button1Text = this.scene.add.text(0, 0, 'Apartment', {
-      fontSize: '20px',
-      fill: '#fff',
-    }).setDepth(8);
-    Phaser.Display.Align.In.Center(button1Text, button1);
+    const splitLevel = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height,
+      key2,
+      key3,
+      'Split-Level: $40,000',
+      () => destroyFunc('Split-Level'),
+      '20px'
+    ).setScale(0.5)
 
-    const button2 = this.scene.add
-      .sprite(x.x > 400 ? x.x + 50: width, height, key2)
-      .setInteractive().setDepth(7).setScale(0.7);
-    const button2Text = this.scene.add.text(0, 0, 'Fancy House', {
-      fontSize: '20px',
-      fill: '#fff',
-    }).setDepth(8);
-    Phaser.Display.Align.In.Center(button2Text, button2);
+    const mobileHome = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height + 10,
+      key2,
+      key3,
+      'Mobile Home: $60,000',
+      () => destroyFunc('Mobile Home'),
+      '20px'
+    ).setScale(0.5)
 
-     // create bottom choice button
-    const button3 = this.scene.add
-      .sprite(x.x > 400 ? x.x - 25: width, height + 70, key2)
-      .setInteractive().setDepth(7).setScale(0.7);
-    const button3Text = this.scene.add.text(0, 0, 'Parents House', {
-      fontSize: '20px',
-      fill: '#fff',
-    }).setDepth(8);
-    Phaser.Display.Align.In.Center(button3Text, button3);
+    const logCabin = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height + 20,
+      key2,
+      key3,
+      'Log Cabin: $80,000',
+      () => destroyFunc('Log Cabin'),
+      '20px'
+    ).setScale(0.5)
 
-  
-   const button4 = this.scene.add
-    .sprite(x.x > 400 ? x.x + 50: width, height + 70, key2)
-    .setInteractive().setDepth(7).setScale(0.7);
-   const button4Text = this.scene.add.text(0, 0, 'Regular House', {
-   fontSize: '20px',
-   fill: '#fff',
-  }).setDepth(8);
-  Phaser.Display.Align.In.Center(button4Text, button4);
+    const cozyCondo = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height + 30,
+      key2,
+      key3,
+      'Cozy Condo: $100,000',
+      () => destroyFunc('Cozy Condo'),
+      '20px'
+    ).setScale(0.5)
 
-  const button5 = this.scene.add
-    .sprite(x.x > 400 ? x.x - 25: width, height + 35, key2)
-    .setInteractive().setDepth(7).setScale(0.7);
-   const button5Text = this.scene.add.text(0, 0, 'Studio', {
-   fontSize: '20px',
-   fill: '#fff',
-  }).setDepth(8);
-  Phaser.Display.Align.In.Center(button5Text, button5);
+    const dutchColonial = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height + 40,
+      key2,
+      key3,
+      'Dutch Colonial: $120,000',
+      () => destroyFunc('Dutch Colonial'),
+      '20px'
+    ).setScale(0.5)
 
-  const button6 = this.scene.add
-    .sprite(x.x > 400 ? x.x + 50: width, height + 35, key2)
-    .setInteractive().setDepth(7).setScale(0.7);
-   const button6Text = this.scene.add.text(0, 0, '60,000', {
-   fontSize: '20px',
-   fill: '#fff',
-  }).setDepth(8);
-  Phaser.Display.Align.In.Center(button6Text, button6);
+    const beachHouse = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height + 50,
+      key2,
+      key3,
+      'Beach House: $140,000',
+      () => destroyFunc('Beach House'),
+      '20px'
+    ).setScale(0.5)
 
-    // adds text in box
+    const farmhouse = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height + 60,
+      key2,
+      key3,
+      'Farmhouse: $160,000',
+      () => destroyFunc('Farmhouse'),
+      '20px'
+    ).setScale(0.5)
+
+    const tudor = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height + 70,
+      key2,
+      key3,
+      'Tudor: $180,000',
+      () => destroyFunc('Tudor'),
+      '20px'
+    ).setScale(0.5)
+
+    const victorian = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height + 80,
+      key2,
+      key3,
+      'Victorian: $200,000',
+      () => destroyFunc('Victorian'),
+      '20px'
+    ).setScale(0.5)
+
+  // adds text in box
     const text = this.scene.add.text(0, 0, description, {
       fontSize: '20px',
       fill: '#000',
@@ -87,106 +131,41 @@ export default class HouseDecision extends Phaser.GameObjects.Container {
     text.y = 210;
 
     msgBox.add(box);
-    msgBox.add(button1);
-    msgBox.add(button1Text);
-    msgBox.add(button2);
-    msgBox.add(button2Text);
-    msgBox.add(button3);
-    msgBox.add(button3Text);
-    msgBox.add(button4);
-    msgBox.add(button4Text);
-    msgBox.add(button5);
-    msgBox.add(button5Text);
-    msgBox.add(button6);
-    msgBox.add(button6Text);
     msgBox.add(text);
 
-    // top button decision
-    button1.on('pointerdown', function () {
-      callback('Apartment');
+    const destroyFunc = (name) => {
+      callback(name);
+
       msgBox.destroy(true);
+
+      splitLevel.button.destroy();
+      splitLevel.text.destroy();
+
+      mobileHome.button.destroy();
+      mobileHome.text.destroy();
+
+      logCabin.button.destroy();
+      logCabin.text.destroy();
+
+      cozyCondo.button.destroy();
+      cozyCondo.text.destroy();
+
+      dutchColonial.button.destroy();
+      dutchColonial.text.destroy();
+
+      beachHouse.button.destroy();
+      beachHouse.text.destroy();
+
+      farmhouse.button.destroy();
+      farmhouse.text.destroy();
+
+      tudor.button.destroy();
+      tudor.text.destroy();
+
+      victorian.button.destroy();
+      victorian.text.destroy();
+
       scene.messageBox = null;
-    });
-
-    button1.on('pointerover', function () {
-      button1.setTexture(key3);
-    });
-
-    button1.on('pointerout', function () {
-      button1.setTexture(key2);
-    });
-
-    // bottom button decision
-    button2.on('pointerdown', function () {
-      callback('Fancy House');
-      msgBox.destroy(true);
-      scene.messageBox = null;
-    });
-
-    button2.on('pointerover', function () {
-      button2.setTexture(key3);
-    });
-
-    button2.on('pointerout', function () {
-      button2.setTexture(key2);
-    });
-
-     // bottom button decision
-     button3.on('pointerdown', function () {
-      callback('Parents House');
-      msgBox.destroy(true);
-      scene.messageBox = null;
-    });
-
-    button3.on('pointerover', function () {
-      button3.setTexture(key3);
-    });
-
-    button3.on('pointerout', function () {
-      button3.setTexture(key2);
-    });
-
-    // bottom button decision
-    button4.on('pointerdown', function () {
-      callback('Regular House');
-      msgBox.destroy(true);
-      scene.messageBox = null;
-    });
-
-    button4.on('pointerover', function () {
-      button4.setTexture(key3);
-    });
-
-    button4.on('pointerout', function () {
-      button4.setTexture(key2);
-    });
-
-    button5.on('pointerdown', function () {
-      callback('Studio');
-      msgBox.destroy(true);
-      scene.messageBox = null;
-    });
-
-    button5.on('pointerover', function () {
-      button5.setTexture(key3);
-    });
-
-    button5.on('pointerout', function () {
-      button5.setTexture(key2);
-    });
-
-    button6.on('pointerdown', function () {
-      callback(decision2);
-      msgBox.destroy(true);
-      scene.messageBox = null;
-    });
-
-    button6.on('pointerover', function () {
-      button6.setTexture(key3);
-    });
-
-    button6.on('pointerout', function () {
-      button6.setTexture(key2);
-    });
+    }
   }
 }
