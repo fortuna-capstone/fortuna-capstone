@@ -113,7 +113,9 @@ const tilemap = [
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(0, 'GET MARRIED or something', retire),
+    new Tile(0, 'GET MARRIED or something', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(' '),
     new Tile(1, 'Pay $10,000.', (scene, amount) =>
@@ -250,7 +252,7 @@ const tilemap = [
       pay(scene, (amount = 45000))
     ),
     new Tile(' '),
-    new Tile(0, 'Retire!', () => console.log('Some function goes here.')),
+    new Tile(0, 'Retire!', retire),
   ],
   [
     new Tile(2, 'Make new friends.', pickLifeTile),
