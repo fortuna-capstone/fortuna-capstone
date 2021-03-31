@@ -55,32 +55,15 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);
   });
+  socket.on('updatePlayer', function (player) {
+    players[socket.id] = player;
+    socket.broadcast.emit('gotPlayer', players[socket.id]);
+  });
 
   socket.on('playerMovement', function (movementData) {
     players[socket.id].x = movementData.x;
     players[socket.id].y = movementData.y;
     socket.broadcast.emit('playerMoved', players[socket.id]);
-  });
-  socket.on('payday', function (payData) {
-    players[socket.id].bankAccount = payData.bankAccount;
-    socket.broadcast.emit('gotPaid', players[socket.id]);
-  });
-  socket.on('career', function (careerData) {
-    players[socket.id].career = careerData.career;
-    socket.broadcast.emit('gotCareer', players[socket.id]);
-  });
-  socket.on('house', function (houseData) {
-    players[socket.id].house = houseData.house;
-    socket.broadcast.emit('gotHouse', players[socket.id]);
-  });
-  socket.on('lifeTiles', function (lifeTilesData) {
-    console.log(lifeTilesData)
-    players[socket.id].lifeTiles = lifeTilesData.lifeTiles;
-    socket.broadcast.emit('gotLifeTiles', players[socket.id]);
-  });
-  socket.on('salary', function (salaryData) {
-    players[socket.id].salary = salaryData.salary;
-    socket.broadcast.emit('gotSalary', players[socket.id]);
   });
   socket.on('retire', function (playerData) {
     players[socket.id].retired = true;
@@ -109,6 +92,5 @@ io.on('connection', (socket) => {
   console.log(`Connected to the ${socket.id}`);
   socket.emit('roll', 'someone has rolled');
 
-  // socket.emit('currentPlayers', players);
   socket.broadcast.emit('playerLeft', players[socket.id]);
 });
