@@ -27,7 +27,7 @@ let turn;
 let playing = true;
 
 let playerTwoInfo;
-let playerThreeInfo
+let playerThreeInfo;
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -51,6 +51,7 @@ export default class GameScene extends Phaser.Scene {
     this.board = new MyBoard(this);
     this.socket = io();
     this.otherPlayersBody = [];
+    this.lifeTileArray = [];
 
     this.otherPlayers = this.add.group();
     this.socket.on('currentPlayers', function (players) {
@@ -126,6 +127,9 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+    this.socket.on('lifeTileChoices', function (lifeTiles) {
+      scene.lifeTileArray = lifeTiles;
+    });
 
     // bootcamp or college
     this.messageBox = new DecisionBox(
@@ -188,28 +192,32 @@ export default class GameScene extends Phaser.Scene {
       this.movePiece();
       this.socket.roll = 0;
     }
-  
-    if(this.otherPlayers.getChildren()[0]){
-      let player = this.otherPlayers.getChildren()[0]
+
+    if (this.otherPlayers.getChildren()[0]) {
+      let player = this.otherPlayers.getChildren()[0];
       playerTwoInfo.text.setText(
         `bank account: ${player.playerInfo.bankAccount} \ncareer: ${
           player.playerInfo.career.description
             ? player.playerInfo.career.description
             : 'unemployed'
         } \nsalary: ${
-          player.playerInfo.salary.amount ? player.playerInfo.salary.amount : 'No income'
+          player.playerInfo.salary.amount
+            ? player.playerInfo.salary.amount
+            : 'No income'
         } \nlife tiles: ${player.playerInfo.lifeTiles.length}`
       );
     }
-    if(this.otherPlayers.getChildren()[1]){
-      let player = this.otherPlayers.getChildren()[1]
+    if (this.otherPlayers.getChildren()[1]) {
+      let player = this.otherPlayers.getChildren()[1];
       playerThreeInfo.text.setText(
         `bank account: ${player.playerInfo.bankAccount} \ncareer: ${
           player.playerInfo.career.description
             ? player.playerInfo.career.description
             : 'unemployed'
         } \nsalary: ${
-          player.playerInfo.salary.amount ? player.playerInfo.salary.amount : 'No income'
+          player.playerInfo.salary.amount
+            ? player.playerInfo.salary.amount
+            : 'No income'
         } \nlife tiles: ${player.playerInfo.lifeTiles.length}`
       );
     }
@@ -224,7 +232,7 @@ export default class GameScene extends Phaser.Scene {
           this.player.salary.amount ? this.player.salary.amount : 'No income'
         } \nlife tiles: ${this.player.lifeTiles.length}`
       );
-     
+
       let x = this.player.gamePiece.x;
       let y = this.player.gamePiece.y;
       if (
@@ -266,17 +274,23 @@ export default class GameScene extends Phaser.Scene {
       this.player.oldHouse = {
         house: this.player.house,
       };
+
       let lifeTiles = this.player.lifeTiles;
-     
       if (
         this.player.oldLifeTiles &&
         lifeTiles.length != this.player.oldLifeTiles.lifeTiles.length
       ) {
-        this.socket.emit('lifeTiles', { lifeTiles: this.player.lifeTiles });
+        console.log('IN THE IF?');
+        this.socket.emit(
+          'lifeTiles',
+          { lifeTiles: this.player.lifeTiles },
+          this.lifeTileArray
+        );
       }
       this.player.oldLifeTiles = {
         lifeTiles: this.player.lifeTiles,
       };
+
       let salary = this.player.salary;
       if (this.player.oldSalary && salary != this.player.oldSalary.salary) {
         this.socket.emit('salary', { salary: this.player.salary });
@@ -286,7 +300,6 @@ export default class GameScene extends Phaser.Scene {
       };
       if (turn) {
         if (turn === this.player.turn && this.player.skip) {
-          console.log('TURN WILL BE SKIPPED!!!');
           this.socket.emit('endTurn');
         }
         if (turn !== this.player.turn) {
@@ -342,7 +355,6 @@ function addPlayer(scene, player) {
       y: 5,
     });
     playerInfo = new PlayerInfo(scene, player, 20, 510);
-
   }
 }
 
@@ -356,8 +368,10 @@ function addOtherPlayers(scene, playerInfo) {
   scene.otherPlayers.add(otherPlayer);
   scene.otherPlayersBody.push(otherPlayerBody);
 
-  if(scene.otherPlayers.getChildren()[0]&& !playerTwoInfo){
-  playerTwoInfo = new PlayerInfo(scene, playerInfo, 20, 20);}
-  if(scene.otherPlayers.getChildren()[1]&& !playerThreeInfo){
-    playerThreeInfo = new PlayerInfo(scene, playerInfo, 550, 20);}
+  if (scene.otherPlayers.getChildren()[0] && !playerTwoInfo) {
+    playerTwoInfo = new PlayerInfo(scene, playerInfo, 20, 20);
+  }
+  if (scene.otherPlayers.getChildren()[1] && !playerThreeInfo) {
+    playerThreeInfo = new PlayerInfo(scene, playerInfo, 550, 20);
+  }
 }

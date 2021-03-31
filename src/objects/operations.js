@@ -2,7 +2,7 @@
 import db from '../config/firebaseConfig';
 
 // Importing data from data.js
-import { tileKeys, salaryKeys } from './data';
+import { salaryKeys } from './data';
 
 // Pulling Life Tile Data from Firebase
 let lifeTiles = {};
@@ -13,10 +13,13 @@ tilesRef.on('value', (snap) => {
 
 // pick lifetile function
 export function pickLifeTile(scene) {
+  console.log('SCENE ARRAY BEFORE SPLICE', scene.scene.lifeTileArray);
+  let tileKeys = scene.scene.lifeTileArray;
   let randomNum = Math.floor(Math.random() * Math.floor(tileKeys.length));
   let chosenTile = lifeTiles[tileKeys[randomNum]];
   scene.scene.player.lifeTiles.push(chosenTile);
   tileKeys.splice(randomNum, 1);
+  console.log('SCENE ARRAY AFTER SPLICE', scene.scene.lifeTileArray);
 }
 
 // payday function
