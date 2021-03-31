@@ -80,7 +80,6 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('gotSalary', players[socket.id]);
   });
   socket.on('retire', function (playerData) {
-    console.log('RETIRE IN INDEX PLAYER DATA', playerData);
     players[socket.id].retired = true;
     players[socket.id].retirement = playerData.retirement;
     socket.broadcast.emit('playerRetired', players[socket.id]);
@@ -91,7 +90,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('endTurn', function () {
-    if (turnCounter % 2 !== 0) {
+    if (turnCounter % 3 !== 0) {
       turnCounter++;
     } else {
       turnCounter = 1;
