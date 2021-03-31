@@ -96,6 +96,14 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+    this.socket.on('gotPlayer', function (playerInfo) {
+      scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+        console.log(playerInfo)
+        if (playerInfo.playerId === otherPlayer.playerId) {
+          otherPlayer.playerInfo = playerInfo;
+        }
+      });
+    });
     this.socket.on('gotHouse', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -241,49 +249,29 @@ export default class GameScene extends Phaser.Scene {
         x: this.player.gamePiece.x,
         y: this.player.gamePiece.y,
       };
-
+      
       let bankAccount = this.player.bankAccount;
-      if (
-        this.player.oldBalance &&
-        bankAccount != this.player.oldBalance.bankAccount
-      ) {
-        this.socket.emit('payday', { bankAccount: this.player.bankAccount });
-      }
-      this.player.oldBalance = {
-        bankAccount: this.player.bankAccount,
-      };
-      let career = this.player.career;
-      if (this.player.oldCareer && career != this.player.oldCareer.career) {
-        this.socket.emit('career', { career: this.player.career });
-      }
-      this.player.oldCareer = {
-        career: this.player.career,
-      };
       let house = this.player.house;
-      if (this.player.oldHouse && house != this.player.oldHouse.house) {
-        this.socket.emit('house', { house: this.player.house });
-      }
-      this.player.oldHouse = {
-        house: this.player.house,
-      };
+      let career = this.player.career;
       let lifeTiles = this.player.lifeTiles;
-     
-      if (
-        this.player.oldLifeTiles &&
-        lifeTiles.length != this.player.oldLifeTiles.lifeTiles.length
-      ) {
-        this.socket.emit('lifeTiles', { lifeTiles: this.player.lifeTiles });
-      }
-      this.player.oldLifeTiles = {
-        lifeTiles: this.player.lifeTiles,
-      };
       let salary = this.player.salary;
-      if (this.player.oldSalary && salary != this.player.oldSalary.salary) {
-        this.socket.emit('salary', { salary: this.player.salary });
+      if (
+        this.player.oldPlayer &&(
+        bankAccount != this.player.oldPlayer.bankAccount ||
+        career != this.player.oldPlayer.career || house != this.player.oldPlayer.house ||
+        lifeTiles.length != this.player.oldPlayer.lifeTiles.length ||
+        salary != this.player.oldPlayer.salary
+        )
+      ) {
+        this.socket.emit('updatePlayer', this.player)
       }
-      this.player.oldSalary = {
+      this.player.oldPlayer = {
+        bankAccount: this.player.bankAccount,
+        career: this.player.career,
+        house: this.player.house,
+        lifeTiles: this.player.lifeTiles,
         salary: this.player.salary,
-      };
+      }
       if (turn) {
         if (turn === this.player.turn && this.player.skip) {
           console.log('TURN WILL BE SKIPPED!!!');
