@@ -38,15 +38,18 @@ io.on('connection', (socket) => {
     x: 190,
     y: 330,
     turn: turn,
+    retired: false,
   };
   turn++;
   socket.on('disconnect', function () {
     console.log('user disconnected');
     delete players[socket.id];
-    if(turn>1){
-      turn --}
-    if(turnCounter>1){
-    turnCounter --}
+    if (turn > 1) {
+      turn--;
+    }
+    if (turnCounter > 1) {
+      turnCounter--;
+    }
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);
   });
@@ -76,17 +79,24 @@ io.on('connection', (socket) => {
     players[socket.id].salary = salaryData.salary;
     socket.broadcast.emit('gotSalary', players[socket.id]);
   });
+  socket.on('retire', function (playerData) {
+    console.log('RETIRE IN INDEX PLAYER DATA', playerData);
+    players[socket.id].retired = true;
+    players[socket.id].retirement = playerData.retirement;
+    socket.broadcast.emit('playerRetired', players[socket.id]);
+  });
 
   socket.on('startGame', function () {
     socket.emit('turnStarted', turnCounter);
   });
 
   socket.on('endTurn', function () {
-    if (turnCounter % 3 !== 0) {
+    if (turnCounter % 2 !== 0) {
       turnCounter++;
     } else {
       turnCounter = 1;
     }
+    // turnCounter = 1;
     console.log('TURN COUNTER IN INDEX', turnCounter);
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);
