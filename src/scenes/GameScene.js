@@ -263,11 +263,6 @@ export default class GameScene extends Phaser.Scene {
         salary != this.player.oldPlayer.salary
         )
       ) {
-        // this.socket.emit('payday', { bankAccount: this.player.bankAccount });
-        // this.socket.emit('career', { career: this.player.career });
-        // this.socket.emit('house', { house: this.player.house });
-        // this.socket.emit('lifeTiles', { lifeTiles: this.player.lifeTiles });
-        // this.socket.emit('salary', { salary: this.player.salary })
         this.socket.emit('updatePlayer', this.player)
       }
       this.player.oldPlayer = {
