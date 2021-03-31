@@ -16,12 +16,19 @@ import DecisionBox from '../objects/DecisionBox';
 import PlayerInfo from '../objects/PlayerInfo';
 import HouseDecision from '../objects/HouseDecision';
 
+import { calculateWinner } from '../objects/operations';
+
 let tile;
 let counter;
 let board;
 let playerInfo;
 let camera;
 let turn;
+
+let playing = true;
+
+let playerTwoInfo;
+
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -39,10 +46,9 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     board = new MyBoard(this);
-    var scene = this;
+    let scene = this;
 
     // CREATING BOARD
-    // const board = new MyBoard(this);
     this.board = new MyBoard(this);
     this.socket = io();
     this.otherPlayersBody = [];
@@ -56,20 +62,18 @@ export default class GameScene extends Phaser.Scene {
           addOtherPlayers(scene, players[id]);
         }
       });
-      playerInfo = new PlayerInfo(scene, scene.player);
+
     });
     this.socket.on('newPlayer', function (playerInfo) {
       addOtherPlayers(scene, playerInfo);
     });
     this.socket.on('turnStarted', function (turnCounter) {
-      console.log('TURN STARTED?', turnCounter);
       turn = turnCounter;
     });
     this.socket.on('playerLeft', function (playerId) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerId === otherPlayer.playerId) {
           otherPlayer.destroy();
-          console.log(scene.otherPlayers)
         }
       });
     });
@@ -115,6 +119,15 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+    this.socket.on('playerRetired', function (playerInfo) {
+      scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+        console.log('IN PLAYER RETIRED', playerInfo);
+        if (playerInfo.playerId === otherPlayer.playerId) {
+          otherPlayer.playerInfo.retired = true;
+          otherPlayer.playerInfo.retirement = playerInfo.retirement;
+        }
+      });
+    });
 
     // bootcamp or college
     this.messageBox = new DecisionBox(
@@ -141,8 +154,9 @@ export default class GameScene extends Phaser.Scene {
       'blueButton1',
       'blueButton2',
       'Spin!'
-    ).setScale(0.5).setScrollFactor(0);
-
+    )
+      .setScale(0.5)
+      .setScrollFactor(0);
 
     camera = this.cameras.main.setBounds(0, 0, 8000, 360);
 
@@ -257,7 +271,22 @@ export default class GameScene extends Phaser.Scene {
       } else {
         this.gameDice.button.setInteractive();
       }
-  }
+      
+      let retired = this.player.retired;
+      if (retired && playing) {
+        this.socket.emit('retire', this.player);
+        console.log('RETIRED AND PLAYING');
+        playing = false;
+      }
+
+      let notRetired = this.otherPlayersBody.filter((item) => !item.retired);
+
+      if (this.player.retired && !notRetired.length) {
+        console.log('GAME OVER');
+        calculateWinner(this.scene);
+      }
+    }
+    
 
     if (this.currentTile !== tile) {
       tile = this.currentTile;
@@ -276,7 +305,7 @@ export default class GameScene extends Phaser.Scene {
             'blueButton1',
             'blueButton2',
             activeTile.description,
-            () => action(this.scene)
+            (house) => action(this.scene, house)
           );
           this.socket.emit('endTurn');
         } else {
@@ -303,6 +332,10 @@ function addPlayer(scene, player) {
       x: 1,
       y: 5,
     });
+    playerInfo = new PlayerInfo(scene, player, 20, 510);
+    console.log(playerInfo)
+    playerTwoInfo = new PlayerInfo(scene, player, 20, 110);
+    console.log(playerTwoInfo)
   }
 }
 
@@ -316,4 +349,3 @@ function addOtherPlayers(scene, playerInfo) {
   scene.otherPlayers.add(otherPlayer);
   scene.otherPlayersBody.push(otherPlayerBody);
 }
-
