@@ -35,8 +35,8 @@ io.on('connection', (socket) => {
     deskItems: [],
     house: [],
     gamePiece: {},
-    x: 190,
-    y: 330,
+    x: 140,
+    y: 440,
     turn: turn,
   };
   turn++;

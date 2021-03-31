@@ -21,6 +21,7 @@ let board;
 let playerInfo;
 let camera;
 let turn;
+let playerTwoInfo;
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -38,10 +39,9 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     board = new MyBoard(this);
-    var scene = this;
+    let scene = this;
 
     // CREATING BOARD
-    // const board = new MyBoard(this);
     this.board = new MyBoard(this);
     this.socket = io();
     this.otherPlayersBody = [];
@@ -55,7 +55,7 @@ export default class GameScene extends Phaser.Scene {
           addOtherPlayers(scene, players[id]);
         }
       });
-      playerInfo = new PlayerInfo(scene, scene.player);
+
     });
     this.socket.on('newPlayer', function (playerInfo) {
       addOtherPlayers(scene, playerInfo);
@@ -280,6 +280,10 @@ function addPlayer(scene, player) {
       x: 1,
       y: 5,
     });
+    playerInfo = new PlayerInfo(scene, player, 20, 510);
+    console.log(playerInfo)
+    playerTwoInfo = new PlayerInfo(scene, player, 20, 110);
+    console.log(playerTwoInfo)
   }
 }
 
