@@ -35,13 +35,14 @@ io.on('connection', (socket) => {
     deskItems: [],
     house: [],
     gamePiece: {},
-    x: 190,
-    y: 330,
+    x: 140,
+    y: 440,
     turn: turn,
   };
   turn++;
   socket.on('disconnect', function () {
     console.log('user disconnected');
+    io.emit('playerLeft', socket.id);
     delete players[socket.id];
     if(turn>1){
       turn --}
@@ -87,7 +88,6 @@ io.on('connection', (socket) => {
     } else {
       turnCounter = 1;
     }
-    console.log('TURN COUNTER IN INDEX', turnCounter);
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);
   });
