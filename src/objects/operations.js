@@ -93,6 +93,7 @@ export function retire(scene) {
   }
   scene.scene.player.retirement = housePrice + bankAccount + lifeTilesTotal;
   scene.scene.player.retired = true;
+  scene.scene.player.skip = true;
 }
 
 export function calculateWinner(scene) {

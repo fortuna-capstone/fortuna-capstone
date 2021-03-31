@@ -39,6 +39,7 @@ io.on('connection', (socket) => {
     y: 440,
     turn: turn,
     retired: false,
+    skip: false,
   };
   turn++;
   socket.on('disconnect', function () {
