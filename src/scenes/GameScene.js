@@ -61,14 +61,12 @@ export default class GameScene extends Phaser.Scene {
       addOtherPlayers(scene, playerInfo);
     });
     this.socket.on('turnStarted', function (turnCounter) {
-      console.log('TURN STARTED?', turnCounter);
       turn = turnCounter;
     });
     this.socket.on('playerLeft', function (playerId) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerId === otherPlayer.playerId) {
           otherPlayer.destroy();
-          console.log(scene.otherPlayers)
         }
       });
     });
