@@ -39,6 +39,7 @@ io.on('connection', (socket) => {
     y: 440,
     turn: turn,
     retired: false,
+    skip: false,
   };
   turn++;
   socket.on('disconnect', function () {
@@ -73,6 +74,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('gotHouse', players[socket.id]);
   });
   socket.on('lifeTiles', function (lifeTilesData) {
+    console.log(lifeTilesData)
     players[socket.id].lifeTiles = lifeTilesData.lifeTiles;
     socket.broadcast.emit('gotLifeTiles', players[socket.id]);
   });
@@ -107,6 +109,6 @@ io.on('connection', (socket) => {
   console.log(`Connected to the ${socket.id}`);
   socket.emit('roll', 'someone has rolled');
 
-  socket.emit('currentPlayers', players);
+  // socket.emit('currentPlayers', players);
   socket.broadcast.emit('playerLeft', players[socket.id]);
 });
