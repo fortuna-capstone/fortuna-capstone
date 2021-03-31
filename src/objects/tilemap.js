@@ -1,5 +1,5 @@
 import Tile from './Tiles';
-import { collect, pay, payday, pickLifeTile, pickCareer } from './operations';
+import { collect, pay, payday, pickLifeTile, pickCareer, taxesDue } from './operations';
 
 // COLOR KEY:
 // 0: red
@@ -288,7 +288,7 @@ const tilemap = [
     new Tile(' '),
     new Tile(1, 'ORANGE - Trade salary with any player.', () => console.log('Some function goes here.')),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
+    new Tile(1, 'Taxes due.', () => taxesDue),
     new Tile(' '),
     new Tile(1, 'ORANGE - spin again if not in the lead?', () => console.log('Some function goes here.')),
     new Tile(' '),
