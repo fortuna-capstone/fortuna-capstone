@@ -22,6 +22,7 @@ let playerInfo;
 let camera;
 let turn;
 let playerTwoInfo;
+let playerThreeInfo
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -173,6 +174,31 @@ export default class GameScene extends Phaser.Scene {
       this.movePiece();
       this.socket.roll = 0;
     }
+  
+    if(this.otherPlayers.getChildren()[0]){
+      let player = this.otherPlayers.getChildren()[0]
+      playerTwoInfo.text.setText(
+        `bank account: ${player.playerInfo.bankAccount} \ncareer: ${
+          player.playerInfo.career.description
+            ? player.playerInfo.career.description
+            : 'unemployed'
+        } \nsalary: ${
+          player.playerInfo.salary.amount ? player.playerInfo.salary.amount : 'No income'
+        } \nlife tiles: ${player.playerInfo.lifeTiles.length}`
+      );
+    }
+    if(this.otherPlayers.getChildren()[1]){
+      let player = this.otherPlayers.getChildren()[1]
+      playerThreeInfo.text.setText(
+        `bank account: ${player.playerInfo.bankAccount} \ncareer: ${
+          player.playerInfo.career.description
+            ? player.playerInfo.career.description
+            : 'unemployed'
+        } \nsalary: ${
+          player.playerInfo.salary.amount ? player.playerInfo.salary.amount : 'No income'
+        } \nlife tiles: ${player.playerInfo.lifeTiles.length}`
+      );
+    }
     if (this.player) {
       camera.startFollow(this.player.gamePiece);
       playerInfo.text.setText(
@@ -184,6 +210,7 @@ export default class GameScene extends Phaser.Scene {
           this.player.salary.amount ? this.player.salary.amount : 'No income'
         } \nlife tiles: ${this.player.lifeTiles.length}`
       );
+     
       let x = this.player.gamePiece.x;
       let y = this.player.gamePiece.y;
       if (
@@ -226,9 +253,10 @@ export default class GameScene extends Phaser.Scene {
         house: this.player.house,
       };
       let lifeTiles = this.player.lifeTiles;
+     
       if (
         this.player.oldLifeTiles &&
-        lifeTiles != this.player.oldLifeTiles.lifeTiles
+        lifeTiles.length != this.player.oldLifeTiles.lifeTiles.length
       ) {
         this.socket.emit('lifeTiles', { lifeTiles: this.player.lifeTiles });
       }
@@ -281,9 +309,7 @@ function addPlayer(scene, player) {
       y: 5,
     });
     playerInfo = new PlayerInfo(scene, player, 20, 510);
-    console.log(playerInfo)
-    playerTwoInfo = new PlayerInfo(scene, player, 20, 110);
-    console.log(playerTwoInfo)
+
   }
 }
 
@@ -296,5 +322,10 @@ function addOtherPlayers(scene, playerInfo) {
   otherPlayer.playerInfo = playerInfo;
   scene.otherPlayers.add(otherPlayer);
   scene.otherPlayersBody.push(otherPlayerBody);
+
+  if(scene.otherPlayers.getChildren()[0]&& !playerTwoInfo){
+  playerTwoInfo = new PlayerInfo(scene, playerInfo, 20, 20);}
+  if(scene.otherPlayers.getChildren()[1]&& !playerThreeInfo){
+    playerThreeInfo = new PlayerInfo(scene, playerInfo, 550, 20);}
 }
 
