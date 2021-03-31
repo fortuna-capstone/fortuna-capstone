@@ -15,13 +15,19 @@ import MessageBox from '../objects/MessageBox';
 import DecisionBox from '../objects/DecisionBox';
 import PlayerInfo from '../objects/PlayerInfo';
 
+import { calculateWinner } from '../objects/operations';
+
 let tile;
 let counter;
 let board;
 let playerInfo;
 let camera;
 let turn;
+
+let playing = true;
+
 let playerTwoInfo;
+
 
 export default class GameScene extends Phaser.Scene {
   constructor(scene) {
@@ -112,6 +118,15 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+    this.socket.on('playerRetired', function (playerInfo) {
+      scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+        console.log('IN PLAYER RETIRED', playerInfo);
+        if (playerInfo.playerId === otherPlayer.playerId) {
+          otherPlayer.playerInfo.retired = true;
+          otherPlayer.playerInfo.retirement = playerInfo.retirement;
+        }
+      });
+    });
 
     // bootcamp or college
     this.messageBox = new DecisionBox(
@@ -138,8 +153,9 @@ export default class GameScene extends Phaser.Scene {
       'blueButton1',
       'blueButton2',
       'Spin!'
-    ).setScale(0.5).setScrollFactor(0);
-
+    )
+      .setScale(0.5)
+      .setScrollFactor(0);
 
     camera = this.cameras.main.setBounds(0, 0, 8000, 360);
 
@@ -242,14 +258,27 @@ export default class GameScene extends Phaser.Scene {
       this.player.oldSalary = {
         salary: this.player.salary,
       };
-      if(turn){
-      if (turn !== this.player.turn) {
-        this.gameDice.button.disableInteractive();
-      } else {
-        this.gameDice.button.setInteractive();
+      if (turn) {
+        if (turn !== this.player.turn) {
+          this.gameDice.button.disableInteractive();
+        } else {
+          this.gameDice.button.setInteractive();
+        }
+      }
+      let retired = this.player.retired;
+      if (retired && playing) {
+        this.socket.emit('retire', this.player);
+        console.log('RETIRED AND PLAYING');
+        playing = false;
+      }
+
+      let notRetired = this.otherPlayersBody.filter((item) => !item.retired);
+
+      if (this.player.retired && !notRetired.length) {
+        console.log('GAME OVER');
+        calculateWinner(this.scene);
       }
     }
-  }
 
     if (this.currentTile !== tile) {
       tile = this.currentTile;
@@ -269,6 +298,8 @@ export default class GameScene extends Phaser.Scene {
           () => action(this.scene)
         );
         this.socket.emit('endTurn');
+        console.log('PLAYER', this.player);
+        console.log('THIS', this);
       }
     }
   }
@@ -297,4 +328,3 @@ function addOtherPlayers(scene, playerInfo) {
   scene.otherPlayers.add(otherPlayer);
   scene.otherPlayersBody.push(otherPlayerBody);
 }
-

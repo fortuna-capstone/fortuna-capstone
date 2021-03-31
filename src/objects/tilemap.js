@@ -1,5 +1,13 @@
 import Tile from './Tiles';
-import { collect, pay, payday, pickLifeTile, pickCareer, taxesDue } from './operations';
+import {
+  collect,
+  pay,
+  payday,
+  pickLifeTile,
+  pickCareer,
+  retire,
+  taxesDue,
+} from './operations';
 
 // COLOR KEY:
 // 0: red
@@ -24,7 +32,7 @@ const tilemap = [
       pay(scene, (amount = 5000))
     ),
     new Tile(2, "Dean's List.", pickLifeTile),
-    new Tile(1, 'Your buddies crash your car. Pay $5,000.', (scene, amount) => 
+    new Tile(1, 'Your buddies crash your car. Pay $5,000.', (scene, amount) =>
       pay(scene, (amount = 5000))
     ),
     new Tile(' '),
@@ -54,9 +62,7 @@ const tilemap = [
     new Tile(' '),
     new Tile(' '),
     new Tile(2, 'Life Tile', pickLifeTile),
-    new Tile(1, 'Pay $20,000', (scene, amount) =>
-      pay(scene, (amount = 20000))
-    ),
+    new Tile(1, 'Pay $20,000', (scene, amount) => pay(scene, (amount = 20000))),
     new Tile(3, 'Payday!', payday),
     new Tile(' '),
     new Tile(' '),
@@ -76,13 +82,17 @@ const tilemap = [
       pay(scene, (amount = 35000))
     ),
     new Tile(1, 'Midlife crisis. Start a new career.', pickCareer),
-    new Tile(1, 'ORANGE - Spin again if not in the lead.', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Spin again if not in the lead.', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(1, 'Pay $125,000', (scene, amount) =>
       pay(scene, (amount = 125000))
     ),
     new Tile(2, 'Life Tile.', pickLifeTile),
-    new Tile(1, 'Trade Salary with another player.', () => console.log('Some function goes here.')),
+    new Tile(1, 'Trade Salary with another player.', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
     new Tile(1, 'Pay $35,000.', (scene, amount) =>
@@ -93,7 +103,9 @@ const tilemap = [
     ),
   ],
   [
-    new Tile(1, 'ORANGE - Study for exams. Miss next turn.', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Study for exams. Miss next turn.', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(' '),
     new Tile(1, 'ORANGE', () => console.log('Some function goes here.')),
@@ -101,7 +113,9 @@ const tilemap = [
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(0, 'GET MARRIED or something', () => console.log('Some function goes here.')),
+    new Tile(0, 'GET MARRIED or something', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(' '),
     new Tile(1, 'Pay $10,000.', (scene, amount) =>
@@ -158,8 +172,10 @@ const tilemap = [
     new Tile(' '),
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Pension. Collect 20,000 times your spin?', (scene, amount) =>
-      collect(scene, (amount = 20000))
+    new Tile(
+      1,
+      'ORANGE - Pension. Collect 20,000 times your spin?',
+      (scene, amount) => collect(scene, (amount = 20000))
     ),
   ],
   [
@@ -184,9 +200,7 @@ const tilemap = [
     new Tile(' '),
     new Tile(2, 'Life Tile w/ Desk Item', pickLifeTile),
     new Tile(' '),
-    new Tile(1, 'Pay $5,000.', (scene, amount) =>
-      pay(scene, (amount = 5000))
-    ),
+    new Tile(1, 'Pay $5,000.', (scene, amount) => pay(scene, (amount = 5000))),
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
@@ -201,14 +215,18 @@ const tilemap = [
       collect(scene, (amount = 10000))
     ),
     new Tile(' '),
-    new Tile(0, 'You may sell your house and buy a new one!', () => console.log('Some function goes here.')),
+    new Tile(0, 'You may sell your house and buy a new one!', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(1, 'Pay $15,000.', (scene, amount) =>
       pay(scene, (amount = 15000))
     ),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Taxes due.', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(1, 'Collect $95,000.', (scene, amount) =>
       collect(scene, (amount = 95000))
@@ -218,7 +236,9 @@ const tilemap = [
       pay(scene, (amount = 50000))
     ),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Taxes due.', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(1, 'Pay $100,000', (scene, amount) =>
       pay(scene, (amount = 100000))
@@ -232,7 +252,7 @@ const tilemap = [
       pay(scene, (amount = 45000))
     ),
     new Tile(' '),
-    new Tile(0, 'Retire!', () => console.log('Some function goes here.')),
+    new Tile(0, 'Retire!', retire),
   ],
   [
     new Tile(2, 'Make new friends.', pickLifeTile),
@@ -241,16 +261,18 @@ const tilemap = [
     new Tile(1, 'ORANGE', () => console.log('Some function goes here.')),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Lose turn?', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Lose turn?', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
-    new Tile(' '),
-    new Tile(' '),
-    new Tile(1, 'Pay $5,000.', (scene, amount) =>
-      pay(scene, (amount = 5000))
+    new Tile(1, 'ORANGE - Taxes due.', () =>
+      console.log('Some function goes here.')
     ),
+    new Tile(' '),
+    new Tile(' '),
+    new Tile(1, 'Pay $5,000.', (scene, amount) => pay(scene, (amount = 5000))),
     new Tile(' '),
     new Tile(1, 'Pay $40,000.', (scene, amount) =>
       pay(scene, (amount = 40000))
@@ -258,16 +280,22 @@ const tilemap = [
     new Tile(1, 'ORANGE - Pay $5,000 per desk item?', (scene, amount) =>
       pay(scene, (amount = 5000))
     ),
-    new Tile(1, 'ORANGE - Trade salary with another player.', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Trade salary with another player.', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(2, 'Life Tile w/ Desk Item', pickLifeTile),
     new Tile(3, 'Payday!', payday),
     new Tile(2, 'Life Tile w/ Desk Item', pickLifeTile),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Spin again if not in the lead.', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Spin again if not in the lead.', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Spin again if not in the lead?', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Spin again if not in the lead?', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
@@ -286,11 +314,17 @@ const tilemap = [
       pay(scene, (amount = 25000))
     ),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Trade salary with any player.', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Trade salary with any player.', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Taxes due.', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
-    new Tile(1, 'ORANGE - spin again if not in the lead?', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - spin again if not in the lead?', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
@@ -309,44 +343,48 @@ const tilemap = [
     new Tile(' '),
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
-    new Tile(1, 'Collect $50,000.', (scene, amount) => 
+    new Tile(1, 'Collect $50,000.', (scene, amount) =>
       collect(scene, (amount = 50000))
     ),
     new Tile(' '),
     new Tile(' '),
     new Tile(2, 'Life Tile w/ Desk item', pickLifeTile),
     new Tile(' '),
-    new Tile(1, 'Pay $5,000.', (scene, amount) => 
-      pay(scene, (amount = 5000))
-    ),
+    new Tile(1, 'Pay $5,000.', (scene, amount) => pay(scene, (amount = 5000))),
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'Pay $15,000.', (scene, amount) => 
+    new Tile(1, 'Pay $15,000.', (scene, amount) =>
       pay(scene, (amount = 15000))
     ),
     new Tile(' '),
     new Tile(2, 'Life Tile w/ Desk Item', pickLifeTile),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Trade salary with any player?', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Trade salary with any player?', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
     new Tile(' '),
-    new Tile(1, 'Pay $35,000.', (scene, amount) => 
+    new Tile(1, 'Pay $35,000.', (scene, amount) =>
       pay(scene, (amount = 35000))
     ),
-    new Tile(1, 'ORANGE - Trade salary with any player', () => console.log('Some function goes here.')),
-    new Tile(1, 'Pay $25,000.', (scene, amount) => 
+    new Tile(1, 'ORANGE - Trade salary with any player', () =>
+      console.log('Some function goes here.')
+    ),
+    new Tile(1, 'Pay $25,000.', (scene, amount) =>
       pay(scene, (amount = 25000))
     ),
-    new Tile(1, 'Tax refund. Collect $75,000.', (scene, amount) => 
+    new Tile(1, 'Tax refund. Collect $75,000.', (scene, amount) =>
       collect(scene, (amount = 75000))
     ),
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Trade salary with any player', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Trade salary with any player', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
     new Tile(' '),
@@ -354,16 +392,18 @@ const tilemap = [
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
     new Tile(' '),
-    new Tile(1, 'Pay $65,000.', (scene, amount) => 
+    new Tile(1, 'Pay $65,000.', (scene, amount) =>
       pay(scene, (amount = 65000))
     ),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Spin again if not in the lead?', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Spin again if not in the lead?', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(' '),
     new Tile(' '),
   ],
   [
-    new Tile(1, 'Scholarship! Collect $20,000.', (scene, amount) => 
+    new Tile(1, 'Scholarship! Collect $20,000.', (scene, amount) =>
       collect(scene, (amount = 20000))
     ),
     new Tile(0, 'Start here.'),
@@ -371,16 +411,16 @@ const tilemap = [
     new Tile(2, 'Make new friends.', pickLifeTile),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'Pay $5,000.', (scene, amount) => 
-      pay(scene, (amount = 5000))
-    ),
-    new Tile(1, 'Sell your app. Collect $10,000.', (scene, amount) => 
+    new Tile(1, 'Pay $5,000.', (scene, amount) => pay(scene, (amount = 5000))),
+    new Tile(1, 'Sell your app. Collect $10,000.', (scene, amount) =>
       collect(scene, (amount = 10000))
     ),
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
     new Tile(2, 'Life Tile.', pickLifeTile),
-    new Tile(0, 'You may buy a house!', () => console.log('Some function goes here.')),
+    new Tile(0, 'You may buy a house!', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(3, 'Payday!', payday),
     new Tile(1, 'Lose your job. Start a new career.', pickCareer),
     new Tile(' '),
@@ -391,15 +431,19 @@ const tilemap = [
       pay(scene, (amount = 15000))
     ),
     new Tile(1, 'ORANGE', () => console.log('Some function goes here.')),
-    new Tile(1, 'ORANGE - Trade salary with any player.', () => console.log('Some function goes here.')),
+    new Tile(1, 'ORANGE - Trade salary with any player.', () =>
+      console.log('Some function goes here.')
+    ),
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Taxes due.', () => console.log('Some function goes here.')),
-    new Tile(1, 'Pay $25,000.', (scene, amount) => 
+    new Tile(1, 'ORANGE - Taxes due.', () =>
+      console.log('Some function goes here.')
+    ),
+    new Tile(1, 'Pay $25,000.', (scene, amount) =>
       pay(scene, (amount = 25000))
     ),
-    new Tile(1, 'Pay $25,000.', (scene, amount) => 
+    new Tile(1, 'Pay $25,000.', (scene, amount) =>
       pay(scene, (amount = 25000))
     ),
     new Tile(' '),
@@ -410,19 +454,19 @@ const tilemap = [
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'Pay $30,000.', (scene, amount) => 
+    new Tile(1, 'Pay $30,000.', (scene, amount) =>
       pay(scene, (amount = 30000))
     ),
     new Tile(1, 'ORANGE', () => console.log('Some function goes here.')),
-    new Tile(1, 'Pay $125,000', (scene, amount) => 
+    new Tile(1, 'Pay $125,000', (scene, amount) =>
       pay(scene, (amount = 125000))
     ),
     new Tile(' '),
     new Tile(1, 'ORANGE', () => console.log('Some function goes here.')),
-    new Tile(1, 'Pay $100,000', (scene, amount) => 
+    new Tile(1, 'Pay $100,000', (scene, amount) =>
       pay(scene, (amount = 100000))
     ),
-    new Tile(1, 'ORANGE - Pay $50,000 per desk item?', (scene, amount) => 
+    new Tile(1, 'ORANGE - Pay $50,000 per desk item?', (scene, amount) =>
       pay(scene, (amount = 50000))
     ),
     new Tile(' '),
