@@ -1,7 +1,8 @@
 import 'phaser';
 import phaserConfig from '../config/phaserConfig';
+import Button from './Button';
 
-export default class Button extends Phaser.GameObjects.Container {
+export default class DecisionBox extends Phaser.GameObjects.Container {
   constructor(
     scene,
     x,
@@ -25,24 +26,28 @@ export default class Button extends Phaser.GameObjects.Container {
     const box = this.scene.add.sprite(x.x > 400 ? x.x : width, height, key1).setScale(0.6).setDepth(6);
 
     // create top choice button
-    const topButton = this.scene.add
-      .sprite(x.x > 400 ? x.x : width, height, key2)
-      .setInteractive().setDepth(7);
-    const topButtonText = this.scene.add.text(0, 0, text1, {
-      fontSize: '20px',
-      fill: '#fff',
-    }).setDepth(8);
-    Phaser.Display.Align.In.Center(topButtonText, topButton);
+    const topButton = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height,
+      key2,
+      key3,
+      text1, 
+      () => destroyFunc(decision1),
+      '20px'
+    );
 
     // create bottom choice button
-    const bottomButton = this.scene.add
-      .sprite(x.x > 400 ? x.x : width, height + 75, key2)
-      .setInteractive().setDepth(7);
-    const bottomButtonText = this.scene.add.text(0, 0, text2, {
-      fontSize: '20px',
-      fill: '#fff',
-    }).setDepth(8);
-    Phaser.Display.Align.In.Center(bottomButtonText, bottomButton);
+    const bottomButton = new Button(
+      scene,
+      x.x > 400 ? x.x : width,
+      height + 75,
+      key2,
+      key3,
+      text2, 
+      () => destroyFunc(decision2),
+      '20px'
+    );
 
     // adds text in box
     const text = this.scene.add.text(0, 0, description, {
@@ -55,41 +60,21 @@ export default class Button extends Phaser.GameObjects.Container {
     text.y = 210;
 
     msgBox.add(box);
-    msgBox.add(topButton);
-    msgBox.add(topButtonText);
-    msgBox.add(bottomButton);
-    msgBox.add(bottomButtonText);
     msgBox.add(text);
 
+    const destroyFunc = (decision) => {
+      callback(decision)
 
-    // top button decision
-    topButton.on('pointerdown', function () {
-      callback(decision1);
       msgBox.destroy(true);
+
+      topButton.button.destroy();
+      topButton.text.destroy();
+
+      bottomButton.button.destroy();
+      bottomButton.text.destroy();
+
       scene.messageBox = null;
-    });
+    }
 
-    topButton.on('pointerover', function () {
-      topButton.setTexture(key3);
-    });
-
-    topButton.on('pointerout', function () {
-      topButton.setTexture(key2);
-    });
-
-    // bottom button decision
-    bottomButton.on('pointerdown', function () {
-      callback(decision2);
-      msgBox.destroy(true);
-      scene.messageBox = null;
-    });
-
-    bottomButton.on('pointerover', function () {
-      bottomButton.setTexture(key3);
-    });
-
-    bottomButton.on('pointerout', function () {
-      bottomButton.setTexture(key2);
-    });
   }
 }
