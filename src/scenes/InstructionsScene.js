@@ -14,9 +14,9 @@ export default class InstructionsScene extends Phaser.Scene {
 
   create() {
     // this.messageBox = new MessageBox(this, 0, 0, 'messageBox', 'blueButton1');
-    this.scene.add.text(0, 0, 'WHAT"S HEREEEE', {
-      fontSize: '32px',
-      fill: '#fff',
-    });
+    // this.scene.add.text(0, 0, 'WHAT"S HEREEEE', {
+    //   fontSize: '32px',
+    //   fill: '#fff',
+    // });
   }
 }
