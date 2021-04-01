@@ -35,4 +35,5 @@ const houseKeys = [
 module.exports = {
   salaryKeys,
   careerKeys,
+  tileKeys,
 };

@@ -1,9 +1,6 @@
 // Connecting to Firebase
 import db from '../config/firebaseConfig';
 
-// Importing data from data.js
-import { tileKeys } from './data';
-
 // Pulling Life Tile Data from Firebase
 let lifeTiles = {};
 const tilesRef = db.ref().child('Tiles');
@@ -13,10 +10,12 @@ tilesRef.on('value', (snap) => {
 
 // pick lifetile function
 export function pickLifeTile(scene) {
+  let tileKeys = scene.scene.dataArrays.tileArray;
   let randomNum = Math.floor(Math.random() * Math.floor(tileKeys.length));
   let chosenTile = lifeTiles[tileKeys[randomNum]];
   scene.scene.player.lifeTiles.push(chosenTile);
   tileKeys.splice(randomNum, 1);
+  console.log('TILE KEYS AFTER SPLICE', tileKeys);
 }
 
 // payday function
@@ -36,7 +35,7 @@ export function taxesDue(scene) {
 export function deskItem(scene, item) {
   pickLifeTile(scene);
   scene.scene.player.deskItems.push(item);
-  console.log(scene.scene.player)
+  console.log(scene.scene.player);
 }
 
 // Pulling House Data from firebase
@@ -44,13 +43,14 @@ let houses = {};
 const housesRef = db.ref().child('Houses');
 housesRef.on('value', (snap) => {
   houses = snap.val();
-})
+});
 
 // pick house function
 export function pickHouse(scene, selectedHouse) {
   scene.scene.player.house = houses[selectedHouse];
-  scene.scene.player.bankAccount -= parseInt(scene.scene.player.house.cost) * 1000;
-} 
+  scene.scene.player.bankAccount -=
+    parseInt(scene.scene.player.house.cost) * 1000;
+}
 
 // Pulling Career Data from firebase
 let careers = {};
@@ -65,7 +65,7 @@ careersRef.on('value', (snap) => {
 
 //pick career function
 export function pickCareer(scene) {
-  const options = scene.scene.careerArray;
+  const options = scene.scene.dataArrays.careerArray;
   let randomNum = Math.floor(Math.random() * Math.floor(options.length));
   const chosen = careers[options[randomNum]];
   scene.scene.player.career = chosen;
@@ -82,7 +82,7 @@ salariesRef.on('value', (snap) => {
 
 // pick salary function
 function pickSalary(scene) {
-  let salaryKeys = scene.scene.salaryArray;
+  let salaryKeys = scene.scene.dataArrays.salaryArray;
   let randomNum = Math.floor(Math.random() * Math.floor(salaryKeys.length));
   let chosenSalary = salaries[salaryKeys[randomNum]];
   scene.scene.player.salary = chosenSalary;
