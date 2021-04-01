@@ -1,12 +1,14 @@
 import Tile from './Tiles';
 import {
   collect,
+  deskItem,
   pay,
   payday,
-  pickLifeTile,
   pickCareer,
+  pickHouse,
+  pickLifeTile,
   retire,
-  taxesDue,
+  taxesDue
 } from './operations';
 
 // COLOR KEY:
@@ -113,9 +115,7 @@ const tilemap = [
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(0, 'GET MARRIED or something', () =>
-      console.log('Some function goes here.')
-    ),
+    new Tile(0, 'GET MARRIED or something', (scene, item) => deskItem(scene, (item = 'monitor'))),
     new Tile(' '),
     new Tile(' '),
     new Tile(1, 'Pay $10,000.', (scene, amount) =>
@@ -413,9 +413,7 @@ const tilemap = [
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
     new Tile(2, 'Life Tile.', pickLifeTile),
-    new Tile(0, 'You may buy a house!', () =>
-      console.log('Some function goes here.')
-    ),
+    new Tile(0, 'You may buy a house!', pickHouse),
     new Tile(3, 'Payday!', payday),
     new Tile(1, 'Lose your job. Start a new career.', pickCareer),
     new Tile(' '),

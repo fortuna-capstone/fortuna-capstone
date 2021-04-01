@@ -24,13 +24,33 @@ export function payday(scene) {
   console.log('SCENE', scene);
   scene.scene.player.bankAccount +=
     parseInt(scene.scene.player.salary.amount) * 1000;
-  console.log('AFTER PAYDAY', scene.scene.player.bankAccount);
 }
 
+// taxes function
 export function taxesDue(scene) {
   scene.scene.player.bankAccount -=
     parseInt(scene.scene.player.salary.taxes) * 1000;
 }
+
+// desk item function
+export function deskItem(scene, item) {
+  pickLifeTile(scene);
+  scene.scene.player.deskItems.push(item);
+  console.log(scene.scene.player)
+}
+
+// Pulling House Data from firebase
+let houses = {};
+const housesRef = db.ref().child('Houses');
+housesRef.on('value', (snap) => {
+  houses = snap.val();
+})
+
+// pick house function
+export function pickHouse(scene, selectedHouse) {
+  scene.scene.player.house = houses[selectedHouse];
+  scene.scene.player.bankAccount -= parseInt(scene.scene.player.house.cost) * 1000;
+} 
 
 // Pulling Career Data from firebase
 let careers = {};
@@ -62,6 +82,7 @@ salariesRef.on('value', (snap) => {
   salaries = snap.val();
 });
 
+// pick salary function
 function pickSalary(scene) {
   let randomNum = Math.floor(Math.random() * Math.floor(salaryKeys.length));
   let chosenSalary = salaries[salaryKeys[randomNum]];
@@ -80,9 +101,7 @@ export function collect(scene, amount) {
 }
 
 // Retire Function
-
 export function retire(scene) {
-  console.log('SCENE', scene);
   const { bankAccount, house, lifeTiles } = scene.scene.player;
   const lifeTilesTotal = lifeTiles.reduce((acc, val) => {
     return acc + parseInt(val.value) * 1000;
