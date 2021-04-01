@@ -1,11 +1,22 @@
-import 'phaser'
+import 'phaser';
 
-this.instructions;
+import MessageBox from '../objects/MessageBox';
 
-export default class Instructions extends from Phaser.Scene {
-  constructor() {
-    super()
-    this.instructions = this.add.text('')
+export default class InstructionsScene extends Phaser.Scene {
+  constructor(scene) {
+    super('Instructions');
   }
 
+  preload() {
+    this.load.image('messageBox', 'assets/message_box.png');
+    this.load.image('blueButton1', 'assets/blue_button02.png');
+  }
+
+  create() {
+    // this.messageBox = new MessageBox(this, 0, 0, 'messageBox', 'blueButton1');
+    this.scene.add.text(0, 0, 'WHAT"S HEREEEE', {
+      fontSize: '32px',
+      fill: '#fff',
+    });
+  }
 }

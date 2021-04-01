@@ -21,8 +21,36 @@ export function pickLifeTile(scene) {
 
 // payday function
 export function payday(scene) {
-  scene.scene.player.bankAccount += 100;
+  console.log('SCENE', scene);
+  scene.scene.player.bankAccount +=
+    parseInt(scene.scene.player.salary.amount) * 1000;
 }
+
+// taxes function
+export function taxesDue(scene) {
+  scene.scene.player.bankAccount -=
+    parseInt(scene.scene.player.salary.taxes) * 1000;
+}
+
+// desk item function
+export function deskItem(scene, item) {
+  pickLifeTile(scene);
+  scene.scene.player.deskItems.push(item);
+  console.log(scene.scene.player)
+}
+
+// Pulling House Data from firebase
+let houses = {};
+const housesRef = db.ref().child('Houses');
+housesRef.on('value', (snap) => {
+  houses = snap.val();
+})
+
+// pick house function
+export function pickHouse(scene, selectedHouse) {
+  scene.scene.player.house = houses[selectedHouse];
+  scene.scene.player.bankAccount -= parseInt(scene.scene.player.house.cost) * 1000;
+} 
 
 // Pulling Career Data from firebase
 let careers = {};
@@ -45,7 +73,6 @@ export function pickCareer(scene) {
   let update = { taken: false };
   pickSalary(scene);
   return db.ref().child('Career').child(options[randomNum]).update(update);
-
 }
 
 // Pulling Salary Data from Firebase
@@ -55,6 +82,7 @@ salariesRef.on('value', (snap) => {
   salaries = snap.val();
 });
 
+// pick salary function
 function pickSalary(scene) {
   let randomNum = Math.floor(Math.random() * Math.floor(salaryKeys.length));
   let chosenSalary = salaries[salaryKeys[randomNum]];
@@ -70,4 +98,40 @@ export function pay(scene, amount) {
 // Collect function
 export function collect(scene, amount) {
   scene.scene.player.bankAccount += amount;
+}
+
+// Retire Function
+export function retire(scene) {
+  const { bankAccount, house, lifeTiles } = scene.scene.player;
+  const lifeTilesTotal = lifeTiles.reduce((acc, val) => {
+    return acc + parseInt(val.value) * 1000;
+  }, 0);
+  let housePrice = 0;
+  if (house.cost) {
+    housePrice = house.cost;
+  }
+  scene.scene.player.retirement = housePrice + bankAccount + lifeTilesTotal;
+  scene.scene.player.retired = true;
+  scene.scene.player.skip = true;
+}
+
+export function calculateWinner(scene) {
+  let playersObj = {};
+  let currentPlayer = scene.scene.player.playerId;
+  let currentPlayerTotal = scene.scene.player.retirement;
+  playersObj[currentPlayer] = currentPlayerTotal;
+  scene.scene.otherPlayersBody.forEach((player) => {
+    let playerId = player.playerId;
+    let playerTotal = player.retirement;
+    playersObj[playerId] = playerTotal;
+  });
+  let highestScore = 0;
+  let winner = null;
+  for (let key in playersObj) {
+    if (playersObj[key] > highestScore) {
+      highestScore = playersObj[key];
+      winner = key;
+    }
+  }
+  console.log(`${winner} wins with a score of ${highestScore}`);
 }
