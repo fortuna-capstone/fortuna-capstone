@@ -9,7 +9,6 @@ export default class Dice extends Phaser.GameObjects.Container {
 
     this.button = this.scene.add
       .sprite(0, 0, key1)
-      .setInteractive()
       .setScrollFactor(0);
     this.text = this.scene.add.text(0, 0, text, {
       fontSize: '32px',
