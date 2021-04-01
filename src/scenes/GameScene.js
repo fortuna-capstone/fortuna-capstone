@@ -98,7 +98,6 @@ export default class GameScene extends Phaser.Scene {
     });
     this.socket.on('gotPlayer', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-        console.log(playerInfo)
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.playerInfo = playerInfo;
         }
@@ -263,11 +262,6 @@ export default class GameScene extends Phaser.Scene {
         salary != this.player.oldPlayer.salary
         )
       ) {
-        // this.socket.emit('payday', { bankAccount: this.player.bankAccount });
-        // this.socket.emit('career', { career: this.player.career });
-        // this.socket.emit('house', { house: this.player.house });
-        // this.socket.emit('lifeTiles', { lifeTiles: this.player.lifeTiles });
-        // this.socket.emit('salary', { salary: this.player.salary })
         this.socket.emit('updatePlayer', this.player)
       }
       this.player.oldPlayer = {
@@ -279,7 +273,7 @@ export default class GameScene extends Phaser.Scene {
       }
       if (turn) {
         if (turn === this.player.turn && this.player.skip) {
-          console.log('TURN WILL BE SKIPPED!!!');
+          this.socket.emit('updatePlayer', this.player)
           this.socket.emit('endTurn');
         }
         if (turn !== this.player.turn) {
@@ -321,8 +315,6 @@ export default class GameScene extends Phaser.Scene {
           () => action(this.scene)
         );
         this.socket.emit('endTurn');
-        console.log('PLAYER', this.player);
-        console.log('THIS', this);
       }
     }
   }
