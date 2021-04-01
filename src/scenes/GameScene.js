@@ -145,7 +145,7 @@ export default class GameScene extends Phaser.Scene {
     });
     this.socket.on('houseOptions', function (houseOptions) {
       scene.dataArrays.houseArray = houseOptions;
-      console.log('HOUSE OPTIONS', houseOptions);
+    
     });
 
     // bootcamp or college
@@ -272,10 +272,7 @@ export default class GameScene extends Phaser.Scene {
       let career = this.player.career;
       let lifeTiles = this.player.lifeTiles;
       let salary = this.player.salary;
-      if(this.player.oldPlayer){
-      console.log("lifeTiles",lifeTiles, this.player.oldPlayer.lifeTiles)
-      console.log("career", career, this.player.oldPlayer.career)
-    }
+     
       if (
 
         this.player.oldPlayer &&
@@ -296,22 +293,17 @@ export default class GameScene extends Phaser.Scene {
         salary: this.player.salary,
       };
       if (turn) {
+      console.log(turn, this.player.turn)
         if (turn === this.player.turn && this.player.skip) {
-
-          this.socket.emit('updatePlayer', this.player)
-
           this.socket.emit('endTurn');
         }
         if (turn !== this.player.turn) {
+          console.log("not turn")
           this.gameDice.button.disableInteractive();
         } else {
+          console.log("turn")
           this.gameDice.button.setInteractive();
         }
-      }
-      if (this.messageBox) {
-        this.gameDice.button.disableInteractive();
-      } else {
-        this.gameDice.button.setInteractive();
       }
 
       let retired = this.player.retired;
