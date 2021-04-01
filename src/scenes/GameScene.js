@@ -24,6 +24,8 @@ let board;
 let playerInfo;
 let camera;
 let turn;
+let gameOver = false;
+let winner;
 
 let playing = true;
 
@@ -127,7 +129,9 @@ export default class GameScene extends Phaser.Scene {
       });
     });
     this.socket.on('playerRetired', function (playerInfo) {
+      console.log('PLAYER RETIRED');
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+        console.log('OTHER PLAYERS', otherPlayer.playerInfo);
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.playerInfo.retired = true;
           otherPlayer.playerInfo.retirement = playerInfo.retirement;
@@ -145,7 +149,10 @@ export default class GameScene extends Phaser.Scene {
     });
     this.socket.on('houseOptions', function (houseOptions) {
       scene.dataArrays.houseArray = houseOptions;
-    
+    });
+    this.socket.on('gameOver', function (winnerInfo) {
+      gameOver = true;
+      winner = winnerInfo;
     });
 
     // bootcamp or college
@@ -213,7 +220,9 @@ export default class GameScene extends Phaser.Scene {
     if (this.otherPlayers.getChildren()[0]) {
       let player = this.otherPlayers.getChildren()[0];
       playerTwoInfo.text.setText(
-        `bank account: ${player.playerInfo.bankAccount} \ncareer: ${
+        `player: ${player.playerInfo.turn} \nbank account: ${
+          player.playerInfo.bankAccount
+        } \ncareer: ${
           player.playerInfo.career.description
             ? player.playerInfo.career.description
             : 'unemployed'
@@ -227,7 +236,9 @@ export default class GameScene extends Phaser.Scene {
     if (this.otherPlayers.getChildren()[1]) {
       let player = this.otherPlayers.getChildren()[1];
       playerThreeInfo.text.setText(
-        `bank account: ${player.playerInfo.bankAccount} \ncareer: ${
+        `player: ${player.playerInfo.turn} \nbank account: ${
+          player.playerInfo.bankAccount
+        } \ncareer: ${
           player.playerInfo.career.description
             ? player.playerInfo.career.description
             : 'unemployed'
@@ -241,7 +252,9 @@ export default class GameScene extends Phaser.Scene {
     if (this.player) {
       camera.startFollow(this.player.gamePiece);
       playerInfo.text.setText(
-        `bank account: ${this.player.bankAccount} \ncareer: ${
+        `player: ${this.player.turn} \nbank account: ${
+          this.player.bankAccount
+        } \ncareer: ${
           this.player.career.description
             ? this.player.career.description
             : 'unemployed'
@@ -272,16 +285,14 @@ export default class GameScene extends Phaser.Scene {
       let career = this.player.career;
       let lifeTiles = this.player.lifeTiles;
       let salary = this.player.salary;
-     
-      if (
 
+      if (
         this.player.oldPlayer &&
         (bankAccount != this.player.oldPlayer.bankAccount ||
           career != this.player.oldPlayer.career ||
           house != this.player.oldPlayer.house ||
           lifeTiles.length != this.player.oldPlayer.lifeTiles.length ||
           salary != this.player.oldPlayer.salary)
-
       ) {
         this.socket.emit('updatePlayer', this.player, this.dataArrays);
       }
@@ -293,15 +304,12 @@ export default class GameScene extends Phaser.Scene {
         salary: this.player.salary,
       };
       if (turn) {
-      console.log(turn, this.player.turn)
         if (turn === this.player.turn && this.player.skip) {
           this.socket.emit('endTurn');
         }
         if (turn !== this.player.turn) {
-          console.log("not turn")
           this.gameDice.button.disableInteractive();
         } else {
-          console.log("turn")
           this.gameDice.button.setInteractive();
         }
       }
@@ -311,11 +319,14 @@ export default class GameScene extends Phaser.Scene {
         this.socket.emit('retire', this.player);
         playing = false;
       }
-      let notRetired = this.otherPlayersBody.filter((item) => !item.retired);
+
+      let notRetired = this.otherPlayers.getChildren().filter((otherPlayer) => {
+        return !otherPlayer.playerInfo.retired;
+      });
 
       if (this.player.retired && !notRetired.length) {
-        console.log('GAME OVER');
-        calculateWinner(this.scene);
+        winner = calculateWinner(this.scene);
+        this.socket.emit('endGame', winner);
       }
     }
 
@@ -352,12 +363,27 @@ export default class GameScene extends Phaser.Scene {
           );
           this.socket.emit('endTurn');
         }
-
       }
     }
+    if (gameOver) {
+      this.messageBox = new MessageBox(
+        this,
+        camera.midPoint,
+        0,
+        'messageBox',
+        'blueButton1',
+        'blueButton2',
+        `Player ${winner.winner} wins with a score of ${winner.highestScore}`,
+        () => {
+          console.log('CLICKED');
+        }
+      );
+    }
+    gameOver = false;
   }
 }
 function addPlayer(scene, player) {
+  console.log('PLAYER IN ADD PLAYER', player);
   if (!scene.player) {
     scene.player = player;
     scene.player.gamePiece = new ChessPiece(board, {
