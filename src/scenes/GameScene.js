@@ -293,7 +293,7 @@ export default class GameScene extends Phaser.Scene {
         salary: this.player.salary,
       };
       if (turn) {
-      console.log(turn, this.player.turn)
+
         if (turn === this.player.turn && this.player.skip) {
           if (!this.player.retired) {
             this.player.skip = false;
@@ -302,10 +302,8 @@ export default class GameScene extends Phaser.Scene {
           this.socket.emit('endTurn');
         }
         if (turn !== this.player.turn) {
-          console.log("not turn")
           this.gameDice.button.disableInteractive();
         } else {
-          console.log("turn")
           this.gameDice.button.setInteractive();
         }
       }

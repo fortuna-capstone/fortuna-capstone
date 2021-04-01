@@ -36,7 +36,7 @@ const tilemap = [
       pay(scene, (amount = 10000))
     ),
     new Tile(2, 'Life Tile.', pickLifeTile),
-    new Tile(1, 'Pay $10,000.', (scene, amount) =>
+    new Tile(1, 'Buy new office furniture. Pay $10,000.', (scene, amount) =>
       pay(scene, (amount = 10000))
     ),
     new Tile(1, 'Pay $10,000.', (scene, amount) =>
@@ -44,7 +44,7 @@ const tilemap = [
     ),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
-    new Tile(2, 'Life Tile w/ Two Desk Items', pickLifeTile),
+    new Tile(2, 'Got a new mouse!', (scene, item) => deskItem(scene, item = "mouse")),
     new Tile(1, 'Pay $20,000.', (scene, amount) =>
       pay(scene, (amount = 20000))
     ),
@@ -104,18 +104,18 @@ const tilemap = [
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(0, 'Bought a brand new desk!', pickLifeTile),
+    new Tile(0, 'Bought your own office space!', pickLifeTile),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'Pay $10,000.', (scene, amount) =>
+    new Tile(1, 'Attend a high-tech seminar. Pay $10,000.', (scene, amount) =>
       pay(scene, (amount = 10000))
     ),
     new Tile(' '),
-    new Tile(1, 'Collect $10,000.', (scene, amount) =>
+    new Tile(1, 'Win a hackathon! Collect $10,000.', (scene, amount) =>
       collect(scene, (amount = 10000))
     ),
     new Tile(' '),
-    new Tile(2, 'Life Tile w/ Desk Item', pickLifeTile),
+    new Tile(2, 'Got a rubber duck!', (scene, item) => deskItem(scene, item = "rubber duck")),
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
@@ -183,11 +183,11 @@ const tilemap = [
     ),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
-    new Tile(1, 'Pay $20,000.', (scene, amount) =>
+    new Tile(1, 'Night school. Pay $20,000.', (scene, amount) =>
       pay(scene, (amount = 20000))
     ),
     new Tile(' '),
-    new Tile(2, 'Life Tile w/ Desk Item', pickLifeTile),
+    new Tile(2, 'Got a new monitor!', (scene, item) => deskItem(scene, item = "monitor")),
     new Tile(' '),
     new Tile(1, 'Pay $5,000.', (scene, amount) => pay(scene, (amount = 5000))),
     new Tile(' '),
@@ -261,15 +261,13 @@ const tilemap = [
     new Tile(1, 'Pay $40,000.', (scene, amount) =>
       pay(scene, (amount = 40000))
     ),
-    new Tile(1, 'ORANGE - Pay $5,000 per desk item?', (scene, amount) =>
-      pay(scene, (amount = 5000))
-    ),
+    new Tile(1, 'ORANGE - Pay $5,000 per desk item?', (scene, item) => deskItem(scene, item = "")),
     new Tile(1, 'ORANGE - Trade salary with another player.', () =>
       console.log('Some function goes here.')
     ),
-    new Tile(2, 'Life Tile w/ Desk Item', pickLifeTile),
+    new Tile(2, 'Got a second monitor!', (scene, item) => deskItem(scene, item = "second monitor")),
     new Tile(3, 'Payday!', payday),
-    new Tile(2, 'Life Tile w/ Desk Item', pickLifeTile),
+    new Tile(2, 'Got a new chair!', (scene, item) => deskItem(scene, item = "desk chair")),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
     new Tile(' '),
@@ -321,7 +319,7 @@ const tilemap = [
     new Tile(1, 'ORANGE', () => console.log('Some function goes here.')),
     new Tile(' '),
     new Tile(' '),
-    new Tile(2, 'Birthday party!.', pickLifeTile),
+    new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
@@ -330,7 +328,7 @@ const tilemap = [
     ),
     new Tile(' '),
     new Tile(' '),
-    new Tile(2, 'Life Tile w/ Desk item', pickLifeTile),
+    new Tile(2, 'Got a new keyboard!', (scene, item) => deskItem(scene, item = "keyboard")),
     new Tile(' '),
     new Tile(1, 'Pay $5,000.', (scene, amount) => pay(scene, (amount = 5000))),
     new Tile(' '),
@@ -341,7 +339,7 @@ const tilemap = [
       pay(scene, (amount = 15000))
     ),
     new Tile(' '),
-    new Tile(2, 'Life Tile w/ Desk Item', pickLifeTile),
+    new Tile(2, 'Got a plant!', (scene, item) => deskItem(scene, item = "plant")),
     new Tile(' '),
     new Tile(1, 'ORANGE - Trade salary with any player?', () =>
       console.log('Some function goes here.')
