@@ -167,7 +167,7 @@ export default class GameScene extends Phaser.Scene {
     );
     this.gameDice = new Dice(
       this,
-      phaserConfig.width - 50,
+      phaserConfig.width- 150,
       phaserConfig.height - 50,
       'blueButton1',
       'blueButton2',
@@ -380,7 +380,7 @@ function addPlayer(scene, player) {
       x: 1,
       y: 5,
     });
-    playerInfo = new PlayerInfo(scene, player, 10, 525);
+    playerInfo = new PlayerInfo(scene, player, 10, 480);
   }
 }
 
@@ -398,6 +398,6 @@ function addOtherPlayers(scene, playerInfo) {
     playerTwoInfo = new PlayerInfo(scene, playerInfo, 10, 10);
   }
   if (scene.otherPlayers.getChildren()[1] && !playerThreeInfo) {
-    playerThreeInfo = new PlayerInfo(scene, playerInfo, 520, 10);
+    playerThreeInfo = new PlayerInfo(scene, playerInfo, 530, 10);
   }
 }
