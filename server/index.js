@@ -86,6 +86,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('retire', function (playerData) {
+    console.log('PLAYER DATA AFTER RETIRE', playerData);
     players[socket.id].retired = true;
     players[socket.id].retirement = playerData.retirement;
     socket.broadcast.emit('playerRetired', players[socket.id]);
