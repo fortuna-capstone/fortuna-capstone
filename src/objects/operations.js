@@ -32,6 +32,11 @@ export function taxesDue(scene) {
     parseInt(scene.scene.player.salary.taxes) * 1000;
 }
 
+// skip turn function
+export function skipTurn(scene) {
+  scene.scene.player.skip = true;
+}
+
 // desk item function
 export function deskItem(scene, item) {
   pickLifeTile(scene);

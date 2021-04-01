@@ -8,6 +8,7 @@ import {
   pickHouse,
   pickLifeTile,
   retire,
+  skipTurn,
   taxesDue
 } from './operations';
 
@@ -17,16 +18,6 @@ import {
 // 2: life
 // 3: green
 
-// const tiles = [
-//   '111    ',
-//   '2 2   0',
-//   '1 032 1',
-//   '2 2 1 3',
-//   '011 1 2',
-//   '    112',
-//   '       ',
-// ];
-
 const tilemap = [
   [
     new Tile(2, 'Study abroad.', pickLifeTile),
@@ -34,7 +25,7 @@ const tilemap = [
       pay(scene, (amount = 5000))
     ),
     new Tile(2, "Dean's List.", pickLifeTile),
-    new Tile(1, 'Your buddies crash your car. Pay $5,000.', (scene, amount) =>
+    new Tile(1, 'Pay $5,000.', (scene, amount) =>
       pay(scene, (amount = 5000))
     ),
     new Tile(' '),
@@ -93,7 +84,7 @@ const tilemap = [
     ),
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(1, 'Trade Salary with another player.', () =>
-      console.log('Some function goes here.')
+      console.log('Trade salary function goes here.')
     ),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
@@ -105,9 +96,7 @@ const tilemap = [
     ),
   ],
   [
-    new Tile(1, 'ORANGE - Study for exams. Miss next turn.', () =>
-      console.log('Some function goes here.')
-    ),
+    new Tile(1, 'Study for exams. Miss next turn.', skipTurn),
     new Tile(' '),
     new Tile(' '),
     new Tile(1, 'ORANGE', () => console.log('Some function goes here.')),
@@ -115,7 +104,7 @@ const tilemap = [
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(0, 'GET MARRIED or something', (scene, item) => deskItem(scene, (item = 'monitor'))),
+    new Tile(0, 'Bought a brand new desk!', pickLifeTile),
     new Tile(' '),
     new Tile(' '),
     new Tile(1, 'Pay $10,000.', (scene, amount) =>
@@ -259,9 +248,7 @@ const tilemap = [
     new Tile(1, 'ORANGE', () => console.log('Some function goes here.')),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'ORANGE - Lose turn?', () =>
-      console.log('Some function goes here.')
-    ),
+    new Tile(1, 'Lost! Miss next turn.', skipTurn),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
     new Tile(' '),
@@ -402,7 +389,7 @@ const tilemap = [
       collect(scene, (amount = 20000))
     ),
     new Tile(0, 'Start here.'),
-    new Tile(1, 'ORANGE', () => console.log('Some function goes here.')),
+    new Tile(1, 'Rent apartment.', (scene, amount) => pay(scene, (amount = 5000))),
     new Tile(2, 'Make new friends.', pickLifeTile),
     new Tile(' '),
     new Tile(' '),
@@ -413,7 +400,7 @@ const tilemap = [
     new Tile(2, 'Life Tile.', pickLifeTile),
     new Tile(' '),
     new Tile(2, 'Life Tile.', pickLifeTile),
-    new Tile(0, 'You may buy a house!', pickHouse),
+    new Tile(0, 'Buy a house!', pickHouse),
     new Tile(3, 'Payday!', payday),
     new Tile(1, 'Lose your job. Start a new career.', pickCareer),
     new Tile(' '),

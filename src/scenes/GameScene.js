@@ -275,6 +275,9 @@ export default class GameScene extends Phaser.Scene {
       }
       if (turn) {
         if (turn === this.player.turn && this.player.skip) {
+          if (!this.player.retired) {
+            this.player.skip = false;
+          }
           console.log('TURN WILL BE SKIPPED!!!');
           this.socket.emit('endTurn');
         }
