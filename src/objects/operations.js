@@ -94,6 +94,11 @@ function pickSalary(scene) {
   salaryKeys.splice(randomNum, 1);
 }
 
+// trade salary function
+export function tradeSalary(scene, otherPlayer) {
+  console.log(scene.scene.otherPlayers.getChildren())
+}
+
 // Pay function
 export function pay(scene, amount) {
   scene.scene.player.bankAccount -= amount;

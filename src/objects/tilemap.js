@@ -9,7 +9,8 @@ import {
   pickLifeTile,
   retire,
   skipTurn,
-  taxesDue
+  taxesDue,
+  tradeSalary
 } from './operations';
 
 // COLOR KEY:
@@ -248,7 +249,8 @@ const tilemap = [
     new Tile(1, 'ORANGE', () => console.log('Some function goes here.')),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'Lost! Miss next turn.', skipTurn),
+    // new Tile(1, 'Lost! Miss next turn.', skipTurn),
+    new Tile(1, 'Trade salary!', (scene, otherPlayer) => tradeSalary(scene, otherPlayer = 2)),
     new Tile(' '),
     new Tile(3, 'Payday!', payday),
     new Tile(' '),

@@ -341,7 +341,24 @@ export default class GameScene extends Phaser.Scene {
             (house) => action(this.scene, house)
           );
           this.socket.emit('endTurn');
-        } else {
+        } else if (tile.x === 6 && tile.y === 3) {
+          let turns = this.otherPlayers.getChildren().map(player => player.playerInfo.turn)
+          this.messageBox = new DecisionBox(
+            this,
+            camera.midPoint,
+            0,
+            'messageBox',
+            'blueButton1',
+            'blueButton2',
+            activeTile.description,
+            `Player ${turns[0]}`,
+            `Player ${turns[1]}`,
+            turns[0],
+            turns[1],
+            (player) => action(this.scene, player)
+          )
+        } 
+        else {
           this.messageBox = new MessageBox(
             this,
             camera.midPoint,
