@@ -143,7 +143,10 @@ export default class GameScene extends Phaser.Scene {
     });
     this.socket.on('tileOptions', function (tileOptions) {
       scene.dataArrays.tileArray = tileOptions;
-      console.log('TILE OPTIONS', tileOptions);
+    });
+    this.socket.on('houseOptions', function (houseOptions) {
+      scene.dataArrays.houseArray = houseOptions;
+      console.log('HOUSE OPTIONS', houseOptions);
     });
 
     // bootcamp or college

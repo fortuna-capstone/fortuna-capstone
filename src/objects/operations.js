@@ -15,12 +15,10 @@ export function pickLifeTile(scene) {
   let chosenTile = lifeTiles[tileKeys[randomNum]];
   scene.scene.player.lifeTiles.push(chosenTile);
   tileKeys.splice(randomNum, 1);
-  console.log('TILE KEYS AFTER SPLICE', tileKeys);
 }
 
 // payday function
 export function payday(scene) {
-  console.log('SCENE', scene);
   scene.scene.player.bankAccount +=
     parseInt(scene.scene.player.salary.amount) * 1000;
 }
@@ -35,7 +33,6 @@ export function taxesDue(scene) {
 export function deskItem(scene, item) {
   pickLifeTile(scene);
   scene.scene.player.deskItems.push(item);
-  console.log(scene.scene.player);
 }
 
 // Pulling House Data from firebase
@@ -50,6 +47,9 @@ export function pickHouse(scene, selectedHouse) {
   scene.scene.player.house = houses[selectedHouse];
   scene.scene.player.bankAccount -=
     parseInt(scene.scene.player.house.cost) * 1000;
+  const houseArray = scene.scene.dataArrays.houseArray;
+  const index = houseArray.indexOf(selectedHouse);
+  houseArray.splice(index, 1);
 }
 
 // Pulling Career Data from firebase

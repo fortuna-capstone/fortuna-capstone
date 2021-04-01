@@ -8,6 +8,7 @@ const data = require('./data');
 const salaryKeys = data.salaryKeys;
 const careerKeys = data.careerKeys;
 const tileKeys = data.tileKeys;
+const houseKeys = data.houseKeys;
 
 app.use(express.static(path.join(__dirname, '..', '/')));
 
@@ -32,6 +33,7 @@ let turnCounter = 1;
 let salaryOptions = salaryKeys;
 let careerOptions = careerKeys;
 let tileOptions = tileKeys;
+let houseOptions = houseKeys;
 
 io.on('connection', (socket) => {
   players[socket.id] = {
@@ -64,17 +66,17 @@ io.on('connection', (socket) => {
     socket.emit('turnStarted', turnCounter);
   });
   socket.on('updatePlayer', function (player, updatedArray) {
-    const { salaryArray, careerArray, tileArray } = updatedArray;
-    console.log('TILE ARRAY', tileArray);
-    console.log('SALARY', salaryArray, 'CAREER', careerArray);
+    const { salaryArray, careerArray, tileArray, houseArray } = updatedArray;
     players[socket.id] = player;
     socket.broadcast.emit('gotPlayer', players[socket.id]);
     salaryOptions = salaryArray;
     careerOptions = careerArray;
     tileOptions = tileArray;
+    houseOptions = houseArray;
     socket.broadcast.emit('salaryOptions', salaryOptions);
     socket.broadcast.emit('careerOptions', careerOptions);
     socket.broadcast.emit('tileOptions', tileOptions);
+    socket.broadcast.emit('houseOptions', houseOptions);
   });
 
   socket.on('playerMovement', function (movementData) {
@@ -121,6 +123,7 @@ io.on('connection', (socket) => {
     socket.emit('salaryOptions', salaryOptions);
     socket.emit('careerOptions', careerOptions);
     socket.emit('tileOptions', tileOptions);
+    socket.emit('houseOptions', houseOptions);
   });
 
   socket.on('endTurn', function () {

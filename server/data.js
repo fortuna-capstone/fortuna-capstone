@@ -36,4 +36,5 @@ module.exports = {
   salaryKeys,
   careerKeys,
   tileKeys,
+  houseKeys,
 };
