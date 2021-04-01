@@ -99,7 +99,6 @@ export default class GameScene extends Phaser.Scene {
     });
     this.socket.on('gotPlayer', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-        console.log(playerInfo)
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.playerInfo = playerInfo;
         }
@@ -256,11 +255,15 @@ export default class GameScene extends Phaser.Scene {
       let career = this.player.career;
       let lifeTiles = this.player.lifeTiles;
       let salary = this.player.salary;
+      if(this.player.oldPlayer){
+      console.log("lifeTiles",lifeTiles, this.player.oldPlayer.lifeTiles)
+      console.log("career", career, this.player.oldPlayer.career)
+    }
       if (
         this.player.oldPlayer &&(
         bankAccount != this.player.oldPlayer.bankAccount ||
         career != this.player.oldPlayer.career || house != this.player.oldPlayer.house ||
-        lifeTiles.length != this.player.oldPlayer.lifeTiles.length ||
+        lifeTiles != this.player.oldPlayer.lifeTiles ||
         salary != this.player.oldPlayer.salary
         )
       ) {
@@ -270,12 +273,12 @@ export default class GameScene extends Phaser.Scene {
         bankAccount: this.player.bankAccount,
         career: this.player.career,
         house: this.player.house,
-        lifeTiles: this.player.lifeTiles,
+        lifeTiles: [...this.player.lifeTiles],
         salary: this.player.salary,
       }
       if (turn) {
         if (turn === this.player.turn && this.player.skip) {
-          console.log('TURN WILL BE SKIPPED!!!');
+          this.socket.emit('updatePlayer', this.player)
           this.socket.emit('endTurn');
         }
         if (turn !== this.player.turn) {
@@ -339,6 +342,7 @@ export default class GameScene extends Phaser.Scene {
           );
           this.socket.emit('endTurn');
         }
+
       }
     }
   }
