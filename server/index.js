@@ -85,33 +85,6 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('playerMoved', players[socket.id]);
   });
 
-  // socket.on('payday', function (payData) {
-  //   players[socket.id].bankAccount = payData.bankAccount;
-  //   socket.broadcast.emit('gotPaid', players[socket.id]);
-  // });
-  // socket.on('career', function (careerData, updatedArray) {
-  //   console.log('UPDATED ARRAY IN CAREER', updatedArray);
-  //   players[socket.id].career = careerData.career;
-  //   socket.broadcast.emit('gotCareer', players[socket.id]);
-  //   careerOptions = updatedArray;
-  //   socket.broadcast.emit('careerOptions', careerOptions);
-  // });
-  // socket.on('house', function (houseData) {
-  //   players[socket.id].house = houseData.house;
-  //   socket.broadcast.emit('gotHouse', players[socket.id]);
-  // });
-  // socket.on('lifeTiles', function (lifeTilesData, updatedArray) {
-  //   players[socket.id].lifeTiles = lifeTilesData.lifeTiles;
-  //   socket.broadcast.emit('gotLifeTiles', players[socket.id]);
-  // });
-  // socket.on('salary', function (salaryData, updatedArray) {
-  //   console.log('UPDATED ARRAY IN SALARY', updatedArray);
-  //   players[socket.id].salary = salaryData.salary;
-  //   socket.broadcast.emit('gotSalary', players[socket.id]);
-  //   salaryOptions = updatedArray;
-  //   socket.broadcast.emit('salaryOptions', salaryOptions);
-  // });
-
   socket.on('retire', function (playerData) {
     players[socket.id].retired = true;
     players[socket.id].retirement = playerData.retirement;

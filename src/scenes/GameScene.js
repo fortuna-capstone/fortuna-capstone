@@ -1,6 +1,5 @@
 import 'phaser';
 
-import firebase from 'firebase/app';
 import 'firebase/database';
 
 import Dice from '../objects/Dice';
@@ -203,6 +202,8 @@ export default class GameScene extends Phaser.Scene {
     // } else {
     //   this.gameDice.button.setInteractive();
     // }
+ 
+    
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
 
@@ -239,6 +240,10 @@ export default class GameScene extends Phaser.Scene {
       );
     }
     if (this.player) {
+      console.log(this.player.turn)
+    if(this.player.turn >3){
+      this.scene.start('Waiting')
+    }
       camera.startFollow(this.player.gamePiece);
       playerInfo.text.setText(
         `bank account: ${this.player.bankAccount} \ncareer: ${
@@ -293,15 +298,12 @@ export default class GameScene extends Phaser.Scene {
         salary: this.player.salary,
       };
       if (turn) {
-      console.log(turn, this.player.turn)
         if (turn === this.player.turn && this.player.skip) {
           this.socket.emit('endTurn');
         }
         if (turn !== this.player.turn) {
-          console.log("not turn")
           this.gameDice.button.disableInteractive();
         } else {
-          console.log("turn")
           this.gameDice.button.setInteractive();
         }
       }
@@ -314,7 +316,6 @@ export default class GameScene extends Phaser.Scene {
       let notRetired = this.otherPlayersBody.filter((item) => !item.retired);
 
       if (this.player.retired && !notRetired.length) {
-        console.log('GAME OVER');
         calculateWinner(this.scene);
       }
     }
