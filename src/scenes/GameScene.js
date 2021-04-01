@@ -14,6 +14,7 @@ import tilemap from '../objects/tilemap';
 import MessageBox from '../objects/MessageBox';
 import DecisionBox from '../objects/DecisionBox';
 import PlayerInfo from '../objects/PlayerInfo';
+import HouseDecision from '../objects/HouseDecision';
 
 import { calculateWinner } from '../objects/operations';
 
@@ -93,6 +94,14 @@ export default class GameScene extends Phaser.Scene {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.playerInfo.career = playerInfo.career;
+        }
+      });
+    });
+    this.socket.on('gotPlayer', function (playerInfo) {
+      scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+        console.log(playerInfo);
+        if (playerInfo.playerId === otherPlayer.playerId) {
+          otherPlayer.playerInfo = playerInfo;
         }
       });
     });
@@ -183,11 +192,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
-    if (this.messageBox) {
-      this.gameDice.button.disableInteractive();
-    } else {
-      this.gameDice.button.setInteractive();
-    }
+    // if (this.messageBox) {
+    //   this.gameDice.button.disableInteractive();
+    // } else {
+    //   this.gameDice.button.setInteractive();
+    // }
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
 
@@ -253,54 +262,25 @@ export default class GameScene extends Phaser.Scene {
       };
 
       let bankAccount = this.player.bankAccount;
-      if (
-        this.player.oldBalance &&
-        bankAccount != this.player.oldBalance.bankAccount
-      ) {
-        this.socket.emit('payday', { bankAccount: this.player.bankAccount });
-      }
-      this.player.oldBalance = {
-        bankAccount: this.player.bankAccount,
-      };
-      let career = this.player.career;
-      if (this.player.oldCareer && career != this.player.oldCareer.career) {
-        this.socket.emit(
-          'career',
-          { career: this.player.career },
-          this.careerArray
-        );
-      }
-      this.player.oldCareer = {
-        career: this.player.career,
-      };
       let house = this.player.house;
-      if (this.player.oldHouse && house != this.player.oldHouse.house) {
-        this.socket.emit('house', { house: this.player.house });
-      }
-      this.player.oldHouse = {
-        house: this.player.house,
-      };
-
+      let career = this.player.career;
       let lifeTiles = this.player.lifeTiles;
-      if (
-        this.player.oldLifeTiles &&
-        lifeTiles.length != this.player.oldLifeTiles.lifeTiles.length
-      ) {
-        this.socket.emit('lifeTiles', { lifeTiles: this.player.lifeTiles });
-      }
-      this.player.oldLifeTiles = {
-        lifeTiles: this.player.lifeTiles,
-      };
-
       let salary = this.player.salary;
-      if (this.player.oldSalary && salary != this.player.oldSalary.salary) {
-        this.socket.emit(
-          'salary',
-          { salary: this.player.salary },
-          this.salaryArray
-        );
+      if (
+        this.player.oldPlayer &&
+        (bankAccount != this.player.oldPlayer.bankAccount ||
+          career != this.player.oldPlayer.career ||
+          house != this.player.oldPlayer.house ||
+          lifeTiles.length != this.player.oldPlayer.lifeTiles.length ||
+          salary != this.player.oldPlayer.salary)
+      ) {
+        this.socket.emit('updatePlayer', this.player);
       }
-      this.player.oldSalary = {
+      this.player.oldPlayer = {
+        bankAccount: this.player.bankAccount,
+        career: this.player.career,
+        house: this.player.house,
+        lifeTiles: this.player.lifeTiles,
         salary: this.player.salary,
       };
       if (turn) {
@@ -313,6 +293,12 @@ export default class GameScene extends Phaser.Scene {
           this.gameDice.button.setInteractive();
         }
       }
+      if (this.messageBox) {
+        this.gameDice.button.disableInteractive();
+      } else {
+        this.gameDice.button.setInteractive();
+      }
+
       let retired = this.player.retired;
       if (retired && playing) {
         this.socket.emit('retire', this.player);
@@ -334,19 +320,32 @@ export default class GameScene extends Phaser.Scene {
         let activeTile = tilemap[tile.y][tile.x];
 
         let action = activeTile.operation;
-        this.messageBox = new MessageBox(
-          this,
-          camera.midPoint,
-          0,
-          'messageBox',
-          'blueButton1',
-          'blueButton2',
-          activeTile.description,
-          () => action(this.scene)
-        );
-        this.socket.emit('endTurn');
-        console.log('PLAYER', this.player);
-        console.log('THIS', this);
+
+        if (tile.x === 11 && tile.y === 5) {
+          this.messageBox = new HouseDecision(
+            this,
+            camera.midPoint,
+            0,
+            'messageBox',
+            'blueButton1',
+            'blueButton2',
+            activeTile.description,
+            (house) => action(this.scene, house)
+          );
+          this.socket.emit('endTurn');
+        } else {
+          this.messageBox = new MessageBox(
+            this,
+            camera.midPoint,
+            0,
+            'messageBox',
+            'blueButton1',
+            'blueButton2',
+            activeTile.description,
+            () => action(this.scene)
+          );
+          this.socket.emit('endTurn');
+        }
       }
     }
   }

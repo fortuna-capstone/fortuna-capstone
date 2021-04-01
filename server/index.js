@@ -61,6 +61,10 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);
   });
+  socket.on('updatePlayer', function (player) {
+    players[socket.id] = player;
+    socket.broadcast.emit('gotPlayer', players[socket.id]);
+  });
 
   socket.on('playerMovement', function (movementData) {
     players[socket.id].x = movementData.x;
@@ -104,12 +108,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('endTurn', function () {
-    if (turnCounter % 3 !== 0) {
-      turnCounter++;
-    } else {
-      turnCounter = 1;
-    }
-    // turnCounter = 1;
+    // if (turnCounter % 3 !== 0) {
+    //   turnCounter++;
+    // } else {
+    turnCounter = 1;
 
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);
@@ -121,6 +123,5 @@ io.on('connection', (socket) => {
   console.log(`Connected to the ${socket.id}`);
   socket.emit('roll', 'someone has rolled');
 
-  // socket.emit('currentPlayers', players);
   socket.broadcast.emit('playerLeft', players[socket.id]);
 });
