@@ -23,7 +23,7 @@ export default class MyBoard extends RexPlugins.Board.Board {
       grid: {
         gridType: 'quadGrid',
         x: 80,
-        y: 140,
+        y: 175,
         cellWidth: 60,
         cellHeight: 60,
         type: 'orthogonal',
