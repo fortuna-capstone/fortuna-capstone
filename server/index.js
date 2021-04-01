@@ -5,8 +5,8 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 const data = require('./data');
-
-const tileKeys = data.tileKeys;
+const salaryKeys = data.salaryKeys;
+const careerKeys = data.careerKeys;
 
 app.use(express.static(path.join(__dirname, '..', '/')));
 
@@ -28,7 +28,8 @@ server.listen(process.env.PORT || 8080, function () {
 let players = {};
 let turn = 1;
 let turnCounter = 1;
-let lifeTiles = tileKeys;
+let salaryOptions = salaryKeys;
+let careerOptions = careerKeys;
 
 io.on('connection', (socket) => {
   players[socket.id] = {
@@ -70,23 +71,25 @@ io.on('connection', (socket) => {
     players[socket.id].bankAccount = payData.bankAccount;
     socket.broadcast.emit('gotPaid', players[socket.id]);
   });
-  socket.on('career', function (careerData) {
+  socket.on('career', function (careerData, updatedArray) {
     players[socket.id].career = careerData.career;
     socket.broadcast.emit('gotCareer', players[socket.id]);
+    careerOptions = updatedArray;
+    socket.broadcast.emit('careerOptions', careerOptions);
   });
   socket.on('house', function (houseData) {
     players[socket.id].house = houseData.house;
     socket.broadcast.emit('gotHouse', players[socket.id]);
   });
   socket.on('lifeTiles', function (lifeTilesData, updatedArray) {
-    console.log('LIFE TILE ARRAY IN INDEX', updatedArray);
     players[socket.id].lifeTiles = lifeTilesData.lifeTiles;
     socket.broadcast.emit('gotLifeTiles', players[socket.id]);
-    // socket.emit('lifeTileChoices', lifeTiles);
   });
-  socket.on('salary', function (salaryData) {
+  socket.on('salary', function (salaryData, updatedArray) {
     players[socket.id].salary = salaryData.salary;
     socket.broadcast.emit('gotSalary', players[socket.id]);
+    salaryOptions = updatedArray;
+    socket.broadcast.emit('salaryOptions', salaryOptions);
   });
   socket.on('retire', function (playerData) {
     players[socket.id].retired = true;
@@ -96,16 +99,17 @@ io.on('connection', (socket) => {
 
   socket.on('startGame', function () {
     socket.emit('turnStarted', turnCounter);
-    socket.emit('lifeTileChoices', lifeTiles);
+    socket.emit('salaryOptions', salaryOptions);
+    socket.emit('careerOptions', careerOptions);
   });
 
   socket.on('endTurn', function () {
-    // if (turnCounter % 3 !== 0) {
-    //   turnCounter++;
-    // } else {
-    //   turnCounter = 1;
-    // }
-    turnCounter = 1;
+    if (turnCounter % 3 !== 0) {
+      turnCounter++;
+    } else {
+      turnCounter = 1;
+    }
+    // turnCounter = 1;
 
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);

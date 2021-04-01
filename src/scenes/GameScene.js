@@ -51,7 +51,6 @@ export default class GameScene extends Phaser.Scene {
     this.board = new MyBoard(this);
     this.socket = io();
     this.otherPlayersBody = [];
-    this.lifeTileArray = [];
 
     this.otherPlayers = this.add.group();
     this.socket.on('currentPlayers', function (players) {
@@ -120,15 +119,18 @@ export default class GameScene extends Phaser.Scene {
     });
     this.socket.on('playerRetired', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-        console.log('IN PLAYER RETIRED', playerInfo);
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.playerInfo.retired = true;
           otherPlayer.playerInfo.retirement = playerInfo.retirement;
         }
       });
     });
-    this.socket.on('lifeTileChoices', function (lifeTiles) {
-      scene.lifeTileArray = lifeTiles;
+    this.socket.on('salaryOptions', function (salaryOptions) {
+      scene.salaryArray = salaryOptions;
+    });
+    this.socket.on('careerOptions', function (careerOptions) {
+      scene.careerArray = careerOptions;
+      console.log('CAREER ARRAY', scene.careerArray);
     });
 
     // bootcamp or college
@@ -262,7 +264,11 @@ export default class GameScene extends Phaser.Scene {
       };
       let career = this.player.career;
       if (this.player.oldCareer && career != this.player.oldCareer.career) {
-        this.socket.emit('career', { career: this.player.career });
+        this.socket.emit(
+          'career',
+          { career: this.player.career },
+          this.careerArray
+        );
       }
       this.player.oldCareer = {
         career: this.player.career,
@@ -280,12 +286,7 @@ export default class GameScene extends Phaser.Scene {
         this.player.oldLifeTiles &&
         lifeTiles.length != this.player.oldLifeTiles.lifeTiles.length
       ) {
-        console.log('IN THE IF?');
-        this.socket.emit(
-          'lifeTiles',
-          { lifeTiles: this.player.lifeTiles },
-          this.lifeTileArray
-        );
+        this.socket.emit('lifeTiles', { lifeTiles: this.player.lifeTiles });
       }
       this.player.oldLifeTiles = {
         lifeTiles: this.player.lifeTiles,
@@ -293,7 +294,11 @@ export default class GameScene extends Phaser.Scene {
 
       let salary = this.player.salary;
       if (this.player.oldSalary && salary != this.player.oldSalary.salary) {
-        this.socket.emit('salary', { salary: this.player.salary });
+        this.socket.emit(
+          'salary',
+          { salary: this.player.salary },
+          this.salaryArray
+        );
       }
       this.player.oldSalary = {
         salary: this.player.salary,
@@ -311,7 +316,6 @@ export default class GameScene extends Phaser.Scene {
       let retired = this.player.retired;
       if (retired && playing) {
         this.socket.emit('retire', this.player);
-        console.log('RETIRED AND PLAYING');
         playing = false;
       }
 
