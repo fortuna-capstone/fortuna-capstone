@@ -11,6 +11,7 @@ export default class HouseDecision extends Phaser.GameObjects.Container {
     const msgBox = this.scene.add.group();
     console.log('SCENE', scene);
     let options = scene.dataArrays.houseArray;
+
     let splitLevel;
     let mobileHome;
     let logCabin;
@@ -39,6 +40,7 @@ export default class HouseDecision extends Phaser.GameObjects.Container {
         0.8
       );
     }
+
     if (options.includes('Mobile Home')) {
       mobileHome = new Button(
         scene,
@@ -171,32 +173,50 @@ export default class HouseDecision extends Phaser.GameObjects.Container {
 
       msgBox.destroy(true);
 
-      splitLevel.button.destroy();
-      splitLevel.text.destroy();
+      if (options.includes('Split-Level') || name === 'Split-Level') {
+        splitLevel.button.destroy();
+        splitLevel.text.destroy();
+      }
 
-      mobileHome.button.destroy();
-      mobileHome.text.destroy();
+      if (options.includes('Mobile Home') || name === 'Mobile Home') {
+        mobileHome.button.destroy();
+        mobileHome.text.destroy();
+      }
 
-      logCabin.button.destroy();
-      logCabin.text.destroy();
+      if (options.includes('Log Cabin') || name === 'Log Cabin') {
+        logCabin.button.destroy();
+        logCabin.text.destroy();
+      }
 
-      cozyCondo.button.destroy();
-      cozyCondo.text.destroy();
+      if (options.includes('Cozy Condo') || name === 'Cozy Condo') {
+        cozyCondo.button.destroy();
+        cozyCondo.text.destroy();
+      }
 
-      dutchColonial.button.destroy();
-      dutchColonial.text.destroy();
+      if (options.includes('Dutch Colonial') || name === 'Dutch Colonial') {
+        dutchColonial.button.destroy();
+        dutchColonial.text.destroy();
+      }
 
-      beachHouse.button.destroy();
-      beachHouse.text.destroy();
+      if (options.includes('Beach House') || name === 'Beach House') {
+        beachHouse.button.destroy();
+        beachHouse.text.destroy();
+      }
 
-      farmhouse.button.destroy();
-      farmhouse.text.destroy();
+      if (options.includes('Farmhouse') || name === 'Farmhouse') {
+        farmhouse.button.destroy();
+        farmhouse.text.destroy();
+      }
 
-      tudor.button.destroy();
-      tudor.text.destroy();
+      if (options.includes('Tudor') || name === 'Tudor') {
+        tudor.button.destroy();
+        tudor.text.destroy();
+      }
 
-      victorian.button.destroy();
-      victorian.text.destroy();
+      if (options.includes('Victorian') || name === 'Victorian') {
+        victorian.button.destroy();
+        victorian.text.destroy();
+      }
 
       scene.messageBox = null;
     };
