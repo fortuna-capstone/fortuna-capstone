@@ -4,6 +4,12 @@ const path = require('path');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
+const data = require('./data');
+const salaryKeys = data.salaryKeys;
+const careerKeys = data.careerKeys;
+const tileKeys = data.tileKeys;
+const houseKeys = data.houseKeys;
+
 app.use(express.static(path.join(__dirname, '..', '/')));
 
 // const bodyParser = require('body-parser');
@@ -24,6 +30,10 @@ server.listen(process.env.PORT || 8080, function () {
 let players = {};
 let turn = 1;
 let turnCounter = 1;
+let salaryOptions = salaryKeys;
+let careerOptions = careerKeys;
+let tileOptions = tileKeys;
+let houseOptions = houseKeys;
 
 io.on('connection', (socket) => {
   players[socket.id] = {
@@ -55,9 +65,18 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);
   });
-  socket.on('updatePlayer', function (player) {
+  socket.on('updatePlayer', function (player, updatedArray) {
+    const { salaryArray, careerArray, tileArray, houseArray } = updatedArray;
     players[socket.id] = player;
     socket.broadcast.emit('gotPlayer', players[socket.id]);
+    salaryOptions = salaryArray;
+    careerOptions = careerArray;
+    tileOptions = tileArray;
+    houseOptions = houseArray;
+    socket.broadcast.emit('salaryOptions', salaryOptions);
+    socket.broadcast.emit('careerOptions', careerOptions);
+    socket.broadcast.emit('tileOptions', tileOptions);
+    socket.broadcast.emit('houseOptions', houseOptions);
   });
 
   socket.on('playerMovement', function (movementData) {
@@ -65,6 +84,34 @@ io.on('connection', (socket) => {
     players[socket.id].y = movementData.y;
     socket.broadcast.emit('playerMoved', players[socket.id]);
   });
+
+  // socket.on('payday', function (payData) {
+  //   players[socket.id].bankAccount = payData.bankAccount;
+  //   socket.broadcast.emit('gotPaid', players[socket.id]);
+  // });
+  // socket.on('career', function (careerData, updatedArray) {
+  //   console.log('UPDATED ARRAY IN CAREER', updatedArray);
+  //   players[socket.id].career = careerData.career;
+  //   socket.broadcast.emit('gotCareer', players[socket.id]);
+  //   careerOptions = updatedArray;
+  //   socket.broadcast.emit('careerOptions', careerOptions);
+  // });
+  // socket.on('house', function (houseData) {
+  //   players[socket.id].house = houseData.house;
+  //   socket.broadcast.emit('gotHouse', players[socket.id]);
+  // });
+  // socket.on('lifeTiles', function (lifeTilesData, updatedArray) {
+  //   players[socket.id].lifeTiles = lifeTilesData.lifeTiles;
+  //   socket.broadcast.emit('gotLifeTiles', players[socket.id]);
+  // });
+  // socket.on('salary', function (salaryData, updatedArray) {
+  //   console.log('UPDATED ARRAY IN SALARY', updatedArray);
+  //   players[socket.id].salary = salaryData.salary;
+  //   socket.broadcast.emit('gotSalary', players[socket.id]);
+  //   salaryOptions = updatedArray;
+  //   socket.broadcast.emit('salaryOptions', salaryOptions);
+  // });
+
   socket.on('retire', function (playerData) {
     players[socket.id].retired = true;
     players[socket.id].retirement = playerData.retirement;
@@ -73,6 +120,10 @@ io.on('connection', (socket) => {
 
   socket.on('startGame', function () {
     socket.emit('turnStarted', turnCounter);
+    socket.emit('salaryOptions', salaryOptions);
+    socket.emit('careerOptions', careerOptions);
+    socket.emit('tileOptions', tileOptions);
+    socket.emit('houseOptions', houseOptions);
   });
 
   socket.on('endTurn', function () {
@@ -81,7 +132,6 @@ io.on('connection', (socket) => {
     } else {
       turnCounter = 1;
     }
-
     socket.broadcast.emit('turnStarted', turnCounter);
     socket.emit('turnStarted', turnCounter);
   });
