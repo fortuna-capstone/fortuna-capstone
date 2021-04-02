@@ -8,7 +8,7 @@ tilesRef.on('value', (snap) => {
   lifeTiles = snap.val();
 });
 
-// pick lifetile function
+// Pick Lifetile function
 export function pickLifeTile(scene) {
   let tileKeys = scene.scene.dataArrays.tileArray;
   let randomNum = Math.floor(Math.random() * Math.floor(tileKeys.length));
@@ -17,19 +17,24 @@ export function pickLifeTile(scene) {
   tileKeys.splice(randomNum, 1);
 }
 
-// payday function
+// Payday function
 export function payday(scene) {
   scene.scene.player.bankAccount +=
     parseInt(scene.scene.player.salary.amount) * 1000;
 }
 
-// taxes function
+// Taxes function
 export function taxesDue(scene) {
   scene.scene.player.bankAccount -=
     parseInt(scene.scene.player.salary.taxes) * 1000;
 }
 
-// desk item function
+// Skip Turn function
+export function skipTurn(scene) {
+  scene.scene.player.skip = true;
+}
+
+// Desk Item function
 export function deskItem(scene, item) {
   pickLifeTile(scene);
   scene.scene.player.deskItems.push(item);
@@ -42,7 +47,7 @@ housesRef.on('value', (snap) => {
   houses = snap.val();
 });
 
-// pick house function
+// Pick House function
 export function pickHouse(scene, selectedHouse) {
   scene.scene.player.house = houses[selectedHouse];
   scene.scene.player.bankAccount -=
@@ -63,7 +68,7 @@ careersRef.on('value', (snap) => {
   careers = snap.val();
 });
 
-//pick career function
+// Pick Career function
 export function pickCareer(scene) {
   const options = scene.scene.dataArrays.careerArray;
   let randomNum = Math.floor(Math.random() * Math.floor(options.length));
@@ -80,13 +85,28 @@ salariesRef.on('value', (snap) => {
   salaries = snap.val();
 });
 
-// pick salary function
+// Pick Salary function
 function pickSalary(scene) {
   let salaryKeys = scene.scene.dataArrays.salaryArray;
   let randomNum = Math.floor(Math.random() * Math.floor(salaryKeys.length));
   let chosenSalary = salaries[salaryKeys[randomNum]];
   scene.scene.player.salary = chosenSalary;
   salaryKeys.splice(randomNum, 1);
+}
+
+// Trade Salary function
+export function tradeSalary(scene, otherPlayerTurn) {
+  let switchPlayer = scene.scene.otherPlayers.getChildren().filter(player => {
+    return player.playerInfo.turn === otherPlayerTurn
+  });
+  let switchKey = switchPlayer[0].playerInfo.salary;
+  let salaryKey = scene.scene.player.salary;
+
+  scene.scene.player.salary = switchKey;
+  switchPlayer[0].playerInfo.salary = salaryKey;
+
+  let playerInfo = switchPlayer[0].playerInfo;
+  scene.scene.socket.emit('switchStarted', playerInfo)
 }
 
 // Pay function
@@ -102,6 +122,7 @@ export function collect(scene, amount) {
 // Retire Function
 export function retire(scene) {
   const { bankAccount, house, lifeTiles } = scene.scene.player;
+  console.log('LIFE TILES', lifeTiles[0].value);
   const lifeTilesTotal = lifeTiles.reduce((acc, val) => {
     return acc + parseInt(val.value) * 1000;
   }, 0);
@@ -114,23 +135,33 @@ export function retire(scene) {
   scene.scene.player.skip = true;
 }
 
+// Calculate winner function
 export function calculateWinner(scene) {
+  console.log('SCENE', scene.scene.player.turn);
   let playersObj = {};
-  let currentPlayer = scene.scene.player.playerId;
+  let currentPlayer = String(scene.scene.player.turn);
   let currentPlayerTotal = scene.scene.player.retirement;
   playersObj[currentPlayer] = currentPlayerTotal;
-  scene.scene.otherPlayersBody.forEach((player) => {
-    let playerId = player.playerId;
-    let playerTotal = player.retirement;
+
+  scene.scene.otherPlayers.getChildren().forEach((player) => {
+    console.log('CALCULATE', player);
+    let playerId = String(player.playerInfo.turn);
+    let playerTotal = player.playerInfo.retirement;
     playersObj[playerId] = playerTotal;
   });
+
   let highestScore = 0;
   let winner = null;
+
   for (let key in playersObj) {
     if (playersObj[key] > highestScore) {
       highestScore = playersObj[key];
       winner = key;
     }
   }
-  console.log(`${winner} wins with a score of ${highestScore}`);
+  let winnerAndScore = {
+    winner,
+    highestScore,
+  };
+  return winnerAndScore;
 }

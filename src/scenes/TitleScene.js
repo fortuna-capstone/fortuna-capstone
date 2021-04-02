@@ -12,7 +12,9 @@ export default class TitleScene extends Phaser.Scene {
     this.load.image('titleScene', 'assets/titleScene.png')
   }
   create() {
+
     this.add.image(400,300, 'titleScene').setScale(4)
+
     this.gameButton = new Button(
       this,
       phaserConfig.width / 2,
