@@ -11,6 +11,12 @@ export default class TitleScene extends Phaser.Scene {
     this.load.image('blueButton2', 'assets/blue_button03.png');
   }
   create() {
+    // this.socket = io();
+    // this.players= this.add.group()
+    // this.socket.on('newPlayer', function (playerInfo) {
+    //   this.players.playerId = playerInfo.id
+    // });
+    // console.log(this.players)
     this.gameButton = new Button(
       this,
       phaserConfig.width / 2,

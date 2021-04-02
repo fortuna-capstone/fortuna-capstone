@@ -1,9 +1,6 @@
 // Connecting to Firebase
 import db from '../config/firebaseConfig';
 
-// Importing data from data.js
-import { tileKeys, salaryKeys } from './data';
-
 // Pulling Life Tile Data from Firebase
 let lifeTiles = {};
 const tilesRef = db.ref().child('Tiles');
@@ -13,6 +10,7 @@ tilesRef.on('value', (snap) => {
 
 // pick lifetile function
 export function pickLifeTile(scene) {
+  let tileKeys = scene.scene.dataArrays.tileArray;
   let randomNum = Math.floor(Math.random() * Math.floor(tileKeys.length));
   let chosenTile = lifeTiles[tileKeys[randomNum]];
   scene.scene.player.lifeTiles.push(chosenTile);
@@ -21,7 +19,6 @@ export function pickLifeTile(scene) {
 
 // payday function
 export function payday(scene) {
-  console.log('SCENE', scene);
   scene.scene.player.bankAccount +=
     parseInt(scene.scene.player.salary.amount) * 1000;
 }
@@ -36,7 +33,6 @@ export function taxesDue(scene) {
 export function deskItem(scene, item) {
   pickLifeTile(scene);
   scene.scene.player.deskItems.push(item);
-  console.log(scene.scene.player)
 }
 
 // Pulling House Data from firebase
@@ -44,13 +40,17 @@ let houses = {};
 const housesRef = db.ref().child('Houses');
 housesRef.on('value', (snap) => {
   houses = snap.val();
-})
+});
 
 // pick house function
 export function pickHouse(scene, selectedHouse) {
   scene.scene.player.house = houses[selectedHouse];
-  scene.scene.player.bankAccount -= parseInt(scene.scene.player.house.cost) * 1000;
-} 
+  scene.scene.player.bankAccount -=
+    parseInt(scene.scene.player.house.cost) * 1000;
+  const houseArray = scene.scene.dataArrays.houseArray;
+  const index = houseArray.indexOf(selectedHouse);
+  houseArray.splice(index, 1);
+}
 
 // Pulling Career Data from firebase
 let careers = {};
@@ -65,14 +65,12 @@ careersRef.on('value', (snap) => {
 
 //pick career function
 export function pickCareer(scene) {
-  const options = Object.keys(careers);
+  const options = scene.scene.dataArrays.careerArray;
   let randomNum = Math.floor(Math.random() * Math.floor(options.length));
-
   const chosen = careers[options[randomNum]];
   scene.scene.player.career = chosen;
-  let update = { taken: false };
+  options.splice(randomNum, 1);
   pickSalary(scene);
-  return db.ref().child('Career').child(options[randomNum]).update(update);
 }
 
 // Pulling Salary Data from Firebase
@@ -84,6 +82,7 @@ salariesRef.on('value', (snap) => {
 
 // pick salary function
 function pickSalary(scene) {
+  let salaryKeys = scene.scene.dataArrays.salaryArray;
   let randomNum = Math.floor(Math.random() * Math.floor(salaryKeys.length));
   let chosenSalary = salaries[salaryKeys[randomNum]];
   scene.scene.player.salary = chosenSalary;
