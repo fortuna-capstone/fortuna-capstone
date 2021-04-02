@@ -11,10 +11,12 @@ tilesRef.on('value', (snap) => {
 // Pick Lifetile function
 export function pickLifeTile(scene) {
   let tileKeys = scene.scene.dataArrays.tileArray;
-  let randomNum = Math.floor(Math.random() * Math.floor(tileKeys.length));
-  let chosenTile = lifeTiles[tileKeys[randomNum]];
-  scene.scene.player.lifeTiles.push(chosenTile);
-  tileKeys.splice(randomNum, 1);
+  if (tileKeys.length) {
+    let randomNum = Math.floor(Math.random() * Math.floor(tileKeys.length));
+    let chosenTile = lifeTiles[tileKeys[randomNum]];
+    scene.scene.player.lifeTiles.push(chosenTile);
+    tileKeys.splice(randomNum, 1);
+  }
 }
 
 // Payday function
@@ -50,6 +52,7 @@ housesRef.on('value', (snap) => {
 // Pick House function
 export function pickHouse(scene, selectedHouse) {
   scene.scene.player.house = houses[selectedHouse];
+  scene.scene.player.house.description = selectedHouse;
   scene.scene.player.bankAccount -=
     parseInt(scene.scene.player.house.cost) * 1000;
   const houseArray = scene.scene.dataArrays.houseArray;
