@@ -96,8 +96,8 @@ function pickSalary(scene) {
 
 // Trade Salary function
 export function tradeSalary(scene, otherPlayerTurn) {
-  let switchPlayer = scene.scene.otherPlayers.getChildren().filter(player => {
-    return player.playerInfo.turn === otherPlayerTurn
+  let switchPlayer = scene.scene.otherPlayers.getChildren().filter((player) => {
+    return player.playerInfo.turn === otherPlayerTurn;
   });
   let switchKey = switchPlayer[0].playerInfo.salary;
   let salaryKey = scene.scene.player.salary;
@@ -106,7 +106,7 @@ export function tradeSalary(scene, otherPlayerTurn) {
   switchPlayer[0].playerInfo.salary = salaryKey;
 
   let playerInfo = switchPlayer[0].playerInfo;
-  scene.scene.socket.emit('switchStarted', playerInfo)
+  scene.scene.socket.emit('switchStarted', playerInfo);
 }
 
 // Pay function
@@ -119,10 +119,25 @@ export function collect(scene, amount) {
   scene.scene.player.bankAccount += amount;
 }
 
+// Pay per desk item function
+export function payPerDeskItem(scene) {
+  const { deskItems, bankAccount } = scene.scene.player;
+  let amount = 5000 * deskItems.length;
+  let newAccount = bankAccount - amount;
+  scene.scene.player.bankAccount = newAccount;
+}
+
+// Collect per desk item function
+export function collectPerDeskItem(scene) {
+  const { deskItems, bankAccount } = scene.scene.player;
+  let amount = 5000 * deskItems.length;
+  let newAccount = bankAccount + amount;
+  scene.scene.player.bankAccount = newAccount;
+}
+
 // Retire Function
 export function retire(scene) {
   const { bankAccount, house, lifeTiles } = scene.scene.player;
-  console.log('LIFE TILES', lifeTiles[0].value);
   const lifeTilesTotal = lifeTiles.reduce((acc, val) => {
     return acc + parseInt(val.value) * 1000;
   }, 0);
@@ -137,14 +152,12 @@ export function retire(scene) {
 
 // Calculate winner function
 export function calculateWinner(scene) {
-  console.log('SCENE', scene.scene.player.turn);
   let playersObj = {};
   let currentPlayer = String(scene.scene.player.turn);
   let currentPlayerTotal = scene.scene.player.retirement;
   playersObj[currentPlayer] = currentPlayerTotal;
 
   scene.scene.otherPlayers.getChildren().forEach((player) => {
-    console.log('CALCULATE', player);
     let playerId = String(player.playerInfo.turn);
     let playerTotal = player.playerInfo.retirement;
     playersObj[playerId] = playerTotal;
