@@ -13,26 +13,29 @@ export default class Spinner extends Phaser.GameObjects.Container {
       fill: '#fff',
     });
     Phaser.Display.Align.In.Center(this.text, this.button);
- this.spin = false
+    this.spin = false;
     this.add(this.button);
     this.add(this.text);
-    console.log(this.button.anims)
-     this.button.anims.create({
-        key: 'spin',
-        frames: this.button.anims.generateFrameNumbers('spinner', { start: 0, end: 3}),
-        frameRate: 10,
-        repeat: -1
+    console.log(this.button.anims);
+    this.button.anims.create({
+      key: 'spin',
+      frames: this.button.anims.generateFrameNumbers('spinner', {
+        start: 0,
+        end: 3,
+      }),
+      frameRate: 10,
+      repeat: -1,
     });
-     this.button.anims.create({
-        key: 'pause',
-        frames: [ { key: 'spinner', frame: 0 } ],
-        frameRate: 20
+    this.button.anims.create({
+      key: 'pause',
+      frames: [{ key: 'spinner', frame: 0 }],
+      frameRate: 20,
     });
-    console.log(this.button.anims)
+    console.log(this.button.anims);
     this.button.on(
       'pointerdown',
       function () {
-        const number = Phaser.Math.Between(1, 8);
+        const number = Phaser.Math.Between(9, 10);
         this.scene.socket.roll = number;
       }.bind(this)
     );
@@ -40,26 +43,23 @@ export default class Spinner extends Phaser.GameObjects.Container {
     this.button.on(
       'pointerover',
       function () {
-        this.spin = true
+        this.spin = true;
       }.bind(this)
     );
 
     this.button.on(
       'pointerout',
       function () {
-        this.spin = false
+        this.spin = false;
       }.bind(this)
-    ); 
+    );
     this.scene.add.existing(this);
-   
   }
-  update(){
-    if(this.spin === true){
+  update() {
+    if (this.spin === true) {
       this.button.anims.play('spin', true);
     } else {
-      this.button.anims.play('pause', true)
+      this.button.anims.play('pause', true);
     }
-
   }
-  
 }
