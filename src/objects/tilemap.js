@@ -349,7 +349,7 @@ const tilemap = [
     ),
     new Tile(' '),
     new Tile(' '),
-    new Tile(1, 'Replace computer. Pay $2000', (scene, amount) =>
+    new Tile(1, 'Replace computer. Pay $2,000', (scene, amount) =>
       pay(scene, (amount = 2000))
     ),
     new Tile(' '),

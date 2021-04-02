@@ -15,6 +15,7 @@ import MessageBox from '../objects/MessageBox';
 import DecisionBox from '../objects/DecisionBox';
 import PlayerInfo from '../objects/PlayerInfo';
 import HouseDecision from '../objects/HouseDecision';
+import TradeBox from '../objects/TradeSalary';
 
 import { calculateWinner } from '../objects/operations';
 
@@ -187,6 +188,7 @@ export default class GameScene extends Phaser.Scene {
         this.socket.emit('startGame');
       }
     );
+
     this.gameDice = new Spinner(
       this,
       phaserConfig.width - 200,
@@ -362,7 +364,6 @@ export default class GameScene extends Phaser.Scene {
           if (!this.player.retired) {
             this.player.skip = false;
           }
-          console.log('TURN WILL BE SKIPPED!!!');
           this.socket.emit('endTurn');
         }
         if (turn !== this.player.turn) {
@@ -409,9 +410,12 @@ export default class GameScene extends Phaser.Scene {
             (house) => action(this.scene, house)
           );
           this.socket.emit('endTurn');
-        } else if (tile.x === 8 && tile.y === 1) {
+        } else if ((tile.y === 0 && tile.x === 43) || 
+          (tile.y === 3 && (tile.x === 17 || tile.x === 39)) || 
+          (tile.y === 4 && (tile.x === 24 || tile.x === 29 || tile.x === 35)) ||
+          (tile.y === 5 && tile.x === 20)) {
           let turns = this.otherPlayers.getChildren().map(player => player.playerInfo.turn)
-          this.messageBox = new DecisionBox(
+          this.messageBox = new TradeBox(
             this,
             camera.midPoint,
             0,
@@ -421,6 +425,7 @@ export default class GameScene extends Phaser.Scene {
             activeTile.description,
             `Player ${turns[0]}`,
             `Player ${turns[1]}`,
+            'No trade',
             turns[0],
             turns[1],
             (player) => action(this.scene, player)
