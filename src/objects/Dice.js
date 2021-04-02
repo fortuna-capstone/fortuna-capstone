@@ -12,7 +12,7 @@ export default class Dice extends Phaser.GameObjects.Container {
       .setScrollFactor(0);
     this.text = this.scene.add.text(0, 0, text, {
       fontSize: '32px',
-      fill: '#fff',
+      fill: '#000',
     });
     Phaser.Display.Align.In.Center(this.text, this.button);
 
