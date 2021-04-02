@@ -34,7 +34,7 @@ export default class MessageBox extends Phaser.GameObjects.Container {
 
     const text = this.scene.add.text(0, 0, description, {
       fontSize: '20px',
-      fill: '#000',
+      fill: '#00ff00',
       wordWrap: { width: 220 },
       align: 'center',
     });

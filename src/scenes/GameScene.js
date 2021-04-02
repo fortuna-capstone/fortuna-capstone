@@ -3,6 +3,7 @@ import 'phaser';
 import 'firebase/database';
 
 import Dice from '../objects/Dice';
+import Spinner from '../objects/Spinner'
 import phaserConfig from '../config/phaserConfig';
 
 import io from 'socket.io-client';
@@ -23,8 +24,10 @@ let board;
 let playerInfo;
 let camera;
 let turn;
+let background
 let gameOver = false;
 let winner;
+
 
 let playing = true;
 
@@ -43,11 +46,18 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('blueButton2', 'assets/blue_button03.png');
     this.load.image('messageBox', 'assets/message_box.png');
     this.load.image('otherPlayer', 'assets/grey_box.png');
+    this.load.image('backgroundImage', 'assets/grassBackground.png')
+    this.load.image('playerOneBox', 'assets/playerOnePattern.png')
+    this.load.image('playerTwoBox', 'assets/playerTwoPattern.png')
+    this.load.image('playerThreeBox', 'assets/playerThreePattern.png')
+    this.load.spritesheet('spinner', 'assets/spinner.png', {frameWidth: 100, frameHeight: 100})
   }
 
   create() {
     board = new MyBoard(this);
     let scene = this;
+    background = this.add.image(150, 300,'backgroundImage').setScale(3).setScrollFactor(0)
+    
 
     // CREATING BOARD
     this.board = new MyBoard(this);
@@ -55,11 +65,11 @@ export default class GameScene extends Phaser.Scene {
     this.otherPlayersBody = [];
     this.dataArrays = {};
 
-    this.otherPlayers = this.add.group();
+    this.otherPlayers = this.add.group()
     this.socket.on('currentPlayers', function (players) {
       Object.keys(players).forEach(function (id) {
         if (players[id].playerId === scene.socket.id) {
-          addPlayer(scene, players[id]);
+          addPlayer(scene, players[id], );
         } else {
           addOtherPlayers(scene, players[id]);
         }
@@ -180,7 +190,9 @@ export default class GameScene extends Phaser.Scene {
     this.gameDice = new Dice(
       this,
       phaserConfig.width - 150,
-      phaserConfig.height - 50,
+
+      phaserConfig.height - 100,
+
       'blueButton1',
       'blueButton2',
       'Spin!'
@@ -191,6 +203,9 @@ export default class GameScene extends Phaser.Scene {
     camera = this.cameras.main.setBounds(0, 0, 8000, 360);
 
     this.currentTurn = 0;
+    this.add.image(100,550,'playerOneBox').setScale(3.5).setScrollFactor(0)
+ 
+    
   }
 
   movePiece() {
@@ -209,12 +224,12 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
+
     if (this.otherPlayers.getChildren().length < 2) {
       if (this.messageBox) {
         this.messageBox.disableInteractive();
       }
     }
-
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
 
@@ -223,6 +238,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.otherPlayers.getChildren()[0]) {
+      this.add.image(100,30,'playerTwoBox').setScale(3.5).setScrollFactor(0)
       let player = this.otherPlayers.getChildren()[0];
       console.log(player);
       playerTwoInfo.text.setText(
@@ -246,8 +262,11 @@ export default class GameScene extends Phaser.Scene {
             : 'No Items'
         }\nLife tiles: ${player.playerInfo.lifeTiles.length}`
       );
+      playerTwoInfo.text.setFill('#00ff00')
     }
     if (this.otherPlayers.getChildren()[1]) {
+      this.add.image(700,30,'playerThreeBox').setScale(3.5).setScrollFactor(0)
+
       let player = this.otherPlayers.getChildren()[1];
       playerThreeInfo.text.setText(
         `Player Number: ${player.playerInfo.turn}\nBank Account: ${
@@ -270,6 +289,7 @@ export default class GameScene extends Phaser.Scene {
             : 'No Items'
         }\nLife tiles: ${player.playerInfo.lifeTiles.length}`
       );
+      playerThreeInfo.text.setFill('#00ff00')
     }
     if (this.player) {
       if (this.player.turn > 3) {
@@ -295,6 +315,7 @@ export default class GameScene extends Phaser.Scene {
           this.player.salary.amount ? this.player.salary.amount : 'No income'
         } \nLife tiles: ${this.player.lifeTiles.length}`
       );
+      playerInfo.text.setFill('#00ff00')
 
       let x = this.player.gamePiece.x;
       let y = this.player.gamePiece.y;
@@ -364,6 +385,7 @@ export default class GameScene extends Phaser.Scene {
       if (this.player.retired && !notRetired.length) {
         winner = calculateWinner(this.scene);
         this.socket.emit('endGame', winner);
+
       }
     }
 
@@ -439,14 +461,15 @@ export default class GameScene extends Phaser.Scene {
   }
 }
 function addPlayer(scene, player) {
-  console.log('PLAYER IN ADD PLAYER', player);
   if (!scene.player) {
     scene.player = player;
     scene.player.gamePiece = new ChessPiece(board, {
       x: 1,
       y: 5,
     });
-    playerInfo = new PlayerInfo(scene, player, 10, 480);
+
+    playerInfo = new PlayerInfo(scene, player, 20, 510);
+
   }
 }
 
