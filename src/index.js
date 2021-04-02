@@ -8,11 +8,11 @@ import InstructionsScene from './scenes/InstructionsScene';
 class Game extends Phaser.Game {
   constructor() {
     super(phaserConfig);
-    this.scene.add('InstructionsScene', InstructionsScene);
+    this.scene.add('Instructions', InstructionsScene);
     this.scene.add('Title', TitleScene);
     this.scene.add('Game', GameScene);
     this.scene.add('Waiting', WaitingScene);
-    this.scene.start('InstructionsScene');
+    this.scene.start('Instructions');
   }
 }
 
