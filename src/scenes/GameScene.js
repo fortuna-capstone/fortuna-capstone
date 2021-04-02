@@ -134,6 +134,11 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+    this.socket.on('switchSalary', function (playerInfo) {
+      if (playerInfo.playerId === scene.player.playerId) {
+        scene.player.salary = playerInfo.salary
+      }
+    })
     this.socket.on('salaryOptions', function (salaryOptions) {
       scene.dataArrays.salaryArray = salaryOptions;
     });
@@ -145,7 +150,6 @@ export default class GameScene extends Phaser.Scene {
     });
     this.socket.on('houseOptions', function (houseOptions) {
       scene.dataArrays.houseArray = houseOptions;
-    
     });
 
     // bootcamp or college
@@ -198,11 +202,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
-    // if (this.messageBox) {
-    //   this.gameDice.button.disableInteractive();
-    // } else {
-    //   this.gameDice.button.setInteractive();
-    // }
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
 
@@ -341,7 +340,7 @@ export default class GameScene extends Phaser.Scene {
             (house) => action(this.scene, house)
           );
           this.socket.emit('endTurn');
-        } else if (tile.x === 6 && tile.y === 3) {
+        } else if (tile.x === 8 && tile.y === 1) {
           let turns = this.otherPlayers.getChildren().map(player => player.playerInfo.turn)
           this.messageBox = new DecisionBox(
             this,
@@ -357,6 +356,8 @@ export default class GameScene extends Phaser.Scene {
             turns[1],
             (player) => action(this.scene, player)
           )
+          
+          this.socket.emit('endTurn');
         } 
         else {
           this.messageBox = new MessageBox(
