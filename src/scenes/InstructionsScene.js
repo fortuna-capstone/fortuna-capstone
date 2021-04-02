@@ -18,7 +18,17 @@ export default class InstructionsScene extends Phaser.Scene {
   create() {
     let scene = this.scene;
     // let welcome = this.add.image(400, 300, 'box');
-
+    this.welcomeText = this.add.text(
+      phaserConfig.width / 2 - 250,
+      phaserConfig.height / 2 - 200,
+      'Did you want instructions?',
+      {
+        fontSize: '32px',
+        fill: '#000',
+        wordWrap: { width: 600 },
+        align: 'center',
+      }
+    );
     this.skip = new DecisionBox(
       this,
       phaserConfig.width / 2,
@@ -26,9 +36,9 @@ export default class InstructionsScene extends Phaser.Scene {
       'box',
       'blueButton1',
       'blueButton2',
-      'Welcome to Game of Life: Engineer Edition! Did you want to read the instructions?',
+      'Where to?',
       'Show me!',
-      'I am a pro.'
+      'No need.'
     );
 
     this.skip.setScale(2);
