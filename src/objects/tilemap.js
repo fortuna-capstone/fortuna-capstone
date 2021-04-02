@@ -8,7 +8,7 @@ import {
   pickHouse,
   pickLifeTile,
   retire,
-  taxesDue
+  taxesDue,
 } from './operations';
 
 // COLOR KEY:
@@ -115,7 +115,9 @@ const tilemap = [
     new Tile(' '),
     new Tile(' '),
     new Tile(' '),
-    new Tile(0, 'GET MARRIED or something', (scene, item) => deskItem(scene, (item = 'monitor'))),
+    new Tile(0, 'GET MARRIED or something', (scene, item) =>
+      deskItem(scene, (item = 'monitor'))
+    ),
     new Tile(' '),
     new Tile(' '),
     new Tile(1, 'Pay $10,000.', (scene, amount) =>
