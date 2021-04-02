@@ -8,7 +8,7 @@ tilesRef.on('value', (snap) => {
   lifeTiles = snap.val();
 });
 
-// Pick lifetile function
+// Pick Lifetile function
 export function pickLifeTile(scene) {
   let tileKeys = scene.scene.dataArrays.tileArray;
   let randomNum = Math.floor(Math.random() * Math.floor(tileKeys.length));
@@ -29,7 +29,12 @@ export function taxesDue(scene) {
     parseInt(scene.scene.player.salary.taxes) * 1000;
 }
 
-// Desk item function
+// Skip Turn function
+export function skipTurn(scene) {
+  scene.scene.player.skip = true;
+}
+
+// Desk Item function
 export function deskItem(scene, item) {
   pickLifeTile(scene);
   scene.scene.player.deskItems.push(item);
@@ -42,7 +47,7 @@ housesRef.on('value', (snap) => {
   houses = snap.val();
 });
 
-// Pick house function
+// Pick House function
 export function pickHouse(scene, selectedHouse) {
   scene.scene.player.house = houses[selectedHouse];
   scene.scene.player.bankAccount -=
@@ -63,7 +68,7 @@ careersRef.on('value', (snap) => {
   careers = snap.val();
 });
 
-// Pick career function
+// Pick Career function
 export function pickCareer(scene) {
   const options = scene.scene.dataArrays.careerArray;
   let randomNum = Math.floor(Math.random() * Math.floor(options.length));
@@ -80,7 +85,7 @@ salariesRef.on('value', (snap) => {
   salaries = snap.val();
 });
 
-// Pick salary function
+// Pick Salary function
 function pickSalary(scene) {
   let salaryKeys = scene.scene.dataArrays.salaryArray;
   let randomNum = Math.floor(Math.random() * Math.floor(salaryKeys.length));
@@ -89,9 +94,19 @@ function pickSalary(scene) {
   salaryKeys.splice(randomNum, 1);
 }
 
-// Change salary function
-function changeSalary(scene) {
-  let currentPlayerSalary = scene.scene.player.salary.amount;
+// Trade Salary function
+export function tradeSalary(scene, otherPlayerTurn) {
+  let switchPlayer = scene.scene.otherPlayers.getChildren().filter(player => {
+    return player.playerInfo.turn === otherPlayerTurn
+  });
+  let switchKey = switchPlayer[0].playerInfo.salary;
+  let salaryKey = scene.scene.player.salary;
+
+  scene.scene.player.salary = switchKey;
+  switchPlayer[0].playerInfo.salary = salaryKey;
+
+  let playerInfo = switchPlayer[0].playerInfo;
+  scene.scene.socket.emit('switchStarted', playerInfo)
 }
 
 // Pay function

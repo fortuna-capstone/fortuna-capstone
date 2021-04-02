@@ -137,6 +137,11 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+    this.socket.on('switchSalary', function (playerInfo) {
+      if (playerInfo.playerId === scene.player.playerId) {
+        scene.player.salary = playerInfo.salary
+      }
+    })
     this.socket.on('salaryOptions', function (salaryOptions) {
       scene.dataArrays.salaryArray = salaryOptions;
     });
@@ -333,6 +338,10 @@ export default class GameScene extends Phaser.Scene {
       };
       if (turn) {
         if (turn === this.player.turn && this.player.skip) {
+          if (!this.player.retired) {
+            this.player.skip = false;
+          }
+          console.log('TURN WILL BE SKIPPED!!!');
           this.socket.emit('endTurn');
         }
         if (turn !== this.player.turn) {
@@ -378,7 +387,26 @@ export default class GameScene extends Phaser.Scene {
             (house) => action(this.scene, house)
           );
           this.socket.emit('endTurn');
-        } else {
+        } else if (tile.x === 8 && tile.y === 1) {
+          let turns = this.otherPlayers.getChildren().map(player => player.playerInfo.turn)
+          this.messageBox = new DecisionBox(
+            this,
+            camera.midPoint,
+            0,
+            'messageBox',
+            'blueButton1',
+            'blueButton2',
+            activeTile.description,
+            `Player ${turns[0]}`,
+            `Player ${turns[1]}`,
+            turns[0],
+            turns[1],
+            (player) => action(this.scene, player)
+          )
+          
+          this.socket.emit('endTurn');
+        } 
+        else {
           this.messageBox = new MessageBox(
             this,
             camera.midPoint,

@@ -100,6 +100,11 @@ io.on('connection', (socket) => {
     socket.emit('houseOptions', houseOptions);
   });
 
+  socket.on('switchStarted', function (playerInfo) {
+    players[playerInfo.playerId].salary = playerInfo.salary;
+    socket.broadcast.emit('switchSalary', players[playerInfo.playerId]);
+  })
+
   socket.on('endTurn', function () {
     if (turnCounter % 3 !== 0) {
       turnCounter++;
