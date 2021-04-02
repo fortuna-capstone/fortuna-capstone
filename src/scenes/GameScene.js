@@ -2,7 +2,7 @@ import 'phaser';
 
 import 'firebase/database';
 
-import Dice from '../objects/Dice';
+
 import Spinner from '../objects/Spinner'
 import phaserConfig from '../config/phaserConfig';
 
