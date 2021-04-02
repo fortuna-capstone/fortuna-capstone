@@ -24,6 +24,11 @@ const tileKeys = [
   'twenty-three',
   'twenty-four',
   'twenty-five',
+  'twenty-six',
+  'twenty-seven',
+  'twenty-eight',
+  'twenty-nine',
+  'thirty',
 ];
 // const tileKeys = ['one'];
 
