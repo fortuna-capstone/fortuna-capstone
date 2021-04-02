@@ -18,5 +18,6 @@ export default class InstructionsScene extends Phaser.Scene {
     //   fontSize: '32px',
     //   fill: '#fff',
     // });
+    this.text = new MessageBox();
   }
 }
