@@ -187,23 +187,23 @@ export default class GameScene extends Phaser.Scene {
         this.socket.emit('startGame');
       }
     );
-    this.gameDice = new Dice(
+    this.gameDice = new Spinner(
       this,
-      phaserConfig.width - 150,
+      phaserConfig.width - 200,
 
-      phaserConfig.height - 100,
+      phaserConfig.height - 75,
 
-      'blueButton1',
-      'blueButton2',
+      'spinner',
       'Spin!'
     )
-      .setScale(0.5)
+      .setScale(1)
       .setScrollFactor(0);
+  
 
     camera = this.cameras.main.setBounds(0, 0, 8000, 360);
 
     this.currentTurn = 0;
-    this.add.image(100,550,'playerOneBox').setScale(3.5).setScrollFactor(0)
+    this.add.image(100,530,'playerOneBox').setScale(3.5).setScrollFactor(0)
  
     
   }
@@ -224,6 +224,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
+    this.gameDice.update()
 
     if (this.otherPlayers.getChildren().length < 2) {
       if (this.messageBox) {
@@ -238,9 +239,8 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.otherPlayers.getChildren()[0]) {
-      this.add.image(100,30,'playerTwoBox').setScale(3.5).setScrollFactor(0)
+      this.add.image(100,60,'playerTwoBox').setScale(3.5).setScrollFactor(0)
       let player = this.otherPlayers.getChildren()[0];
-      console.log(player);
       playerTwoInfo.text.setText(
         `Player Number: ${player.playerInfo.turn}\nBank Account: ${
           player.playerInfo.bankAccount
@@ -262,10 +262,10 @@ export default class GameScene extends Phaser.Scene {
             : 'No Items'
         }\nLife tiles: ${player.playerInfo.lifeTiles.length}`
       );
-      playerTwoInfo.text.setFill('#00ff00')
+      playerTwoInfo.text.setFill('#00ff00').setFontSize(13)
     }
     if (this.otherPlayers.getChildren()[1]) {
-      this.add.image(700,30,'playerThreeBox').setScale(3.5).setScrollFactor(0)
+      this.add.image(700,60,'playerThreeBox').setScale(3.5).setScrollFactor(0)
 
       let player = this.otherPlayers.getChildren()[1];
       playerThreeInfo.text.setText(
@@ -289,7 +289,7 @@ export default class GameScene extends Phaser.Scene {
             : 'No Items'
         }\nLife tiles: ${player.playerInfo.lifeTiles.length}`
       );
-      playerThreeInfo.text.setFill('#00ff00')
+      playerThreeInfo.text.setFill('#00ff00').setFontSize(13)
     }
     if (this.player) {
       if (this.player.turn > 3) {
@@ -315,7 +315,7 @@ export default class GameScene extends Phaser.Scene {
           this.player.salary.amount ? this.player.salary.amount : 'No income'
         } \nLife tiles: ${this.player.lifeTiles.length}`
       );
-      playerInfo.text.setFill('#00ff00')
+      playerInfo.text.setFill('#00ff00').setFontSize(13)
 
       let x = this.player.gamePiece.x;
       let y = this.player.gamePiece.y;
@@ -468,7 +468,7 @@ function addPlayer(scene, player) {
       y: 5,
     });
 
-    playerInfo = new PlayerInfo(scene, player, 20, 510);
+    playerInfo = new PlayerInfo(scene, player, 20, 485);
 
   }
 }
@@ -487,6 +487,6 @@ function addOtherPlayers(scene, playerInfo) {
     playerTwoInfo = new PlayerInfo(scene, playerInfo, 10, 10);
   }
   if (scene.otherPlayers.getChildren()[1] && !playerThreeInfo) {
-    playerThreeInfo = new PlayerInfo(scene, playerInfo, 530, 10);
+    playerThreeInfo = new PlayerInfo(scene, playerInfo, 530, 5);
   }
 }

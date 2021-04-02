@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
     house: [],
     gamePiece: {},
     x: 135,
-    y: 447,
+    y: 435,
     turn: turn,
     retired: false,
     skip: false,
