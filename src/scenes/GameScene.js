@@ -46,7 +46,7 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('blueButton2', 'assets/blue_button03.png');
     this.load.image('messageBox', 'assets/message_box.png');
     this.load.image('otherPlayer', 'assets/grey_box.png');
-    this.load.image('backgroundImage', 'assets/grassBackground.png')
+    this.load.image('backgroundImage', 'assets/gameScene.png')
     this.load.image('playerOneBox', 'assets/playerOnePattern.png')
     this.load.image('playerTwoBox', 'assets/playerTwoPattern.png')
     this.load.image('playerThreeBox', 'assets/playerThreePattern.png')
@@ -56,7 +56,7 @@ export default class GameScene extends Phaser.Scene {
   create() {
     board = new MyBoard(this);
     let scene = this;
-    background = this.add.image(150, 300,'backgroundImage').setScale(3).setScrollFactor(0)
+    background = this.add.image(400, 300,'backgroundImage').setScale(4).setScrollFactor(0)
     
 
     // CREATING BOARD
