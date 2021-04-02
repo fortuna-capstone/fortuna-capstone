@@ -122,6 +122,7 @@ export function collect(scene, amount) {
 // Retire Function
 export function retire(scene) {
   const { bankAccount, house, lifeTiles } = scene.scene.player;
+  console.log('LIFE TILES', lifeTiles[0].value);
   const lifeTilesTotal = lifeTiles.reduce((acc, val) => {
     return acc + parseInt(val.value) * 1000;
   }, 0);
@@ -134,23 +135,33 @@ export function retire(scene) {
   scene.scene.player.skip = true;
 }
 
+// Calculate winner function
 export function calculateWinner(scene) {
+  console.log('SCENE', scene.scene.player.turn);
   let playersObj = {};
-  let currentPlayer = scene.scene.player.playerId;
+  let currentPlayer = String(scene.scene.player.turn);
   let currentPlayerTotal = scene.scene.player.retirement;
   playersObj[currentPlayer] = currentPlayerTotal;
-  scene.scene.otherPlayersBody.forEach((player) => {
-    let playerId = player.playerId;
-    let playerTotal = player.retirement;
+
+  scene.scene.otherPlayers.getChildren().forEach((player) => {
+    console.log('CALCULATE', player);
+    let playerId = String(player.playerInfo.turn);
+    let playerTotal = player.playerInfo.retirement;
     playersObj[playerId] = playerTotal;
   });
+
   let highestScore = 0;
   let winner = null;
+
   for (let key in playersObj) {
     if (playersObj[key] > highestScore) {
       highestScore = playersObj[key];
       winner = key;
     }
   }
-  console.log(`${winner} wins with a score of ${highestScore}`);
+  let winnerAndScore = {
+    winner,
+    highestScore,
+  };
+  return winnerAndScore;
 }

@@ -1,6 +1,5 @@
 import 'phaser';
 
-import firebase from 'firebase/app';
 import 'firebase/database';
 
 import Dice from '../objects/Dice';
@@ -24,6 +23,8 @@ let board;
 let playerInfo;
 let camera;
 let turn;
+let gameOver = false;
+let winner;
 
 let playing = true;
 
@@ -127,7 +128,9 @@ export default class GameScene extends Phaser.Scene {
       });
     });
     this.socket.on('playerRetired', function (playerInfo) {
+      console.log('PLAYER RETIRED');
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+        console.log('OTHER PLAYERS', otherPlayer.playerInfo);
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.playerInfo.retired = true;
           otherPlayer.playerInfo.retirement = playerInfo.retirement;
@@ -151,6 +154,10 @@ export default class GameScene extends Phaser.Scene {
     this.socket.on('houseOptions', function (houseOptions) {
       scene.dataArrays.houseArray = houseOptions;
     });
+    this.socket.on('gameOver', function (winnerInfo) {
+      gameOver = true;
+      winner = winnerInfo;
+    });
 
     // bootcamp or college
     this.messageBox = new DecisionBox(
@@ -172,7 +179,7 @@ export default class GameScene extends Phaser.Scene {
     );
     this.gameDice = new Dice(
       this,
-      phaserConfig.width - 50,
+      phaserConfig.width - 150,
       phaserConfig.height - 50,
       'blueButton1',
       'blueButton2',
@@ -202,6 +209,12 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
+    if (this.otherPlayers.getChildren().length < 2) {
+      if (this.messageBox) {
+        this.messageBox.disableInteractive();
+      }
+    }
+
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
 
@@ -211,42 +224,76 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.otherPlayers.getChildren()[0]) {
       let player = this.otherPlayers.getChildren()[0];
+      console.log(player);
       playerTwoInfo.text.setText(
-        `bank account: ${player.playerInfo.bankAccount} \ncareer: ${
+        `Player Number: ${player.playerInfo.turn}\nBank Account: ${
+          player.playerInfo.bankAccount
+        } \nCareer: ${
           player.playerInfo.career.description
             ? player.playerInfo.career.description
             : 'unemployed'
-        } \nsalary: ${
+        } \nSalary: ${
           player.playerInfo.salary.amount
             ? player.playerInfo.salary.amount
             : 'No income'
-        } \nlife tiles: ${player.playerInfo.lifeTiles.length}`
+        } \nHouse: ${
+          player.playerInfo.house.description
+            ? player.playerInfo.house
+            : 'Lives With Parents'
+        }\nDesk Items: ${
+          player.playerInfo.deskItems.description
+            ? player.playerInfo.deskItems
+            : 'No Items'
+        }\nLife tiles: ${player.playerInfo.lifeTiles.length}`
       );
     }
     if (this.otherPlayers.getChildren()[1]) {
       let player = this.otherPlayers.getChildren()[1];
       playerThreeInfo.text.setText(
-        `bank account: ${player.playerInfo.bankAccount} \ncareer: ${
+        `Player Number: ${player.playerInfo.turn}\nBank Account: ${
+          player.playerInfo.bankAccount
+        } \nCareer: ${
           player.playerInfo.career.description
             ? player.playerInfo.career.description
             : 'unemployed'
-        } \nsalary: ${
+        } \nSalary: ${
           player.playerInfo.salary.amount
             ? player.playerInfo.salary.amount
             : 'No income'
-        } \nlife tiles: ${player.playerInfo.lifeTiles.length}`
+        } \nHouse: ${
+          player.playerInfo.house.description
+            ? player.playerInfo.house
+            : 'Lives With Parents'
+        }\nDesk Items: ${
+          player.playerInfo.deskItems.description
+            ? player.playerInfo.deskItems
+            : 'No Items'
+        }\nLife tiles: ${player.playerInfo.lifeTiles.length}`
       );
     }
     if (this.player) {
+      if (this.player.turn > 3) {
+        this.scene.start('Waiting');
+      }
       camera.startFollow(this.player.gamePiece);
       playerInfo.text.setText(
-        `bank account: ${this.player.bankAccount} \ncareer: ${
+        `Player Number: ${this.player.turn} \nBank Account: ${
+          this.player.bankAccount
+        } \nCareer: ${
           this.player.career.description
             ? this.player.career.description
             : 'unemployed'
-        } \nsalary: ${
+        }\nHouse: ${
+          this.player.house.description
+            ? this.player.house.description
+            : 'Lives With Parents'
+        } \nDesk Items: ${
+          this.player.deskItems.description
+            ? this.player.deskItems.description
+            : 'No Items'
+        } \nSalary: ${
           this.player.salary.amount ? this.player.salary.amount : 'No income'
-        } \nlife tiles: ${this.player.lifeTiles.length}`
+        } \nLife tiles: ${this.player.lifeTiles.length}`
       );
 
       let x = this.player.gamePiece.x;
@@ -271,16 +318,14 @@ export default class GameScene extends Phaser.Scene {
       let career = this.player.career;
       let lifeTiles = this.player.lifeTiles;
       let salary = this.player.salary;
-     
-      if (
 
+      if (
         this.player.oldPlayer &&
         (bankAccount != this.player.oldPlayer.bankAccount ||
           career != this.player.oldPlayer.career ||
           house != this.player.oldPlayer.house ||
           lifeTiles.length != this.player.oldPlayer.lifeTiles.length ||
           salary != this.player.oldPlayer.salary)
-
       ) {
         this.socket.emit('updatePlayer', this.player, this.dataArrays);
       }
@@ -292,7 +337,6 @@ export default class GameScene extends Phaser.Scene {
         salary: this.player.salary,
       };
       if (turn) {
-
         if (turn === this.player.turn && this.player.skip) {
           if (!this.player.retired) {
             this.player.skip = false;
@@ -312,11 +356,14 @@ export default class GameScene extends Phaser.Scene {
         this.socket.emit('retire', this.player);
         playing = false;
       }
-      let notRetired = this.otherPlayersBody.filter((item) => !item.retired);
+
+      let notRetired = this.otherPlayers.getChildren().filter((otherPlayer) => {
+        return !otherPlayer.playerInfo.retired;
+      });
 
       if (this.player.retired && !notRetired.length) {
-        console.log('GAME OVER');
-        calculateWinner(this.scene);
+        winner = calculateWinner(this.scene);
+        this.socket.emit('endGame', winner);
       }
     }
 
@@ -372,19 +419,34 @@ export default class GameScene extends Phaser.Scene {
           );
           this.socket.emit('endTurn');
         }
-
       }
     }
+    if (gameOver) {
+      this.messageBox = new MessageBox(
+        this,
+        camera.midPoint,
+        0,
+        'messageBox',
+        'blueButton1',
+        'blueButton2',
+        `Player ${winner.winner} wins with a score of ${winner.highestScore}`,
+        () => {
+          console.log('CLICKED');
+        }
+      );
+    }
+    gameOver = false;
   }
 }
 function addPlayer(scene, player) {
+  console.log('PLAYER IN ADD PLAYER', player);
   if (!scene.player) {
     scene.player = player;
     scene.player.gamePiece = new ChessPiece(board, {
       x: 1,
       y: 5,
     });
-    playerInfo = new PlayerInfo(scene, player, 20, 510);
+    playerInfo = new PlayerInfo(scene, player, 10, 480);
   }
 }
 
@@ -399,9 +461,9 @@ function addOtherPlayers(scene, playerInfo) {
   scene.otherPlayersBody.push(otherPlayerBody);
 
   if (scene.otherPlayers.getChildren()[0] && !playerTwoInfo) {
-    playerTwoInfo = new PlayerInfo(scene, playerInfo, 20, 20);
+    playerTwoInfo = new PlayerInfo(scene, playerInfo, 10, 10);
   }
   if (scene.otherPlayers.getChildren()[1] && !playerThreeInfo) {
-    playerThreeInfo = new PlayerInfo(scene, playerInfo, 550, 20);
+    playerThreeInfo = new PlayerInfo(scene, playerInfo, 530, 10);
   }
 }
