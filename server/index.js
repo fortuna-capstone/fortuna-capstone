@@ -86,6 +86,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('retire', function (playerData) {
+    console.log('PLAYER DATA AFTER RETIRE', playerData);
     players[socket.id].retired = true;
     players[socket.id].retirement = playerData.retirement;
     socket.broadcast.emit('playerRetired', players[socket.id]);
@@ -98,6 +99,11 @@ io.on('connection', (socket) => {
     socket.emit('tileOptions', tileOptions);
     socket.emit('houseOptions', houseOptions);
   });
+
+  socket.on('switchStarted', function (playerInfo) {
+    players[playerInfo.playerId].salary = playerInfo.salary;
+    socket.broadcast.emit('switchSalary', players[playerInfo.playerId]);
+  })
 
   socket.on('endTurn', function () {
     if (turnCounter % 3 !== 0) {
@@ -116,4 +122,8 @@ io.on('connection', (socket) => {
   socket.emit('roll', 'someone has rolled');
 
   socket.broadcast.emit('playerLeft', players[socket.id]);
+
+  socket.on('endGame', function (winnerInfo) {
+    socket.broadcast.emit('gameOver', winnerInfo);
+  });
 });

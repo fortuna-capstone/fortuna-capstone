@@ -52,7 +52,7 @@ export default class DecisionBox extends Phaser.GameObjects.Container {
     // adds text in box
     const text = this.scene.add.text(0, 0, description, {
       fontSize: '20px',
-      fill: '#000',
+      fill: '#00ff00',
       wordWrap: { width: 220 },
       align: 'center',
     }).setDepth(7);
