@@ -20,8 +20,8 @@ export default class InstructionsScene extends Phaser.Scene {
     // let welcome = this.add.image(400, 300, 'box');
     this.welcomeText = this.add.text(
       phaserConfig.width / 2 - 250,
-      phaserConfig.height / 2 - 200,
-      'Did you want instructions?',
+      0,
+      'The Rules of the Game',
       {
         fontSize: '32px',
         fill: '#000',
@@ -38,10 +38,13 @@ export default class InstructionsScene extends Phaser.Scene {
       'blueButton2',
       'Where to?',
       'Show me!',
-      'No need.'
+      'No need.',
+      3,
+      () => this.scene.start('Game')
     );
 
-    this.skip.setScale(2);
+    //this.skip.setSize(3);
+
     //   let box = this.add
     //     .image(phaserConfig.width / 2, phaserConfig.height / 2, 'box')
     //     .setDepth(6);
