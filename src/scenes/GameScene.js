@@ -2,7 +2,6 @@ import 'phaser';
 
 import 'firebase/database';
 
-import Dice from '../objects/Dice';
 import Spinner from '../objects/Spinner';
 import phaserConfig from '../config/phaserConfig';
 
@@ -15,6 +14,7 @@ import MessageBox from '../objects/MessageBox';
 import DecisionBox from '../objects/DecisionBox';
 import PlayerInfo from '../objects/PlayerInfo';
 import HouseDecision from '../objects/HouseDecision';
+import TradeBox from '../objects/TradeSalary';
 
 import { calculateWinner } from '../objects/operations';
 
@@ -45,7 +45,7 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('blueButton2', 'assets/blue_button03.png');
     this.load.image('messageBox', 'assets/message_box.png');
     this.load.image('otherPlayer', 'assets/grey_box.png');
-    this.load.image('backgroundImage', 'assets/grassBackground.png');
+    this.load.image('backgroundImage', 'assets/gameScene.png');
     this.load.image('playerOneBox', 'assets/playerOnePattern.png');
     this.load.image('playerTwoBox', 'assets/playerTwoPattern.png');
     this.load.image('playerThreeBox', 'assets/playerThreePattern.png');
@@ -59,8 +59,8 @@ export default class GameScene extends Phaser.Scene {
     board = new MyBoard(this);
     let scene = this;
     background = this.add
-      .image(150, 300, 'backgroundImage')
-      .setScale(3)
+      .image(400, 300, 'backgroundImage')
+      .setScale(4)
       .setScrollFactor(0);
 
     // CREATING BOARD
@@ -114,6 +114,7 @@ export default class GameScene extends Phaser.Scene {
       });
     });
     this.socket.on('gotPlayer', function (playerInfo) {
+      console.log('PLAYER INFO', playerInfo);
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.playerInfo = playerInfo;
@@ -142,9 +143,7 @@ export default class GameScene extends Phaser.Scene {
       });
     });
     this.socket.on('playerRetired', function (playerInfo) {
-      console.log('PLAYER RETIRED');
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-        console.log('OTHER PLAYERS', otherPlayer.playerInfo);
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.playerInfo.retired = true;
           otherPlayer.playerInfo.retirement = playerInfo.retirement;
@@ -192,6 +191,7 @@ export default class GameScene extends Phaser.Scene {
         this.socket.emit('startGame');
       }
     );
+
     this.gameDice = new Spinner(
       this,
       phaserConfig.width - 200,
@@ -256,7 +256,7 @@ export default class GameScene extends Phaser.Scene {
             : 'No income'
         } \nHouse: ${
           player.playerInfo.house.description
-            ? player.playerInfo.house
+            ? player.playerInfo.house.description
             : 'Lives With Parents'
         }\nDesk Items: ${
           player.playerInfo.deskItems.description
@@ -286,7 +286,7 @@ export default class GameScene extends Phaser.Scene {
             : 'No income'
         } \nHouse: ${
           player.playerInfo.house.description
-            ? player.playerInfo.house
+            ? player.playerInfo.house.description
             : 'Lives With Parents'
         }\nDesk Items: ${
           player.playerInfo.deskItems.description
@@ -367,7 +367,6 @@ export default class GameScene extends Phaser.Scene {
           if (!this.player.retired) {
             this.player.skip = false;
           }
-          console.log('TURN WILL BE SKIPPED!!!');
           this.socket.emit('endTurn');
         }
         if (turn !== this.player.turn) {
@@ -427,6 +426,7 @@ export default class GameScene extends Phaser.Scene {
             activeTile.description,
             `Player ${turns[0]}`,
             `Player ${turns[1]}`,
+            'No trade',
             turns[0],
             turns[1],
             0.6,
