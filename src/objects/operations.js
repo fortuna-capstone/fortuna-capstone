@@ -146,7 +146,7 @@ export function retire(scene) {
   }, 0);
   let housePrice = 0;
   if (house.cost) {
-    housePrice = house.cost;
+    housePrice = parseInt(house.cost) * 1000;
   }
   scene.scene.player.retirement = housePrice + bankAccount + lifeTilesTotal;
   scene.scene.player.retired = true;
