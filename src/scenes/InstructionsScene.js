@@ -2,6 +2,7 @@ import 'phaser';
 import phaserConfig from '../config/phaserConfig';
 
 import DecisionBox from '../objects/DecisionBox';
+import MessageBox from '../objects/MessageBox';
 
 export default class InstructionsScene extends Phaser.Scene {
   constructor() {
@@ -12,12 +13,13 @@ export default class InstructionsScene extends Phaser.Scene {
     this.load.image('box', 'assets/message_box.png');
     this.load.image('blueButton1', 'assets/blue_button02.png');
     this.load.image('blueButton2', 'assets/blue_button03.png');
-    this.load.image;
+    this.load.image('background', 'assets/grassBackground.png');
   }
 
   create() {
     let scene = this.scene;
     // let welcome = this.add.image(400, 300, 'box');
+    this.add.image('background');
     this.welcomeText = this.add.text(
       phaserConfig.width / 2 - 250,
       0,
@@ -29,7 +31,7 @@ export default class InstructionsScene extends Phaser.Scene {
         align: 'center',
       }
     );
-    this.skip = new DecisionBox(
+    this.button = new MessageBox(
       this,
       phaserConfig.width / 2,
       phaserConfig.height / 2,
@@ -37,9 +39,7 @@ export default class InstructionsScene extends Phaser.Scene {
       'blueButton1',
       'blueButton2',
       'Where to?',
-      'Show me!',
-      'No need.',
-      3,
+      'Play',
       () => this.scene.start('Game')
     );
 
