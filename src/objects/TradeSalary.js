@@ -16,6 +16,7 @@ export default class TradeBox extends Phaser.GameObjects.Container {
     text3,
     decision1,
     decision2,
+    scale,
     callback
   ) {
     super(scene);
