@@ -288,7 +288,7 @@ const tilemap = [
     new Tile(1, 'Emergency surgery. Pay $40,000.', (scene, amount) =>
       pay(scene, (amount = 40000))
     ),
-    new Tile(1, 'Fire in the office. $5,000 per desk item?', payPerDeskItem),
+    new Tile(1, 'Fire in the office. Pay $5,000 per desk item.', payPerDeskItem),
     new Tile(1, 'Trade salary with another player?', tradeSalary),
     new Tile(2, 'Got a second monitor!', (scene, item) =>
       deskItem(scene, (item = 'second monitor'))
