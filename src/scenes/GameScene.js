@@ -15,6 +15,7 @@ import DecisionBox from '../objects/DecisionBox';
 import PlayerInfo from '../objects/PlayerInfo';
 import HouseDecision from '../objects/HouseDecision';
 import TradeBox from '../objects/TradeSalary';
+import TurnDisplay from '../objects/TurnDisplay';
 
 import { calculateWinner } from '../objects/operations';
 
@@ -193,7 +194,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.gameDice = new Spinner(
       this,
-      phaserConfig.width - 200,
+      phaserConfig.width - 250,
 
       phaserConfig.height - 75,
 
@@ -202,6 +203,7 @@ export default class GameScene extends Phaser.Scene {
     )
       .setScale(1)
       .setScrollFactor(0);
+     
 
     camera = this.cameras.main.setBounds(0, 0, 8000, 360);
 
@@ -362,6 +364,15 @@ export default class GameScene extends Phaser.Scene {
         salary: this.player.salary,
       };
       if (turn) {
+        this.turnDisplay = new TurnDisplay(
+          this, 
+          phaserConfig.width-100,
+  
+          phaserConfig.height - 75,
+          'messageBox',
+          `Player\n ${turn}s\n turn`
+  
+        )
         if (turn === this.player.turn && this.player.skip) {
           if (!this.player.retired) {
             this.player.skip = false;
