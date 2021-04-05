@@ -144,7 +144,6 @@ export function retire(scene) {
   const lifeTilesTotal = lifeTiles.reduce((acc, val) => {
     return acc + parseInt(val.value) * 1000;
   }, 0);
-  console.log('LIFE TILES TOTAL', lifeTilesTotal);
   let housePrice = 0;
   if (house.cost) {
     housePrice = parseInt(house.cost) * 1000;
@@ -180,6 +179,5 @@ export function calculateWinner(scene) {
     winner,
     highestScore,
   };
-  console.log('WINNER AND SCORE', winnerAndScore);
   return winnerAndScore;
 }
