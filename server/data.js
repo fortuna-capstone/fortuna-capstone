@@ -45,7 +45,6 @@ const tileKeys = [
   'forty-four',
   'forty-five',
 ];
-// const tileKeys = ['one'];
 
 const salaryKeys = [
   'one',
@@ -58,6 +57,7 @@ const salaryKeys = [
   'eight',
   'nine',
 ];
+
 const careerKeys = [
   'BackEndDeveloper',
   'Freelancer',
@@ -66,6 +66,7 @@ const careerKeys = [
   'Intern',
   'JuniorDeveloper',
 ];
+
 const houseKeys = [
   'Beach House',
   'Cozy Condo',

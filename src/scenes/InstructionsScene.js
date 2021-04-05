@@ -4,7 +4,7 @@ import phaserConfig from '../config/phaserConfig';
 import Button from '../objects/Button';
 
 export default class InstructionsScene extends Phaser.Scene {
-  constructor(scene) {
+  constructor() {
     super('Instructions');
   }
 

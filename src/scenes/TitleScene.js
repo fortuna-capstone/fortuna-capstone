@@ -1,7 +1,6 @@
 import 'phaser';
 import Button from '../objects/Button';
 import phaserConfig from '../config/phaserConfig';
-import DecicionBox from '../objects/DecisionBox';
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {
@@ -33,7 +32,5 @@ export default class TitleScene extends Phaser.Scene {
       'Info',
       () => this.scene.start('Instructions')
     );
-
-    // this.choice = new DecicionBox();
   }
 }

@@ -35,7 +35,7 @@ let playerTwoInfo;
 let playerThreeInfo;
 
 export default class GameScene extends Phaser.Scene {
-  constructor(scene) {
+  constructor() {
     super('Game');
     this.board = null;
   }
@@ -71,6 +71,7 @@ export default class GameScene extends Phaser.Scene {
     this.dataArrays = {};
 
     this.otherPlayers = this.add.group();
+
     this.socket.on('currentPlayers', function (players) {
       Object.keys(players).forEach(function (id) {
         if (players[id].playerId === scene.socket.id) {
@@ -80,12 +81,15 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+
     this.socket.on('newPlayer', function (playerInfo) {
       addOtherPlayers(scene, playerInfo);
     });
+
     this.socket.on('turnStarted', function (turnCounter) {
       turn = turnCounter;
     });
+
     this.socket.on('playerLeft', function (playerId) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerId === otherPlayer.playerId) {
@@ -93,6 +97,7 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+
     this.socket.on('playerMoved', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -100,6 +105,7 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+
     this.socket.on('gotPaid', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -107,6 +113,7 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+
     this.socket.on('gotCareer', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -114,6 +121,7 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+
     this.socket.on('gotPlayer', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -121,6 +129,7 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+
     this.socket.on('gotHouse', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -128,6 +137,7 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+
     this.socket.on('gotLifeTiles', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -135,6 +145,7 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+
     this.socket.on('gotSalary', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -142,6 +153,7 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+
     this.socket.on('playerRetired', function (playerInfo) {
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
@@ -150,23 +162,29 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+
     this.socket.on('switchSalary', function (playerInfo) {
       if (playerInfo.playerId === scene.player.playerId) {
         scene.player.salary = playerInfo.salary;
       }
     });
+
     this.socket.on('salaryOptions', function (salaryOptions) {
       scene.dataArrays.salaryArray = salaryOptions;
     });
+
     this.socket.on('careerOptions', function (careerOptions) {
       scene.dataArrays.careerArray = careerOptions;
     });
+
     this.socket.on('tileOptions', function (tileOptions) {
       scene.dataArrays.tileArray = tileOptions;
     });
+
     this.socket.on('houseOptions', function (houseOptions) {
       scene.dataArrays.houseArray = houseOptions;
     });
+
     this.socket.on('gameOver', function (winnerInfo) {
       winner = winnerInfo;
       gameOver = true;
@@ -195,18 +213,14 @@ export default class GameScene extends Phaser.Scene {
     this.gameDice = new Spinner(
       this,
       phaserConfig.width - 250,
-
       phaserConfig.height - 75,
-
       'spinner',
       'Spin!'
     )
       .setScale(1)
       .setScrollFactor(0);
-     
 
     camera = this.cameras.main.setBounds(0, 0, 8000, 360);
-
     this.currentTurn = 0;
     this.add.image(100, 530, 'playerOneBox').setScale(3.5).setScrollFactor(0);
   }
@@ -234,6 +248,7 @@ export default class GameScene extends Phaser.Scene {
         this.messageBox.disableInteractive();
       }
     }
+
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
 
@@ -261,18 +276,21 @@ export default class GameScene extends Phaser.Scene {
             : 'Lives With Parents'
         }\nDesk Items: ${
           player.playerInfo.deskItems.length > 0
-            ? player.playerInfo.deskItems.map((item, i) => {
-              if (i < player.playerInfo.deskItems.length - 1) {
-                return `${item}, `;
-              } else {
-                return `${item}`;
-              }
-            }).join('')
+            ? player.playerInfo.deskItems
+                .map((item, i) => {
+                  if (i < player.playerInfo.deskItems.length - 1) {
+                    return `${item}, `;
+                  } else {
+                    return `${item}`;
+                  }
+                })
+                .join('')
             : 'No Items'
         }\nLife tiles: ${player.playerInfo.lifeTiles.length}`
       );
       playerTwoInfo.text.setFill('#00ff00').setFontSize(13);
     }
+
     if (this.otherPlayers.getChildren()[1]) {
       this.add
         .image(700, 60, 'playerThreeBox')
@@ -297,18 +315,21 @@ export default class GameScene extends Phaser.Scene {
             : 'Lives With Parents'
         }\nDesk Items: ${
           player.playerInfo.deskItems.length > 0
-            ? player.playerInfo.deskItems.map((item, i) => {
-              if (i < player.playerInfo.deskItems.length - 1) {
-                return `${item}, `;
-              } else {
-                return `${item}`;
-              }
-            }).join('')
+            ? player.playerInfo.deskItems
+                .map((item, i) => {
+                  if (i < player.playerInfo.deskItems.length - 1) {
+                    return `${item}, `;
+                  } else {
+                    return `${item}`;
+                  }
+                })
+                .join('')
             : 'No Items'
         }\nLife tiles: ${player.playerInfo.lifeTiles.length}`
       );
       playerThreeInfo.text.setFill('#00ff00').setFontSize(13);
     }
+
     if (this.player) {
       if (this.player.turn > 3) {
         this.scene.start('Waiting');
@@ -329,13 +350,15 @@ export default class GameScene extends Phaser.Scene {
             : 'Lives With Parents'
         } \nDesk Items: ${
           this.player.deskItems.length > 0
-            ? this.player.deskItems.map((item, i) => {
-              if (i < this.player.deskItems.length - 1) {
-                return `${item}, `;
-              } else {
-                return `${item}`;
-              }
-            }).join('')
+            ? this.player.deskItems
+                .map((item, i) => {
+                  if (i < this.player.deskItems.length - 1) {
+                    return `${item}, `;
+                  } else {
+                    return `${item}`;
+                  }
+                })
+                .join('')
             : 'No Items'
         } \nLife tiles: ${this.player.lifeTiles.length}`
       );
@@ -374,6 +397,7 @@ export default class GameScene extends Phaser.Scene {
       ) {
         this.socket.emit('updatePlayer', this.player, this.dataArrays);
       }
+
       this.player.oldPlayer = {
         bankAccount: this.player.bankAccount,
         career: this.player.career,
@@ -381,22 +405,24 @@ export default class GameScene extends Phaser.Scene {
         lifeTiles: [...this.player.lifeTiles],
         salary: this.player.salary,
       };
+
       if (turn) {
         this.turnDisplay = new TurnDisplay(
-          this, 
-          phaserConfig.width-100,
-  
+          this,
+          phaserConfig.width - 100,
+
           phaserConfig.height - 75,
           'messageBox',
           `Player\n ${turn}s\n turn`
-  
-        )
+        );
+
         if (turn === this.player.turn && this.player.skip) {
           if (!this.player.retired) {
             this.player.skip = false;
           }
           this.socket.emit('endTurn');
         }
+
         if (turn !== this.player.turn || this.messageBox) {
           this.gameDice.button.disableInteractive();
         } else {
@@ -482,6 +508,7 @@ export default class GameScene extends Phaser.Scene {
         }
       }
     }
+
     if (winner && gameOver) {
       this.messageBox = new MessageBox(
         this,
@@ -499,6 +526,7 @@ export default class GameScene extends Phaser.Scene {
     gameOver = false;
   }
 }
+
 function addPlayer(scene, player) {
   if (!scene.player) {
     scene.player = player;
@@ -524,6 +552,7 @@ function addOtherPlayers(scene, playerInfo) {
   if (scene.otherPlayers.getChildren()[0] && !playerTwoInfo) {
     playerTwoInfo = new PlayerInfo(scene, playerInfo, 10, 10);
   }
+
   if (scene.otherPlayers.getChildren()[1] && !playerThreeInfo) {
     playerThreeInfo = new PlayerInfo(scene, playerInfo, 530, 5);
   }
