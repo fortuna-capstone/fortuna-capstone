@@ -164,8 +164,8 @@ export default class GameScene extends Phaser.Scene {
       scene.dataArrays.houseArray = houseOptions;
     });
     this.socket.on('gameOver', function (winnerInfo) {
-      gameOver = true;
       winner = winnerInfo;
+      gameOver = true;
     });
 
     // bootcamp or college
@@ -452,7 +452,7 @@ export default class GameScene extends Phaser.Scene {
         }
       }
     }
-    if (gameOver) {
+    if (winner && gameOver) {
       this.messageBox = new MessageBox(
         this,
         camera.midPoint,
