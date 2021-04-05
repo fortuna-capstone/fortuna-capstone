@@ -109,7 +109,6 @@ export default class GameScene extends Phaser.Scene {
       });
     });
     this.socket.on('gotPlayer', function (playerInfo) {
-      console.log('PLAYER INFO', playerInfo);
       scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.playerInfo = playerInfo;
@@ -252,8 +251,14 @@ export default class GameScene extends Phaser.Scene {
             ? player.playerInfo.house.description
             : 'Lives With Parents'
         }\nDesk Items: ${
-          player.playerInfo.deskItems.description
-            ? player.playerInfo.deskItems
+          player.playerInfo.deskItems.length > 0
+            ? player.playerInfo.deskItems.map((item, i) => {
+              if (i < player.playerInfo.deskItems.length - 1) {
+                return `${item}, `;
+              } else {
+                return `${item}`;
+              }
+            }).join('')
             : 'No Items'
         }\nLife tiles: ${player.playerInfo.lifeTiles.length}`
       );
@@ -282,8 +287,14 @@ export default class GameScene extends Phaser.Scene {
             ? player.playerInfo.house.description
             : 'Lives With Parents'
         }\nDesk Items: ${
-          player.playerInfo.deskItems.description
-            ? player.playerInfo.deskItems
+          player.playerInfo.deskItems.length > 0
+            ? player.playerInfo.deskItems.map((item, i) => {
+              if (i < player.playerInfo.deskItems.length - 1) {
+                return `${item}, `;
+              } else {
+                return `${item}`;
+              }
+            }).join('')
             : 'No Items'
         }\nLife tiles: ${player.playerInfo.lifeTiles.length}`
       );
@@ -301,16 +312,22 @@ export default class GameScene extends Phaser.Scene {
           this.player.career.description
             ? this.player.career.description
             : 'unemployed'
-        }\nHouse: ${
+        }\nSalary: ${
+          this.player.salary.amount ? this.player.salary.amount : 'No income'
+        } \nHouse: ${
           this.player.house.description
             ? this.player.house.description
             : 'Lives With Parents'
         } \nDesk Items: ${
-          this.player.deskItems.description
-            ? this.player.deskItems.description
+          this.player.deskItems.length > 0
+            ? this.player.deskItems.map((item, i) => {
+              if (i < this.player.deskItems.length - 1) {
+                return `${item}, `;
+              } else {
+                return `${item}`;
+              }
+            }).join('')
             : 'No Items'
-        } \nSalary: ${
-          this.player.salary.amount ? this.player.salary.amount : 'No income'
         } \nLife tiles: ${this.player.lifeTiles.length}`
       );
       playerInfo.text.setFill('#00ff00').setFontSize(13);
@@ -363,7 +380,7 @@ export default class GameScene extends Phaser.Scene {
           console.log('TURN WILL BE SKIPPED!!!');
           this.socket.emit('endTurn');
         }
-        if (turn !== this.player.turn) {
+        if (turn !== this.player.turn || this.messageBox) {
           this.gameDice.button.disableInteractive();
         } else {
           this.gameDice.button.setInteractive();
