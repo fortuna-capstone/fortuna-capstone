@@ -241,6 +241,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
+    var formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+
     this.gameDice.update();
 
     if (this.otherPlayers.getChildren().length < 2) {
@@ -260,9 +265,11 @@ export default class GameScene extends Phaser.Scene {
       this.add.image(100, 60, 'playerTwoBox').setScale(3.5).setScrollFactor(0);
       let player = this.otherPlayers.getChildren()[0];
       playerTwoInfo.text.setText(
-        `Player Number: ${player.playerInfo.turn}\nBank Account: ${
+        `Player Number: ${
+          player.playerInfo.turn
+        }\nBank Account: ${formatter.format(
           player.playerInfo.bankAccount
-        } \nCareer: ${
+        )} \nCareer: ${
           player.playerInfo.career.description
             ? player.playerInfo.career.description
             : 'unemployed'
@@ -299,9 +306,11 @@ export default class GameScene extends Phaser.Scene {
 
       let player = this.otherPlayers.getChildren()[1];
       playerThreeInfo.text.setText(
-        `Player Number: ${player.playerInfo.turn}\nBank Account: ${
+        `Player Number: ${
+          player.playerInfo.turn
+        }\nBank Account: ${formatter.format(
           player.playerInfo.bankAccount
-        } \nCareer: ${
+        )} \nCareer: ${
           player.playerInfo.career.description
             ? player.playerInfo.career.description
             : 'unemployed'
@@ -335,10 +344,11 @@ export default class GameScene extends Phaser.Scene {
         this.scene.start('Waiting');
       }
       camera.startFollow(this.player.gamePiece);
+
       playerInfo.text.setText(
-        `Player Number: ${this.player.turn} \nBank Account: ${
+        `Player Number: ${this.player.turn} \nBank Account: ${formatter.format(
           this.player.bankAccount
-        } \nCareer: ${
+        )} \nCareer: ${
           this.player.career.description
             ? this.player.career.description
             : 'unemployed'
