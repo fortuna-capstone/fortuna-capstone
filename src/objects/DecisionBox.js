@@ -15,6 +15,7 @@ export default class DecisionBox extends Phaser.GameObjects.Container {
     text2,
     decision1,
     decision2,
+    scale,
     callback
   ) {
     super(scene);
@@ -23,7 +24,10 @@ export default class DecisionBox extends Phaser.GameObjects.Container {
     const height = phaserConfig.height / 2;
     const msgBox = this.scene.add.group();
 
-    const box = this.scene.add.sprite(x.x > 400 ? x.x : width, height, key1).setScale(0.6).setDepth(6);
+    const box = this.scene.add
+      .sprite(x.x > 400 ? x.x : width, height, key1)
+      .setScale(scale)
+      .setDepth(6);
 
     // create top choice button
     const topButton = new Button(
@@ -32,7 +36,7 @@ export default class DecisionBox extends Phaser.GameObjects.Container {
       height,
       key2,
       key3,
-      text1, 
+      text1,
       () => destroyFunc(decision1),
       '20px'
     );
@@ -44,18 +48,20 @@ export default class DecisionBox extends Phaser.GameObjects.Container {
       height + 75,
       key2,
       key3,
-      text2, 
+      text2,
       () => destroyFunc(decision2),
       '20px'
     );
 
     // adds text in box
-    const text = this.scene.add.text(0, 0, description, {
-      fontSize: '20px',
-      fill: '#00ff00',
-      wordWrap: { width: 220 },
-      align: 'center',
-    }).setDepth(7);
+    const text = this.scene.add
+      .text(0, 0, description, {
+        fontSize: '20px',
+        fill: '#00ff00',
+        wordWrap: { width: 220 },
+        align: 'center',
+      })
+      .setDepth(7);
     Phaser.Display.Align.In.TopCenter(text, box);
     text.y = 210;
 
@@ -63,7 +69,7 @@ export default class DecisionBox extends Phaser.GameObjects.Container {
     msgBox.add(text);
 
     const destroyFunc = (decision) => {
-      callback(decision)
+      callback(decision);
 
       msgBox.destroy(true);
 
@@ -74,7 +80,6 @@ export default class DecisionBox extends Phaser.GameObjects.Container {
       bottomButton.text.destroy();
 
       scene.messageBox = null;
-    }
-
+    };
   }
 }

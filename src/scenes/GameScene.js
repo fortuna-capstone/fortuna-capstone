@@ -185,6 +185,7 @@ export default class GameScene extends Phaser.Scene {
       'Go to Bootcamp',
       2,
       4,
+      0.6,
       (decision) => {
         this.player.gamePiece.monopoly.setFace(decision);
         this.socket.emit('startGame');
@@ -461,6 +462,7 @@ export default class GameScene extends Phaser.Scene {
             'No trade',
             turns[0],
             turns[1],
+            0.6,
             (player) => action(this.scene, player)
           );
 
