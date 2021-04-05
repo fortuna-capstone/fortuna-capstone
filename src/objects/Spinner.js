@@ -35,7 +35,7 @@ export default class Spinner extends Phaser.GameObjects.Container {
     this.button.on(
       'pointerdown',
       function () {
-        const number = Phaser.Math.Between(9, 10);
+        const number = Phaser.Math.Between(1, 8);
         this.scene.socket.roll = number;
       }.bind(this)
     );
