@@ -12,19 +12,20 @@ export default class TurnDisplay extends Phaser.GameObjects.Container {
     const height = phaserConfig.height / 5;
     const msgBox = this.scene.add.group();
 
-    const box = this.scene.add.sprite(x, y, key1).setScale(0.2);
+    this.box = this.scene.add.sprite(x, y, key1).setScale(0.2);
 
-    const text = this.scene.add.text(x, y, description, {
+    this.text = this.scene.add.text(0, 0, description, {
       fontSize: '18px',
       fill: '#00ff00',
       wordWrap: { width: 220 },
       align: 'center',
     });
-    Phaser.Display.Align.In.Center(text, box);
-    text.x -= 3;
+    Phaser.Display.Align.In.Center(this.text, this.box);
+    this.text.x -= 3;
+    this.text.y -= 10;
 
-    msgBox.add(box);
-    msgBox.add(text);
+    msgBox.add(this.box);
+    msgBox.add(this.text);
 
   }
 }
