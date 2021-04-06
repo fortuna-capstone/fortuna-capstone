@@ -223,6 +223,16 @@ export default class GameScene extends Phaser.Scene {
     camera = this.cameras.main.setBounds(0, 0, 8000, 360);
     this.currentTurn = 0;
     this.add.image(100, 530, 'playerOneBox').setScale(3.5).setScrollFactor(0);
+
+    this.turnDisplay = new TurnDisplay(
+      this,
+      phaserConfig.width - 100,
+      phaserConfig.height - 75,
+      'messageBox',
+      `Whose\n turn?`
+    );
+    this.turnDisplay.text.setScrollFactor(0);
+    this.turnDisplay.box.setScrollFactor(0);
   }
 
   movePiece() {
@@ -417,15 +427,7 @@ export default class GameScene extends Phaser.Scene {
       };
 
       if (turn) {
-        this.turnDisplay = new TurnDisplay(
-          this,
-          phaserConfig.width - 100,
-
-          phaserConfig.height - 75,
-          'messageBox',
-          `Player\n ${turn}s\n turn`
-        );
-
+        this.turnDisplay.text.setText(`Player\n ${turn}s\n turn`);
         if (turn === this.player.turn && this.player.skip) {
           if (!this.player.retired) {
             this.player.skip = false;
