@@ -219,6 +219,15 @@ export default class GameScene extends Phaser.Scene {
     )
     this.turnDisplay.text.setScrollFactor(0);
     this.turnDisplay.box.setScrollFactor(0);
+    this.rollDisplay = new TurnDisplay(
+      this, 
+      phaserConfig.width - 375,
+      phaserConfig.height - 75,
+      'messageBox',
+      `You\n Rolled a\n ...`
+    )
+    this.rollDisplay.text.setScrollFactor(0);
+    this.rollDisplay.box.setScrollFactor(0);
   }
 
   movePiece() {
@@ -244,12 +253,18 @@ export default class GameScene extends Phaser.Scene {
         this.messageBox.disableInteractive();
       }
     }
+  
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
+      console.log('hi')
+        if(this.socket.roll){
+          console.log('hello')
+          this.rollDisplay.text.setText(`You\n rolled a\n ${this.socket.roll}`)
+        }
 
       this.movePiece();
       this.socket.roll = 0;
-    }
+    } else
 
     if (this.otherPlayers.getChildren()[0]) {
       this.add.image(100, 60, 'playerTwoBox').setScale(3.5).setScrollFactor(0);
@@ -323,6 +338,11 @@ export default class GameScene extends Phaser.Scene {
       if (this.player.turn > 3) {
         this.scene.start('Waiting');
       }
+      if(this.player.skip){
+        this.rollDisplay.text.setText(`Your\n turn\n is\n skipped.`)
+    }else if(!this.player.skip && this.player.turn!= turn) {
+      this.rollDisplay.text.setText(`You\n rolled a\n ...`)
+    }
       camera.startFollow(this.player.gamePiece);
       playerInfo.text.setText(
         `Player Number: ${this.player.turn} \nBank Account: ${
