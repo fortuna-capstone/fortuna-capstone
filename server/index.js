@@ -88,6 +88,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('startGame', function () {
+    salaryOptions = salaryKeys
+    careerOptions = careerKeys
+    tileOptions = tileKeys
+    houseOptions = houseKeys
     socket.emit('turnStarted', turnCounter);
     socket.emit('salaryOptions', salaryOptions);
     socket.emit('careerOptions', careerOptions);
