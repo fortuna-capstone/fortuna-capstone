@@ -5,15 +5,6 @@ import tilemap from './tilemap';
 // 2: life
 // 3: green
 
-// const tiles = [
-//   '111    ',
-//   '2 2   0',
-//   '1 032 1',
-//   '2 2 1 3',
-//   '011 1 2',
-//   '    112',
-//   '       ',
-// ];
 const tiles = tilemap;
 const COLORMAP = [0xff0000, 0xffa500, 0xffc0cb, 0x00cc00];
 
