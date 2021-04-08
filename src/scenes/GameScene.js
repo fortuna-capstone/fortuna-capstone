@@ -233,6 +233,15 @@ export default class GameScene extends Phaser.Scene {
     );
     this.turnDisplay.text.setScrollFactor(0);
     this.turnDisplay.box.setScrollFactor(0);
+    this.rollDisplay = new TurnDisplay(
+      this,
+      phaserConfig.width - 375,
+      phaserConfig.height - 75,
+      'messageBox',
+      `You\n Rolled a\n ...`
+    );
+    this.rollDisplay.text.setScrollFactor(0);
+    this.rollDisplay.box.setScrollFactor(0);
   }
 
   movePiece() {
@@ -266,12 +275,13 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
+      if (this.socket.roll) {
+        this.rollDisplay.text.setText(`You\n rolled a\n ${this.socket.roll}`);
+      }
 
       this.movePiece();
       this.socket.roll = 0;
-    }
-
-    if (this.otherPlayers.getChildren()[0]) {
+    } else if (this.otherPlayers.getChildren()[0]) {
       this.add.image(100, 60, 'playerTwoBox').setScale(3.5).setScrollFactor(0);
       let player = this.otherPlayers.getChildren()[0];
       playerTwoInfo.text.setText(
@@ -352,6 +362,11 @@ export default class GameScene extends Phaser.Scene {
     if (this.player) {
       if (this.player.turn > 3) {
         this.scene.start('Waiting');
+      }
+      if (this.player.skip) {
+        this.rollDisplay.text.setText(`Your\n turn\n is\n skipped.`);
+      } else if (!this.player.skip && this.player.turn != turn) {
+        this.rollDisplay.text.setText(`You\n rolled a\n ...`);
       }
       camera.startFollow(this.player.gamePiece);
 
@@ -556,6 +571,7 @@ function addOtherPlayers(scene, playerInfo) {
   const otherPlayer = scene.add
     .sprite(playerInfo.x, playerInfo.y, 'otherPlayer')
     .setScale(0.5);
+  otherPlayer.tint = Math.random() * 0xffffff;
   otherPlayer.playerId = playerInfo.playerId;
   otherPlayer.playerInfo = playerInfo;
   scene.otherPlayers.add(otherPlayer);

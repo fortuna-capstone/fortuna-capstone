@@ -12,10 +12,6 @@ const houseKeys = data.houseKeys;
 
 app.use(express.static(path.join(__dirname, '..', '/')));
 
-// const bodyParser = require('body-parser');
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '..', '/src/index.html'));
 });

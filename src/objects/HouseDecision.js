@@ -9,8 +9,8 @@ export default class HouseDecision extends Phaser.GameObjects.Container {
     const width = phaserConfig.width / 2;
     const height = phaserConfig.height / 2;
     const msgBox = this.scene.add.group();
-    let options = scene.dataArrays.houseArray;
 
+    let options = scene.dataArrays.houseArray;
     let splitLevel;
     let mobileHome;
     let logCabin;
