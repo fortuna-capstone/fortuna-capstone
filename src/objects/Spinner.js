@@ -16,7 +16,6 @@ export default class Spinner extends Phaser.GameObjects.Container {
     this.spin = false;
     this.add(this.button);
     this.add(this.text);
-    console.log(this.button.anims);
     this.button.anims.create({
       key: 'spin',
       frames: this.button.anims.generateFrameNumbers('spinner', {
@@ -31,7 +30,6 @@ export default class Spinner extends Phaser.GameObjects.Container {
       frames: [{ key: 'spinner', frame: 0 }],
       frameRate: 20,
     });
-    console.log(this.button.anims);
     this.button.on(
       'pointerdown',
       function () {

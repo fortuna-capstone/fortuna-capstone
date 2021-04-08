@@ -45,7 +45,6 @@ const tileKeys = [
   'forty-four',
   'forty-five',
 ];
-// const tileKeys = ['one'];
 
 const salaryKeys = [
   'one',

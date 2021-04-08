@@ -256,9 +256,7 @@ export default class GameScene extends Phaser.Scene {
   
     if (this.socket.roll !== 0) {
       counter = this.socket.roll;
-      console.log('hi')
         if(this.socket.roll){
-          console.log('hello')
           this.rollDisplay.text.setText(`You\n rolled a\n ${this.socket.roll}`)
         }
 
@@ -538,6 +536,7 @@ function addOtherPlayers(scene, playerInfo) {
   const otherPlayer = scene.add
     .sprite(playerInfo.x, playerInfo.y, 'otherPlayer')
     .setScale(0.5);
+  otherPlayer.tint = Math.random() * 0xffffff
   otherPlayer.playerId = playerInfo.playerId;
   otherPlayer.playerInfo = playerInfo;
   scene.otherPlayers.add(otherPlayer);
